@@ -21,7 +21,15 @@ API와 데이터 구조는 [API Specification v1](../docs/06-api-specification.m
 docker compose up -d db
 ```
 
-접속 값을 바꾸려면 루트의 `.env.example`을 `.env`로 복사해 수정한다. `.env`는 커밋하지 않는다.
+접속 값의 기본값은 루트의 `.env.example`과 같다. 값을 바꾸려면 `.env.example`을 `.env`로 복사해 수정한다. `.env`는 커밋하지 않는다.
+
+Docker Compose는 `.env`를 읽지만 서버는 읽지 않는다. 값을 바꿨으면 서버에도 같은 값을 환경 변수로 넘긴다.
+
+```bash
+DB_PORT=5434 ./gradlew bootRun
+```
+
+DB에 접속하지 못하면 서버는 몇 초 안에 `Unable to obtain connection from database`를 남기고 종료한다.
 
 DB를 직접 볼 때:
 
