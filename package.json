@@ -1,9 +1,15 @@
 {
   "name": "queenstown-local-platform",
   "private": true,
-  "workspaces": ["shared", "web"],
+  "workspaces": [
+    "shared",
+    "web"
+  ],
   "scripts": {
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present"
+  },
+  "overrides": {
+    "@swc/core": "1.15.47"
   }
 }

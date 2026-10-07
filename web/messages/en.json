@@ -1,0 +1,24 @@
+{
+  "Nav": {
+    "brand": "Queenstown Local",
+    "label": "Main",
+    "map": "Map",
+    "explore": "Explore",
+    "local": "Local",
+    "more": "More"
+  },
+  "Category": {
+    "food": "Food",
+    "cafe": "Cafes",
+    "bar": "Bars",
+    "activity": "Activities",
+    "shopping": "Shopping",
+    "facility": "Facilities"
+  },
+  "Pages": {
+    "map": "Map",
+    "explore": "Explore",
+    "local": "Local",
+    "more": "More"
+  }
+}
