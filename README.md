@@ -504,6 +504,7 @@ Web + App + Admin 통합 테스트
 - Java 21
 - Spring Boot 4.0.x
 - MyBatis
+- Flyway
 - Gradle
 - Spring Security + JWT
 
@@ -853,10 +854,10 @@ Citizen / Resident / Tourist
 - [x] Wireframe ([Wireframe v1](docs/04-wireframe.md))
 - [x] ERD ([ERD v1](docs/05-erd.md))
 - [x] API 설계 ([API Specification v1](docs/06-api-specification.md))
+- [x] 개발환경 구축 (3주차 Backend Foundation, [backend/README.md](backend/README.md))
 
 ### Next
 
-- [ ] 개발환경 구축
 - [ ] 개발
 
 ---

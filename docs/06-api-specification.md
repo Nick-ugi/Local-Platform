@@ -72,10 +72,10 @@ App은 토큰을 기기의 보안 저장소에 둔다. Web은 브라우저의 Ja
 
 ```json
 {
-  "type": "about:blank",
   "title": "Bad Request",
   "status": 400,
   "detail": "Validation failed.",
+  "instance": "/api/v1/admin/places",
   "code": "VALIDATION_FAILED",
   "errors": [
     { "field": "sourceUrl", "message": "must not be blank" }
@@ -88,6 +88,7 @@ App은 토큰을 기기의 보안 저장소에 둔다. Web은 브라우저의 Ja
 | status | number | HTTP 상태 코드 |
 | title | string | 상태 코드의 이름 |
 | detail | string | 오류 설명 |
+| instance | string | 요청한 경로 |
 | code | string | 오류 코드 |
 | errors | array | 입력값 오류일 때만 있다. 항목은 `field`와 `message`다. |
 
