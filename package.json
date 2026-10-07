@@ -1,0 +1,9 @@
+{
+  "name": "queenstown-local-platform",
+  "private": true,
+  "workspaces": ["shared", "web"],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  }
+}

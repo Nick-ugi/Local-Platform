@@ -1,0 +1,49 @@
+import { readFileSync } from 'node:fs'
+import { expect, test } from 'vitest'
+import { CATEGORIES, ERROR_CODES, FACILITY_SUBTYPES, NOTICE_TYPES, STATUSES } from './codes'
+import { SERVICE_CENTER, SERVICE_RADIUS_KM } from './geo'
+
+// The code values live in three places: here, the DB constraints and the backend enum.
+// These tests fail when one of them changes without the others.
+const backend = new URL('../../backend/src/main/', import.meta.url)
+const schema = readFileSync(new URL('resources/db/migration/V1__init_schema.sql', backend), 'utf8')
+const errorCodeJava = readFileSync(
+  new URL('java/com/queenstownlocal/backend/common/error/ErrorCode.java', backend),
+  'utf8',
+)
+
+/** The quoted values of the first IN (...) list of a CHECK constraint. */
+function constraintValues(name: string): string[] {
+  const start = schema.indexOf(`CONSTRAINT ${name} CHECK (`)
+  if (start < 0) throw new Error(`constraint not found: ${name}`)
+  const listStart = schema.indexOf('IN (', start)
+  const list = schema.slice(listStart, schema.indexOf(')', listStart))
+  return [...list.matchAll(/'([^']+)'/g)].map((match) => match[1])
+}
+
+test('categories match the place category constraint', () => {
+  expect(constraintValues('ck_place_category')).toEqual([...CATEGORIES])
+})
+
+test('facility subtypes match the place subtype constraint', () => {
+  expect(constraintValues('ck_place_subtype')).toEqual([...FACILITY_SUBTYPES])
+})
+
+test('notice types match the notice type constraint', () => {
+  expect(constraintValues('ck_notice_type')).toEqual([...NOTICE_TYPES])
+})
+
+test('statuses match the status constraint', () => {
+  expect(constraintValues('ck_place_status')).toEqual([...STATUSES])
+})
+
+test('error codes match the backend enum', () => {
+  const javaNames = [...errorCodeJava.matchAll(/^\s*([A-Z_]+)\(HttpStatus\./gm)].map((match) => match[1])
+
+  expect(javaNames).toEqual([...ERROR_CODES])
+})
+
+test('service centre is the Queenstown centre from the API specification', () => {
+  expect(SERVICE_CENTER).toEqual({ latitude: -45.0312, longitude: 168.6626 })
+  expect(SERVICE_RADIUS_KM).toBe(50)
+})
