@@ -2,6 +2,7 @@ import type { PlaceDetail } from "@queenstown/shared";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
+import { BackLink } from "@/components/nav/BackLink";
 import { displayUrl, formatDate, httpUrl, telHref } from "@/lib/format";
 
 const externalLinkClass = "text-blue-700 underline underline-offset-2";
@@ -20,8 +21,12 @@ export function PlaceDetailView({ place }: { place: PlaceDetail }) {
   const hasContact = Boolean(place.phone || website);
 
   return (
-    <article className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-8 py-6">
-      <nav aria-label={t("breadcrumb")} className="flex gap-2 text-sm text-neutral-500">
+    <article className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 py-4 [overflow-wrap:anywhere] md:px-8 md:py-6">
+      {/* Phones get a Back link (wireframe m-place), wider screens the breadcrumb (d-place). */}
+      <div className="-mb-3 md:hidden">
+        <BackLink fallbackHref="/explore" />
+      </div>
+      <nav aria-label={t("breadcrumb")} className="hidden gap-2 text-sm text-neutral-500 md:flex">
         <Link href="/explore">{tNav("explore")}</Link>
         <span aria-hidden="true">/</span>
         <Link href={`/explore/${place.category}`}>{tCategory(place.category)}</Link>

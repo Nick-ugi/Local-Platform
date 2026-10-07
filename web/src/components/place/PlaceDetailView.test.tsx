@@ -1,8 +1,11 @@
 import type { PlaceDetail } from "@queenstown/shared";
 import { screen, within } from "@testing-library/react";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { renderWithMessages } from "@/test/render";
 import { PlaceDetailView } from "./PlaceDetailView";
+
+// The back link reads the router; nothing here navigates.
+vi.mock("next/navigation", () => ({ useRouter: () => ({ back: vi.fn() }) }));
 
 const full: PlaceDetail = {
   slug: "lakeside-kitchen",
@@ -52,6 +55,12 @@ test("shows every part of a complete place", () => {
   );
   expect(document.body.textContent).toContain("Source: Business website");
   expect(screen.getByText("Updated 2 Oct 2026")).toBeInTheDocument();
+});
+
+test("offers a way back to Explore", () => {
+  renderWithMessages(<PlaceDetailView place={full} />);
+
+  expect(screen.getByRole("link", { name: "Back" })).toHaveAttribute("href", "/explore");
 });
 
 test("uses the category label, not the code", () => {

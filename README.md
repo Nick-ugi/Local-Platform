@@ -859,6 +859,7 @@ Citizen / Resident / Tourist
 - [x] API 설계 ([API Specification v1](docs/06-api-specification.md))
 - [x] 개발환경 구축 (3주차 Backend Foundation, [backend/README.md](backend/README.md))
 - [x] 4주차 Web Foundation ([web/README.md](web/README.md))
+- [x] 5주차 Mobile Web (하단 탭, 반응형 배치, 상세 화면의 뒤로 가기)
 
 ### Next
 
