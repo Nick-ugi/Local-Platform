@@ -5,13 +5,13 @@ import { StateMessage } from "./StateMessage";
 test("shows the title as the page heading, the body, and the actions", () => {
   render(
     <StateMessage title="Page not found" body="Gone.">
-      <a href="/">Go to Map</a>
+      <a href="https://example.com/help">Get help</a>
     </StateMessage>,
   );
 
   expect(screen.getByRole("heading", { level: 1, name: "Page not found" })).toBeInTheDocument();
   expect(screen.getByText("Gone.")).toBeInTheDocument();
-  expect(screen.getByRole("link", { name: "Go to Map" })).toHaveAttribute("href", "/");
+  expect(screen.getByRole("link", { name: "Get help" })).toHaveAttribute("href", "https://example.com/help");
 });
 
 test("renders without a body or actions", () => {

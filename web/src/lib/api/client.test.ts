@@ -42,7 +42,7 @@ test("falls back to localhost when no base URL is set", async () => {
 
   await apiGet("/places/x");
 
-  expect(fetchMock.mock.calls[0][0]).toBe("http://localhost:8080/api/v1/places/x");
+  expect(fetchMock).toHaveBeenCalledWith("http://localhost:8080/api/v1/places/x", expect.anything());
 });
 
 test("returns the parsed body on success", async () => {
