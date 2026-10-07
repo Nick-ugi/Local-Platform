@@ -485,6 +485,9 @@ Web + App + Admin 통합 테스트
 - Next.js 16
 - React 19
 - TypeScript
+- Tailwind CSS
+- next-intl
+- Vitest
 
 공개 페이지(Place / Event / Notice)의 검색 노출(SEO)과 공유를 위해 SSR을 사용한다.
 
@@ -855,6 +858,7 @@ Citizen / Resident / Tourist
 - [x] ERD ([ERD v1](docs/05-erd.md))
 - [x] API 설계 ([API Specification v1](docs/06-api-specification.md))
 - [x] 개발환경 구축 (3주차 Backend Foundation, [backend/README.md](backend/README.md))
+- [x] 4주차 Web Foundation ([web/README.md](web/README.md))
 
 ### Next
 

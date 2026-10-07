@@ -30,5 +30,13 @@
     "notFoundBody": "This page doesn't exist or is no longer available.",
     "goToMap": "Go to Map",
     "goToExplore": "Go to Explore"
+  },
+  "Place": {
+    "breadcrumb": "Breadcrumb",
+    "address": "Address",
+    "openingHours": "Opening hours",
+    "contact": "Contact",
+    "source": "Source: <link>{source}</link>",
+    "updated": "Updated {date}"
   }
 }
