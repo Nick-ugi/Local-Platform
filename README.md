@@ -223,9 +223,8 @@ Queenstown에 새롭게 정착하는 사용자
 
 - Notice
 - Event
-- Jobs
-- Community
-- Public Information
+
+Jobs와 Community는 MVP 이후에 추가한다. Public Facility는 Map과 Explore의 카테고리로 제공한다.
 
 ### More
 
@@ -417,6 +416,8 @@ Web, Mobile Web, Mobile App을 별도의 서비스로 만드는 것이 아니라
 
 초기 MVP는 **Web + Mobile Web/PWA**를 중심으로 개발한다.
 
+Web과 Mobile Web은 별도 프로젝트가 아니라 **하나의 Next.js 코드베이스를 반응형으로 구성**한다.
+
 목적:
 
 - 빠른 UI 검증
@@ -443,6 +444,10 @@ MVP와 사용자 검증을 진행하면서 **React Native + Expo** 기반 App Pr
 ### Phase 3 — Mobile App MVP
 
 Web/Mobile Web에서 검증된 핵심 기능을 App에 적용한다.
+
+App은 MVP 이후의 선택 사항이 아니라 **12주 MVP의 목표에 포함한다.** (9주차 Prototype → 10주차 Core)
+
+12주차의 App 배포 범위는 스토어 정식 출시가 아니라 **TestFlight / Android 내부 테스트 배포**까지로 한다.
 
 ```text
 Web / Mobile Web MVP
@@ -473,41 +478,83 @@ Web + App + Admin 통합 테스트
 
 ## 12. Technology Stack
 
-### Frontend
+버전은 2026-10 기준이며, 각 프로젝트를 생성하는 시점의 최신 안정 버전을 사용한다.
+
+### Web (Web + Mobile Web)
+
+- Next.js 16
+- React 19
+- TypeScript
+
+공개 페이지(Place / Event / Notice)의 검색 노출(SEO)과 공유를 위해 SSR을 사용한다.
+
+### Admin
 
 - React
 - TypeScript
+- Vite (SPA)
 
 ### Mobile
 
 - React Native
-- Expo
+- Expo (SDK 57)
 
 ### Backend
 
-- Spring Boot
-- Java
+- Java 21
+- Spring Boot 4.0.x
 - MyBatis
+- Gradle
+- Spring Security + JWT
+
+Spring Boot는 MyBatis Starter가 지원하는 4.0.x를 사용한다.
 
 ### Database
 
 - PostgreSQL
+- PostGIS (Nearby / 위치 기반 검색)
+
+### Map
+
+- Mapbox
+  - Web: Mapbox GL JS
+  - App: @rnmapbox/maps
+
+Web과 App에서 같은 지도 스타일을 사용한다.
 
 ### Infrastructure
 
-- Docker
+- Docker (Docker Compose)
+- Nginx
 
 ### API
 
 - REST API
 
-### Admin
+### Language
 
-- React
+- 서비스 UI는 English를 기본으로 한다.
+- 처음부터 i18n 구조를 적용하여 언어를 추가할 수 있도록 한다.
+
+### Repository Structure
+
+하나의 저장소(Monorepo)에서 관리한다. `web` / `admin` / `mobile` / `shared`는 npm workspaces로 묶는다.
+
+```text
+Local-Platform
+ ├── backend   Spring Boot REST API
+ ├── web       Next.js (Web + Mobile Web)
+ ├── admin     React + Vite (Admin Web)
+ ├── mobile    React Native + Expo (App)
+ ├── shared    API Types / Constants / Validation
+ └── docs      기획 · 설계 · 개발 기록
+```
 
 ---
 
 ## 13. Initial Data Model
+
+아래는 초기 구상이다. 테이블과 컬럼의 정의는 [ERD v1](docs/05-erd.md)을 기준으로 한다.
 
 ### Place
 
@@ -524,6 +571,8 @@ Place
  ├── phone
  ├── website
  ├── image
+ ├── source
+ ├── sourceUrl
  ├── status
  ├── createdAt
  └── updatedAt
@@ -539,6 +588,7 @@ Notice
  ├── category
  ├── source
  ├── sourceUrl
+ ├── isOfficial
  ├── latitude
  ├── longitude
  ├── startDate
@@ -547,11 +597,20 @@ Notice
  └── updatedAt
 ```
 
+### Data Source
+
+- Place는 직접 수집 · 등록한 데이터를 사용하고 `source` / `sourceUrl`을 기록한다.
+- Google Places처럼 저장이 제한된 외부 장소 데이터는 DB에 저장하지 않는다.
+- Notice / Public Information은 공식 출처 링크와 요약, 위치를 제공한다. 원문 재사용 조건은 출처별로 확인한다.
+- Seed 데이터는 7~8주차 기능 개발과 병행하여 수집한다.
+
 초기 MVP에서는 필요한 핵심 Domain부터 구현하고, 사용자 검증 결과에 따라 Domain을 확장한다.
 
 ---
 
 ## 14. MVP Scope
+
+기능 단위의 상세 정의는 [MVP Feature Definition v1](docs/01-mvp-feature-definition.md)을 기준으로 한다.
 
 ### Must Have
 
@@ -574,6 +633,13 @@ Local
 
 Public
  └── Location-based Information
+
+App (React Native + Expo)
+ ├── Map
+ ├── Place
+ ├── Search
+ ├── Nearby
+ └── Notice / Event (Marker · Detail)
 ```
 
 ### Should Have
@@ -581,14 +647,14 @@ Public
 ```text
 User
 Favorite
-Recent Place
-Basic Admin
-Business Information
+Basic Admin (Place / Event / Notice)
 ```
 
 ### Later
 
 ```text
+Recent Place
+Business Registration / Management
 Community
 Jobs
 Business Promotion
@@ -648,16 +714,16 @@ MVP Release
 |---|---|
 | 1 | 기획 확정 / MVP 범위 / 사용자 시나리오 |
 | 2 | IA / User Flow / Wireframe / ERD / API |
-| 3 | Spring Boot / PostgreSQL / MyBatis / Docker 기반 구축 |
-| 4 | React Web 기본 구조 / 공통 UI / API 연동 |
+| 3 | Spring Boot / PostgreSQL + PostGIS / MyBatis / Docker 기반 구축 |
+| 4 | Next.js Web 기본 구조 / 공통 UI / API 연동 |
 | 5 | Mobile Web / Responsive / Mobile UX |
-| 6 | Map API / Current Location / Marker / Category |
-| 7 | Place / List / Detail / Search / Nearby |
-| 8 | Event / Notice / Public Information → Map |
+| 6 | Mapbox / Current Location / Marker / Category |
+| 7 | Place / List / Detail / Search / Nearby / Seed 데이터 수집 |
+| 8 | Event / Notice / Public Information → Map / Seed 데이터 수집 |
 | 9 | React Native + Expo App Prototype |
-| 10 | App 핵심 기능 / Map / Place / Search |
-| 11 | User / Favorite / Admin / Web-App 연동 |
-| 12 | 통합 테스트 / Error Handling / Security / Performance / Deployment / MVP Release |
+| 10 | App 핵심 기능 / Map / Place / Search / Notice · Event Detail |
+| 11 | User / Favorite / Admin (Place · Event · Notice) / Web-App 연동 |
+| 12 | 통합 테스트 / Error Handling / Security / Performance / Deployment / App 테스트 배포 / MVP Release |
 
 세부 프로젝트 캘린더는 `PROJECT-CALENDAR.xlsx`를 기준으로 관리한다.
 
@@ -766,7 +832,7 @@ Citizen / Resident / Tourist
 
 ## 21. Current Status
 
-**Planning → MVP Definition**
+**Design → Development**
 
 ### Completed
 
@@ -780,15 +846,16 @@ Citizen / Resident / Tourist
 - [x] Admin 방향
 - [x] 기술 Stack 방향
 - [x] 12주 개발 로드맵
+- [x] 기술 Stack / 저장소 구조 확정
+- [x] MVP 범위 확정 ([MVP Feature Definition v1](docs/01-mvp-feature-definition.md))
+- [x] IA ([Information Architecture v1](docs/02-information-architecture.md))
+- [x] User Flow ([User Flow v1](docs/03-user-flow.md))
+- [x] Wireframe ([Wireframe v1](docs/04-wireframe.md))
+- [x] ERD ([ERD v1](docs/05-erd.md))
+- [x] API 설계 ([API Specification v1](docs/06-api-specification.md))
 
 ### Next
 
-- [ ] MVP 범위 최종 확정
-- [ ] IA
-- [ ] User Flow
-- [ ] Wireframe
-- [ ] ERD
-- [ ] API 설계
 - [ ] 개발환경 구축
 - [ ] 개발
 
@@ -796,9 +863,11 @@ Citizen / Resident / Tourist
 
 ## 22. Project Goal
 
+실제로 운영할 서비스를 만드는 것이 목적이다. 동시에 기획 · 설계 · 개발 · 테스트 · 배포 과정을 기록하여 **포트폴리오로 사용할 수 있도록 한다.**
+
 ### Short Term
 
-Queenstown Local Platform MVP 구축
+Queenstown Local Platform MVP 구축 (Web + Mobile Web + App + Admin)
 
 ### Mid Term
 
