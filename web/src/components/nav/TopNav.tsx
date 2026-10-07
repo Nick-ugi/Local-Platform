@@ -5,13 +5,13 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { MENU, activeMenu } from "./menu";
 
-/** Desktop top menu (wireframe d-map). The search box joins it in week 7. */
+/** Desktop top menu (wireframe d-map), shown from 768px up. The search box joins it in week 7. */
 export function TopNav() {
   const t = useTranslations("Nav");
   const active = activeMenu(usePathname() ?? "");
 
   return (
-    <header className="flex h-[60px] shrink-0 items-center gap-7 border-b border-neutral-400 px-6">
+    <header className="hidden h-[60px] shrink-0 items-center gap-7 border-b border-neutral-400 px-6 md:flex">
       <Link href="/" className="text-base font-extrabold">
         {t("brand")}
       </Link>

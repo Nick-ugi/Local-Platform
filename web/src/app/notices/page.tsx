@@ -10,5 +10,5 @@ export async function generateMetadata(): Promise<Metadata> {
 // Placeholder: the screen itself arrives with its feature week.
 export default function NoticesPage() {
   const t = useTranslations("Pages");
-  return <h1 className="p-8 text-xl font-bold">{t("local")}</h1>;
+  return <h1 className="px-4 py-6 text-xl font-bold md:p-8">{t("local")}</h1>;
 }
