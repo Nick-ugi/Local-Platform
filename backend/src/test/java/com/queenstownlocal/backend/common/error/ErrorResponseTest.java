@@ -38,6 +38,17 @@ class ErrorResponseTest {
 	}
 
 	@Test
+	void invalidArgumentNamesTheField() throws Exception {
+		mvc.perform(get("/probe/invalid"))
+			.andExpect(status().isBadRequest())
+			.andExpect(content().contentTypeCompatibleWith(PROBLEM_JSON))
+			.andExpect(jsonPath("$.code").value("VALIDATION_FAILED"))
+			.andExpect(jsonPath("$.detail").value("Validation failed."))
+			.andExpect(jsonPath("$.errors[0].field").value("west"))
+			.andExpect(jsonPath("$.errors[0].message").value("must be less than east"));
+	}
+
+	@Test
 	void invalidBodyListsFieldErrors() throws Exception {
 		mvc.perform(post("/probe/validate").contentType(MediaType.APPLICATION_JSON).content("{\"name\":\"\"}"))
 			.andExpect(status().isBadRequest())

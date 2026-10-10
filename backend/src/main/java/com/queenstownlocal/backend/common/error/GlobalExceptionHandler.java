@@ -30,11 +30,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	private static final String CODE = "code";
 
+	private static final String ERRORS = "errors";
+
 	@ExceptionHandler(ApiException.class)
 	ResponseEntity<Object> handleApiException(ApiException ex, WebRequest request) {
 		ErrorCode code = ex.code();
 		ProblemDetail body = ProblemDetail.forStatusAndDetail(code.status(), ex.getMessage());
 		body.setProperty(CODE, code.name());
+		if (!ex.errors().isEmpty()) {
+			body.setProperty(ERRORS, ex.errors());
+		}
 		return handleExceptionInternal(ex, body, new HttpHeaders(), code.status(), request);
 	}
 
@@ -69,7 +74,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			case VALIDATION_FAILED -> {
 				if (problem.getStatus() == ErrorCode.VALIDATION_FAILED.status().value()) {
 					problem.setDetail("Validation failed.");
-					problem.setProperty("errors", fieldErrors(ex));
+					problem.setProperty(ERRORS, fieldErrors(ex));
 				}
 			}
 			case NOT_FOUND -> problem.setDetail("Not found.");
@@ -110,9 +115,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 			return List.of(new FieldMessage(mismatch.getPropertyName(), "has an invalid value"));
 		}
 		return List.of();
-	}
-
-	record FieldMessage(String field, String message) {
 	}
 
 }

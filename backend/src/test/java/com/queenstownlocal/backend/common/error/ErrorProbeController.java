@@ -26,6 +26,11 @@ class ErrorProbeController {
 		throw new ApiException(ErrorCode.NOT_FOUND, "Place not found.");
 	}
 
+	@GetMapping("/probe/invalid")
+	void invalid() {
+		throw ApiException.invalid("west", "must be less than east");
+	}
+
 	@PostMapping("/probe/validate")
 	void validate(@Valid @RequestBody Body body) {
 	}

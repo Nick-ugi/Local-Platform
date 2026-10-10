@@ -3,12 +3,16 @@ import { expect, test } from 'vitest'
 import { CATEGORIES, ERROR_CODES, FACILITY_SUBTYPES, NOTICE_TYPES, STATUSES } from './codes'
 import { SERVICE_CENTER, SERVICE_RADIUS_KM } from './geo'
 
-// The code values live in three places: here, the DB constraints and the backend enum.
+// The code values live in three places: here, the DB constraints and the backend's Java code.
 // These tests fail when one of them changes without the others.
 const backend = new URL('../../backend/src/main/', import.meta.url)
 const schema = readFileSync(new URL('resources/db/migration/V1__init_schema.sql', backend), 'utf8')
 const errorCodeJava = readFileSync(
   new URL('java/com/queenstownlocal/backend/common/error/ErrorCode.java', backend),
+  'utf8',
+)
+const placeCategoryJava = readFileSync(
+  new URL('java/com/queenstownlocal/backend/place/PlaceCategory.java', backend),
   'utf8',
 )
 
@@ -23,6 +27,14 @@ function constraintValues(name: string): string[] {
 
 test('categories match the place category constraint', () => {
   expect(constraintValues('ck_place_category')).toEqual([...CATEGORIES])
+})
+
+test('categories match the backend list', () => {
+  const listStart = placeCategoryJava.indexOf('List.of(')
+  const list = placeCategoryJava.slice(listStart, placeCategoryJava.indexOf(')', listStart))
+  const javaCodes = [...list.matchAll(/"([^"]+)"/g)].map((match) => match[1])
+
+  expect(javaCodes).toEqual([...CATEGORIES])
 })
 
 test('facility subtypes match the place subtype constraint', () => {
