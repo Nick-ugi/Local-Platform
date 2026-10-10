@@ -141,6 +141,18 @@ class MapMarkersApiTest {
 	}
 
 	@Test
+	void edgeThatIsNotANumberIsRejected() throws Exception {
+		expectRejected(markers(Map.of("west", "abc")), "west");
+		expectRejected(markers(Map.of("east", "")), "east");
+		expectRejected(markers(Map.of("south", "-Infinity")), "south");
+	}
+
+	@Test
+	void boxWithoutAreaIsRejected() throws Exception {
+		expectRejected(markers(Map.of("west", "168.66", "east", "168.66")), "west");
+	}
+
+	@Test
 	void truncatesAtFiveHundred() throws Exception {
 		insertPlacesInTheBox(501);
 

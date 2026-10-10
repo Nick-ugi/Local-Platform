@@ -233,6 +233,8 @@ export function MapView({
     return () => {
       gone = true;
       created?.remove();
+      // A removed map must not be drawn on; the effects below wait for the next one to load.
+      setMap(null);
     };
   }, [token, startCamera]);
 

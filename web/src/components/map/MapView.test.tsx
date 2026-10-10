@@ -58,7 +58,15 @@ const { FakeMap } = vi.hoisted(() => {
       this.sources[id] = entry;
     }
 
+    /** The real map throws when it is used after remove(). */
+    mustBeAlive() {
+      if (this.removed) {
+        throw new Error("the map was used after it was removed");
+      }
+    }
+
     getSource(id: string) {
+      this.mustBeAlive();
       return this.sources[id];
     }
 
@@ -68,10 +76,13 @@ const { FakeMap } = vi.hoisted(() => {
     }
 
     setFilter(id: string, filter: unknown) {
+      this.mustBeAlive();
       this.filters[id] = filter;
     }
 
-    setPaintProperty() {}
+    setPaintProperty() {
+      this.mustBeAlive();
+    }
 
     getBounds() {
       return {
@@ -99,6 +110,7 @@ const { FakeMap } = vi.hoisted(() => {
     }
 
     flyTo(options: unknown) {
+      this.mustBeAlive();
       this.flights.push(options);
     }
 
@@ -369,6 +381,27 @@ test("removes the map when it goes away", async () => {
   unmount();
 
   expect(map.removed).toBe(true);
+});
+
+// The effect that creates the map runs again when the token changes, and in development on
+// every edit of the file. The old map is gone then, and the new one has not loaded yet.
+test("leaves a map alone once it has removed it", async () => {
+  const { update } = renderMap();
+  const first = await loadedMap();
+
+  update({ token: "pk.other" });
+  await waitFor(() => expect(FakeMap.instances).toHaveLength(2));
+  expect(first.removed).toBe(true);
+
+  expect(() =>
+    update({
+      token: "pk.other",
+      markers: [bakery],
+      selectedSlug: "beach-street-bakery",
+      userLocation: { latitude: -45.0312, longitude: 168.6626 },
+      camera: { latitude: -45.0195, longitude: 168.732, zoom: 15 },
+    }),
+  ).not.toThrow();
 });
 
 test("creates no map when it goes away before the SDK has loaded", async () => {
