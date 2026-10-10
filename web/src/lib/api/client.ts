@@ -22,14 +22,28 @@ export class ApiError extends Error {
 
 const DEFAULT_BASE_URL = "http://localhost:8080";
 
-/** GET {API_BASE_URL}/api/v1{path}. Rejects with an ApiError for every failure. */
-export async function apiGet<T>(path: string): Promise<T> {
-  const baseUrl = process.env.API_BASE_URL || DEFAULT_BASE_URL;
+/** Where the backend is. Only the server knows this; a browser calls the site's own origin. */
+export function backendBaseUrl(): string {
+  return process.env.API_BASE_URL || DEFAULT_BASE_URL;
+}
+
+/**
+ * GET /api/v1{path}. On the server the request goes straight to the backend. In a browser it goes
+ * to this site's own /api/v1, which app/api/v1/[...path]/route.ts forwards, so no CORS is involved.
+ *
+ * Rejects with an ApiError for every failure. A request the caller cancelled is not a failure:
+ * it rejects with the abort error itself.
+ */
+export async function apiGet<T>(path: string, options: { signal?: AbortSignal } = {}): Promise<T> {
+  const origin = typeof window === "undefined" ? backendBaseUrl() : "";
 
   let response: Response;
   try {
-    response = await fetch(`${baseUrl}/api/v1${path}`, { cache: "no-store" });
+    response = await fetch(`${origin}/api/v1${path}`, { cache: "no-store", signal: options.signal });
   } catch (cause) {
+    if (options.signal?.aborted) {
+      throw cause;
+    }
     throw new ApiError({ status: 0, code: "NETWORK_ERROR", detail: "The API could not be reached.", cause });
   }
 

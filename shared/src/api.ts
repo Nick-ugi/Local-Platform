@@ -22,6 +22,35 @@ export interface PlaceDetail {
   updatedAt: string
 }
 
+/** The part of the map on screen: longitudes for west and east, latitudes for south and north. */
+export interface MapBounds {
+  west: number
+  south: number
+  east: number
+  north: number
+}
+
+/** A place among the markers of GET /map/markers. */
+export interface PlaceMarker {
+  kind: 'place'
+  slug: string
+  latitude: number
+  longitude: number
+  name: string
+  category: Category
+  subtype: FacilitySubtype | null
+}
+
+/** A marker of any kind. Events and notices join when the map shows them. */
+export type MapMarker = PlaceMarker
+
+/** GET /map/markers */
+export interface MarkersResponse {
+  markers: MapMarker[]
+  /** True when the area holds more markers than were sent. */
+  truncated: boolean
+}
+
 export interface FieldError {
   field: string
   message: string

@@ -1,5 +1,9 @@
+// @vitest-environment node
 import { afterEach, expect, test, vi } from "vitest";
 import { ApiError, apiGet } from "./client";
+
+// This file runs without a window, so apiGet behaves as it does on the server.
+// client.browser.test.ts covers the browser.
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -7,7 +11,9 @@ afterEach(() => {
 });
 
 function respondWith(status: number, body: string, contentType: string) {
-  const fetchMock = vi.fn(async () => new Response(body, { status, headers: { "Content-Type": contentType } }));
+  const fetchMock = vi.fn<typeof fetch>(
+    async () => new Response(body, { status, headers: { "Content-Type": contentType } }),
+  );
   vi.stubGlobal("fetch", fetchMock);
   return fetchMock;
 }
@@ -43,6 +49,29 @@ test("falls back to localhost when no base URL is set", async () => {
   await apiGet("/places/x");
 
   expect(fetchMock).toHaveBeenCalledWith("http://localhost:8080/api/v1/places/x", expect.anything());
+});
+
+test("passes the abort signal on", async () => {
+  const fetchMock = respondWith(200, "{}", "application/json");
+  const { signal } = new AbortController();
+
+  await apiGet("/x", { signal });
+
+  expect(fetchMock.mock.calls[0][1]?.signal).toBe(signal);
+});
+
+test("lets an aborted request reject as it is", async () => {
+  const controller = new AbortController();
+  controller.abort();
+  const aborted = new DOMException("This operation was aborted", "AbortError");
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async () => {
+      throw aborted;
+    }),
+  );
+
+  await expect(apiGet("/x", { signal: controller.signal })).rejects.toBe(aborted);
 });
 
 test("returns the parsed body on success", async () => {
