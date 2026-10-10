@@ -12,15 +12,16 @@ import { useEffect, useEffectEvent, useRef, useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { toMapBounds, wrapLongitude } from "@/lib/map/bounds";
 import type { Camera } from "@/lib/map/camera";
-import { toFeatureCollection } from "@/lib/map/geojson";
+import { toFeatureCollection, toLngLat, toPositionCollection } from "@/lib/map/geojson";
 
 type Props = {
   /** Mapbox public token. */
   token: string;
-  /** Where the map looks when it is created. */
+  /** Where the map looks when it is created. Giving a new object afterwards moves the map there. */
   camera: Camera;
   markers: readonly MapMarker[];
   selectedSlug: string | null;
+  /** The visitor's position, drawn as a dot, or null to draw none. */
   userLocation: LatLng | null;
   /** Called when the map has loaded and after every move, with the visible box. */
   onMove: (bounds: MapBounds, camera: Camera) => void;
@@ -37,8 +38,13 @@ const CIRCLES = "marker-circles";
 const SELECTED = "marker-selected";
 const LABELS = "marker-labels";
 
+const VISITOR = "visitor";
+const VISITOR_HALO = "visitor-halo";
+const VISITOR_DOT = "visitor-dot";
+
 const INK = "#171717";
 const PAPER = "#ffffff";
+const VISITOR_BLUE = "#1d4ed8";
 const RADIUS_PX = 14;
 /** A click this far outside a marker still counts, which makes the marker a 44 px target. */
 const REACH_PX = 22 - RADIUS_PX;
@@ -50,6 +56,29 @@ function onlySlug(slug: string | null): FilterSpecification {
 
 function labelColor(selectedSlug: string | null): ExpressionSpecification {
   return ["case", ["==", ["get", "slug"], selectedSlug ?? ""], PAPER, INK];
+}
+
+/** The visitor's position: a blue dot with a halo (wireframe m-map-place). */
+function addVisitorLayers(map: MapboxMap) {
+  map.addSource(VISITOR, { type: "geojson", data: toPositionCollection(null) });
+  map.addLayer({
+    id: VISITOR_HALO,
+    type: "circle",
+    source: VISITOR,
+    paint: { "circle-radius": 16, "circle-color": VISITOR_BLUE, "circle-opacity": 0.2, "circle-emissive-strength": 1 },
+  });
+  map.addLayer({
+    id: VISITOR_DOT,
+    type: "circle",
+    source: VISITOR,
+    paint: {
+      "circle-radius": 6,
+      "circle-color": VISITOR_BLUE,
+      "circle-stroke-color": PAPER,
+      "circle-stroke-width": 2,
+      "circle-emissive-strength": 1,
+    },
+  });
 }
 
 /**
@@ -123,7 +152,16 @@ function isRefusal(error: unknown): boolean {
  * without the SDK lives in lib/map. The SDK is imported inside an effect, so it is neither part
  * of the server render nor of the first script the browser loads.
  */
-export function MapView({ token, camera, markers, selectedSlug, onMove, onSelect, onUnavailable }: Props) {
+export function MapView({
+  token,
+  camera,
+  markers,
+  selectedSlug,
+  userLocation,
+  onMove,
+  onSelect,
+  onUnavailable,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   // Set once the style has loaded, which is when sources and layers can be changed.
   const [map, setMap] = useState<MapboxMap | null>(null);
@@ -155,7 +193,7 @@ export function MapView({ token, camera, markers, selectedSlug, onMove, onSelect
           accessToken: token,
           container: containerRef.current,
           style: STYLE,
-          center: [startCamera.longitude, startCamera.latitude],
+          center: toLngLat(startCamera),
           zoom: startCamera.zoom,
         });
       } catch {
@@ -170,6 +208,8 @@ export function MapView({ token, camera, markers, selectedSlug, onMove, onSelect
       let loaded = false;
       target.on("load", () => {
         loaded = true;
+        // The markers go on last, so they stay on top of the visitor's dot.
+        addVisitorLayers(target);
         addMarkerLayers(target);
         target.on("click", (event) => reportSelect(slugAt(target, event)));
         target.on("mousemove", (event) => {
@@ -207,6 +247,17 @@ export function MapView({ token, camera, markers, selectedSlug, onMove, onSelect
     map.setFilter(SELECTED, onlySlug(selectedSlug));
     map.setPaintProperty(LABELS, "text-color", labelColor(selectedSlug));
   }, [map, selectedSlug]);
+
+  useEffect(() => {
+    map?.getSource<GeoJSONSource>(VISITOR)?.setData(toPositionCollection(userLocation));
+  }, [map, userLocation]);
+
+  useEffect(() => {
+    // The camera the map was created with needs no move; any later one does.
+    if (map && camera !== startCamera) {
+      map.flyTo({ center: toLngLat(camera), zoom: camera.zoom });
+    }
+  }, [map, camera, startCamera]);
 
   // Mapbox's stylesheet makes the container position: relative, so the box that fills the
   // parent has to be a separate element.

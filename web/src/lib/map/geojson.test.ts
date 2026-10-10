@@ -1,6 +1,6 @@
 import type { Category, MapMarker } from "@queenstown/shared";
 import { expect, test } from "vitest";
-import { toFeatureCollection } from "./geojson";
+import { toFeatureCollection, toLngLat, toPositionCollection } from "./geojson";
 
 function marker(slug: string, category: Category): MapMarker {
   return {
@@ -44,4 +44,19 @@ test("carries what the layers need", () => {
 
 test("an empty list is an empty collection", () => {
   expect(toFeatureCollection([])).toEqual({ type: "FeatureCollection", features: [] });
+});
+
+test("writes a position the way the map wants it", () => {
+  expect(toLngLat({ latitude: -45.0312, longitude: 168.6626 })).toEqual([168.6626, -45.0312]);
+});
+
+test("a position is a collection of one point", () => {
+  expect(toPositionCollection({ latitude: -45.0312, longitude: 168.6626 })).toEqual({
+    type: "FeatureCollection",
+    features: [{ type: "Feature", geometry: { type: "Point", coordinates: [168.6626, -45.0312] }, properties: {} }],
+  });
+});
+
+test("no position is an empty collection", () => {
+  expect(toPositionCollection(null)).toEqual({ type: "FeatureCollection", features: [] });
 });

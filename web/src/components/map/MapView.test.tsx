@@ -17,9 +17,10 @@ const { FakeMap } = vi.hoisted(() => {
     options: Record<string, unknown>;
     handlers: Record<string, Handler[]> = {};
     sources: Record<string, { data: unknown; setData: (data: unknown) => void }> = {};
-    layers: { id: string }[] = [];
+    layers: { id: string; source?: string }[] = [];
     filters: Record<string, unknown> = {};
     canvas = { style: { cursor: "" } };
+    flights: unknown[] = [];
     removed = false;
 
     box = { west: 168.65, south: -45.04, east: 168.67, north: -45.02 };
@@ -61,7 +62,7 @@ const { FakeMap } = vi.hoisted(() => {
       return this.sources[id];
     }
 
-    addLayer(layer: { id: string; filter?: unknown }) {
+    addLayer(layer: { id: string; source?: string; filter?: unknown }) {
       this.layers.push(layer);
       this.filters[layer.id] = layer.filter;
     }
@@ -95,6 +96,10 @@ const { FakeMap } = vi.hoisted(() => {
 
     getCanvas() {
       return this.canvas;
+    }
+
+    flyTo(options: unknown) {
+      this.flights.push(options);
     }
 
     remove() {
@@ -148,10 +153,9 @@ async function loadedMap() {
   return map;
 }
 
-function onlySource(map: InstanceType<typeof FakeMap>) {
-  const sources = Object.values(map.sources);
-  expect(sources).toHaveLength(1);
-  return sources[0];
+/** The GeoJSON currently in one of the map's two sources. */
+function dataOf(map: InstanceType<typeof FakeMap>, source: "markers" | "visitor") {
+  return map.sources[source].data;
 }
 
 beforeEach(() => {
@@ -178,8 +182,8 @@ test("draws the markers once the map has loaded", async () => {
 
   act(() => map.fire("load"));
 
-  expect(onlySource(map).data).toEqual(toFeatureCollection([kitchen, bakery]));
-  expect(map.layers).toHaveLength(3);
+  expect(dataOf(map, "markers")).toEqual(toFeatureCollection([kitchen, bakery]));
+  expect(map.layers.filter((layer) => layer.source === "markers")).toHaveLength(3);
 });
 
 test("updates the data when the markers change", async () => {
@@ -188,7 +192,71 @@ test("updates the data when the markers change", async () => {
 
   update({ markers: [bakery] });
 
-  expect(onlySource(map).data).toEqual(toFeatureCollection([bakery]));
+  expect(dataOf(map, "markers")).toEqual(toFeatureCollection([bakery]));
+});
+
+test("shows the visitor's position", async () => {
+  const { update } = renderMap({ userLocation: { latitude: -45.0312, longitude: 168.6626 } });
+  const map = await loadedMap();
+
+  expect(dataOf(map, "visitor")).toEqual({
+    type: "FeatureCollection",
+    features: [{ type: "Feature", geometry: { type: "Point", coordinates: [168.6626, -45.0312] }, properties: {} }],
+  });
+
+  update({ userLocation: null });
+
+  expect(dataOf(map, "visitor")).toEqual({ type: "FeatureCollection", features: [] });
+});
+
+test("shows no position until there is one", async () => {
+  const { update } = renderMap();
+  const map = await loadedMap();
+  expect(dataOf(map, "visitor")).toEqual({ type: "FeatureCollection", features: [] });
+
+  update({ userLocation: { latitude: -45.0195, longitude: 168.732 } });
+
+  expect(dataOf(map, "visitor")).toMatchObject({ features: [{ geometry: { coordinates: [168.732, -45.0195] } }] });
+});
+
+test("draws the markers above the visitor's position", async () => {
+  renderMap();
+  const map = await loadedMap();
+
+  const sources = map.layers.map((layer) => layer.source);
+  expect(sources.lastIndexOf("visitor")).toBeGreaterThanOrEqual(0);
+  expect(sources.lastIndexOf("visitor")).toBeLessThan(sources.indexOf("markers"));
+});
+
+test("moves when the camera changes", async () => {
+  const { update } = renderMap();
+  const map = await loadedMap();
+  expect(map.flights).toEqual([]);
+
+  update({ camera: { latitude: -45.0195, longitude: 168.732, zoom: 15 } });
+
+  expect(map.flights).toEqual([{ center: [168.732, -45.0195], zoom: 15 }]);
+});
+
+test("goes to a camera that changed while the map was still loading", async () => {
+  const { update } = renderMap();
+  const map = await createdMap();
+
+  update({ camera: { latitude: -45.0195, longitude: 168.732, zoom: 15 } });
+  expect(map.flights).toEqual([]);
+  act(() => map.fire("load"));
+
+  expect(map.flights).toEqual([{ center: [168.732, -45.0195], zoom: 15 }]);
+});
+
+test("goes back to the same camera when it is given again", async () => {
+  const { update } = renderMap();
+  const map = await loadedMap();
+
+  update({ camera: { latitude: -45.0195, longitude: 168.732, zoom: 15 } });
+  update({ camera: { latitude: -45.0195, longitude: 168.732, zoom: 15 } });
+
+  expect(map.flights).toHaveLength(2);
 });
 
 test("reports the first box when the map has loaded", async () => {

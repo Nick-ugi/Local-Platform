@@ -1,8 +1,9 @@
 import type { MapMarker } from "@queenstown/shared";
-import { act, screen } from "@testing-library/react";
+import { act, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ComponentProps } from "react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
+import { type LocationResult, locate, wasLocationGranted } from "@/lib/geo/location";
 import type { MarkersState } from "@/lib/map/useMarkers";
 import { useMarkers } from "@/lib/map/useMarkers";
 import { renderWithMessages } from "@/test/render";
@@ -21,6 +22,8 @@ vi.mock("./MapView", () => ({
 
 const markersState = vi.hoisted(() => ({ current: null as MarkersState | null }));
 vi.mock("@/lib/map/useMarkers", () => ({ useMarkers: vi.fn(() => markersState.current) }));
+
+vi.mock("@/lib/geo/location", () => ({ locate: vi.fn(), wasLocationGranted: vi.fn() }));
 
 // Next.js keeps useSearchParams in step with history.replaceState. This does the same on top of
 // jsdom's real address bar, so the tests can read the URL a visitor would see.
@@ -87,6 +90,9 @@ beforeEach(() => {
   map.props = null;
   markersAre({});
   vi.mocked(useMarkers).mockClear();
+  // A first visit: the browser has not been asked for the position yet.
+  vi.mocked(wasLocationGranted).mockReset().mockResolvedValue(false);
+  vi.mocked(locate).mockReset().mockResolvedValue({ status: "unavailable" });
 });
 
 afterEach(() => {
@@ -311,4 +317,172 @@ test("says nothing when all is well", () => {
   openMap();
 
   expect(screen.getByRole("status")).toBeEmptyDOMElement();
+});
+
+// About 170 m from the kitchen.
+const inTown = { latitude: -45.0312, longitude: 168.6626 };
+const seoul = { latitude: 37.5665, longitude: 126.978 };
+const queenstownCamera = { latitude: -45.0312, longitude: 168.6626, zoom: 14 };
+
+function locationIs(result: LocationResult) {
+  vi.mocked(locate).mockResolvedValue(result);
+}
+
+async function pressLocate() {
+  await userEvent.click(screen.getByRole("button", { name: "Show my location" }));
+}
+
+test("does not ask for the location on arrival", async () => {
+  openMap();
+
+  await act(async () => {});
+
+  expect(wasLocationGranted).toHaveBeenCalledTimes(1);
+  expect(locate).not.toHaveBeenCalled();
+});
+
+test("uses the location straight away when it was granted before", async () => {
+  vi.mocked(wasLocationGranted).mockResolvedValue(true);
+  locationIs({ status: "inside", position: inTown });
+
+  openMap();
+
+  await waitFor(() => expect(mapProps().userLocation).toEqual(inTown));
+  expect(locate).toHaveBeenCalledTimes(1);
+});
+
+// Coming back from a detail page, or opening a shared link, must show the place it shows.
+test("a location known on arrival does not move the map", async () => {
+  vi.mocked(wasLocationGranted).mockResolvedValue(true);
+  locationIs({ status: "inside", position: { latitude: -45.0195, longitude: 168.732 } });
+
+  openMap("/?place=lakeside-kitchen");
+
+  await waitFor(() => expect(mapProps().userLocation).not.toBeNull());
+  expect(mapProps().camera).toEqual(queenstownCamera);
+});
+
+test("says nothing on arrival when the visitor is outside the area", async () => {
+  vi.mocked(wasLocationGranted).mockResolvedValue(true);
+  locationIs({ status: "outside", position: seoul });
+
+  openMap();
+
+  await waitFor(() => expect(locate).toHaveBeenCalledTimes(1));
+  await act(async () => {});
+  expect(screen.getByRole("status")).toBeEmptyDOMElement();
+  expect(mapProps().userLocation).toBeNull();
+});
+
+test("the button moves the map to a position inside the area", async () => {
+  const frankton = { latitude: -45.0195, longitude: 168.732 };
+  locationIs({ status: "inside", position: frankton });
+  openMap();
+
+  await pressLocate();
+
+  expect(mapProps().camera).toEqual({ ...frankton, zoom: 15 });
+  expect(mapProps().userLocation).toEqual(frankton);
+  expect(screen.getByRole("status")).toBeEmptyDOMElement();
+});
+
+test("pressing the button again returns to the position", async () => {
+  locationIs({ status: "inside", position: inTown });
+  openMap();
+  await pressLocate();
+  const first = mapProps().camera;
+
+  await pressLocate();
+
+  expect(mapProps().camera).toEqual(first);
+  expect(mapProps().camera).not.toBe(first);
+});
+
+test("outside the area the map stays and says why", async () => {
+  locationIs({ status: "outside", position: seoul });
+  openMap();
+
+  await pressLocate();
+
+  expect(
+    screen.getByText("You're outside the Queenstown area, so the map stays on Queenstown."),
+  ).toBeInTheDocument();
+  expect(mapProps().camera).toEqual(queenstownCamera);
+  expect(mapProps().userLocation).toBeNull();
+});
+
+test("a denied permission explains how to turn it on", async () => {
+  locationIs({ status: "denied" });
+  openMap();
+
+  await pressLocate();
+
+  expect(
+    screen.getByText(
+      "Location is turned off for this site. Turn it on in your browser settings to see your position.",
+    ),
+  ).toBeInTheDocument();
+  expect(mapProps().camera).toEqual(queenstownCamera);
+});
+
+test("an unavailable location says so", async () => {
+  locationIs({ status: "unavailable" });
+  openMap();
+
+  await pressLocate();
+
+  expect(screen.getByText("We couldn't find your location.")).toBeInTheDocument();
+});
+
+test("the button is busy while the position is being found", async () => {
+  let finish!: (result: LocationResult) => void;
+  vi.mocked(locate).mockReturnValue(new Promise((resolve) => (finish = resolve)));
+  openMap();
+
+  await pressLocate();
+  expect(screen.getByRole("button", { name: "Show my location" })).toBeDisabled();
+
+  await act(async () => finish({ status: "unavailable" }));
+  expect(screen.getByRole("button", { name: "Show my location" })).toBeEnabled();
+});
+
+test("a later failure takes the position off the map", async () => {
+  locationIs({ status: "inside", position: inTown });
+  openMap();
+  await pressLocate();
+  expect(mapProps().userLocation).toEqual(inTown);
+
+  locationIs({ status: "denied" });
+  await pressLocate();
+
+  expect(mapProps().userLocation).toBeNull();
+});
+
+test("a message about the location goes away when the map is moved", async () => {
+  locationIs({ status: "unavailable" });
+  openMap();
+  await pressLocate();
+  expect(screen.getByText("We couldn't find your location.")).toBeInTheDocument();
+
+  act(() => mapProps().onMove(queenstownBox, queenstownCamera));
+
+  expect(screen.queryByText("We couldn't find your location.")).not.toBeInTheDocument();
+});
+
+test("the preview shows the distance once the location is known", async () => {
+  locationIs({ status: "inside", position: inTown });
+  openMap("/?place=lakeside-kitchen");
+  expect(screen.queryByText("170 m")).not.toBeInTheDocument();
+
+  await pressLocate();
+
+  expect(screen.getByText("170 m")).toBeInTheDocument();
+});
+
+test("offers no location button when there is no map", () => {
+  vi.stubEnv("NEXT_PUBLIC_MAPBOX_TOKEN", "");
+
+  openMap();
+
+  expect(screen.queryByRole("button", { name: "Show my location" })).not.toBeInTheDocument();
 });

@@ -1,4 +1,9 @@
-import type { Category, FacilitySubtype, MapMarker } from "@queenstown/shared";
+import type { Category, FacilitySubtype, LatLng, MapMarker } from "@queenstown/shared";
+
+// The API and the app's own types say latitude and longitude. GeoJSON and Mapbox want
+// [longitude, latitude]. This file is the one place where the order is turned round.
+
+export type LngLat = [longitude: number, latitude: number];
 
 /** What the map's layers read from each marker. */
 export interface MarkerProperties {
@@ -9,16 +14,19 @@ export interface MarkerProperties {
   label: string;
 }
 
-export interface MarkerFeature {
+interface PointFeature<P> {
   type: "Feature";
-  geometry: { type: "Point"; coordinates: [longitude: number, latitude: number] };
-  properties: MarkerProperties;
+  geometry: { type: "Point"; coordinates: LngLat };
+  properties: P;
 }
 
-export interface MarkerCollection {
+interface PointCollection<P> {
   type: "FeatureCollection";
-  features: MarkerFeature[];
+  features: PointFeature<P>[];
 }
+
+export type MarkerCollection = PointCollection<MarkerProperties>;
+export type PositionCollection = PointCollection<Record<string, never>>;
 
 // The wireframes mark a public facility with P.
 const LABELS: Record<Category, string> = {
@@ -30,16 +38,17 @@ const LABELS: Record<Category, string> = {
   facility: "P",
 };
 
-/**
- * The markers as GeoJSON for the map. This is the one place where the API's latitude and
- * longitude become GeoJSON's [longitude, latitude].
- */
+export function toLngLat(position: LatLng): LngLat {
+  return [position.longitude, position.latitude];
+}
+
+/** The markers as GeoJSON for the map. */
 export function toFeatureCollection(markers: readonly MapMarker[]): MarkerCollection {
   return {
     type: "FeatureCollection",
     features: markers.map((marker) => ({
       type: "Feature",
-      geometry: { type: "Point", coordinates: [marker.longitude, marker.latitude] },
+      geometry: { type: "Point", coordinates: toLngLat(marker) },
       properties: {
         slug: marker.slug,
         category: marker.category,
@@ -47,5 +56,15 @@ export function toFeatureCollection(markers: readonly MapMarker[]): MarkerCollec
         label: LABELS[marker.category],
       },
     })),
+  };
+}
+
+/** One position, such as the visitor's, as GeoJSON. No position is an empty collection. */
+export function toPositionCollection(position: LatLng | null): PositionCollection {
+  return {
+    type: "FeatureCollection",
+    features: position
+      ? [{ type: "Feature", geometry: { type: "Point", coordinates: toLngLat(position) }, properties: {} }]
+      : [],
   };
 }

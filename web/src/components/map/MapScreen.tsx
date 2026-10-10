@@ -1,17 +1,36 @@
 "use client";
 
-import type { Category, MapBounds, MapMarker } from "@queenstown/shared";
+import {
+  type Category,
+  distanceMeters,
+  formatDistance,
+  type LatLng,
+  type MapBounds,
+  type MapMarker,
+} from "@queenstown/shared";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { locate, wasLocationGranted } from "@/lib/geo/location";
 import { type Camera, loadCamera, saveCamera } from "@/lib/map/camera";
 import { parseFilter, serializeFilter, toggleFilter } from "@/lib/map/filter";
 import { useMarkers } from "@/lib/map/useMarkers";
 import { FilterChips } from "./FilterChips";
+import { LocateButton } from "./LocateButton";
 import { MapView } from "./MapView";
 import { PlacePreview } from "./PlacePreview";
 
 type Action = { label: string; onClick: () => void };
+
+/** How close the map goes when it moves to the visitor. */
+const LOCATE_ZOOM = 15;
+
+/** The message for each way of not getting a usable position (docs/03-user-flow.md, UF-01). */
+const LOCATION_PROBLEMS = {
+  outside: "outsideArea",
+  denied: "locationDenied",
+  unavailable: "locationUnavailable",
+} as const;
 
 /** A short message laid over the map, with at most one thing to do about it. */
 function Notice({ text, action }: { text: string; action?: Action }) {
@@ -38,6 +57,11 @@ function Notice({ text, action }: { text: string; action?: Action }) {
  * The filter and the selection live in the URL, as ?filter=food,cafe&place=slug, so the screen can
  * be shared and comes back the same after a visit to a detail page. Changing them replaces the
  * current history entry. The map's position is kept for the tab in session storage.
+ *
+ * The browser is asked for the visitor's position only when they press the location button. A
+ * visitor who allowed it on an earlier visit gets their dot and distances straight away, but the
+ * map moves to them only on the button, so a shared link and the way back from a detail page
+ * still show the place they are about.
  */
 export function MapScreen() {
   const t = useTranslations("Map");
@@ -47,10 +71,45 @@ export function MapScreen() {
   const filter = parseFilter(searchParams.get("filter"));
   const selectedSlug = searchParams.get("place");
 
-  const [camera] = useState(loadCamera);
+  const [camera, setCamera] = useState(loadCamera);
   const [bounds, setBounds] = useState<MapBounds | null>(null);
   const [unavailable, setUnavailable] = useState(false);
   const { status, markers, truncated, retry } = useMarkers(bounds, filter);
+
+  const [userLocation, setUserLocation] = useState<LatLng | null>(null);
+  const [locating, setLocating] = useState(false);
+  const [locationProblem, setLocationProblem] = useState<keyof typeof LOCATION_PROBLEMS | null>(null);
+
+  useEffect(() => {
+    let gone = false;
+    void wasLocationGranted().then(async (granted) => {
+      if (!granted) {
+        return;
+      }
+      const result = await locate();
+      if (!gone && result.status === "inside") {
+        setUserLocation(result.position);
+      }
+    });
+    return () => {
+      gone = true;
+    };
+  }, []);
+
+  async function showLocation() {
+    setLocating(true);
+    const result = await locate();
+    setLocating(false);
+    if (result.status === "inside") {
+      setUserLocation(result.position);
+      setCamera({ ...result.position, zoom: LOCATE_ZOOM });
+      setLocationProblem(null);
+    } else {
+      // The map stays where it is, and distances from an earlier position would mislead.
+      setUserLocation(null);
+      setLocationProblem(result.status);
+    }
+  }
 
   // The selected marker is remembered once it has been seen. On a phone the preview makes the map
   // smaller, which can move the marker out of the box; if the preview closed then, the map would
@@ -104,7 +163,11 @@ export function MapScreen() {
   function moved(box: MapBounds, position: Camera) {
     setBounds(box);
     saveCamera(position);
+    // The visitor has gone on to something else; the message has been read.
+    setLocationProblem(null);
   }
+
+  const distanceText = userLocation && selected ? formatDistance(distanceMeters(userLocation, selected)) : null;
 
   if (!token || unavailable) {
     return (
@@ -124,7 +187,7 @@ export function MapScreen() {
             camera={camera}
             markers={markers}
             selectedSlug={selectedSlug}
-            userLocation={null}
+            userLocation={userLocation}
             onMove={moved}
             onSelect={select}
             onUnavailable={() => setUnavailable(true)}
@@ -139,12 +202,17 @@ export function MapScreen() {
               <Notice text={t("empty")} action={filter.length > 0 ? clearFilters : undefined} />
             ) : null}
             {status !== "error" && truncated ? <Notice text={t("truncated")} /> : null}
+            {locationProblem ? <Notice text={t(LOCATION_PROBLEMS[locationProblem])} /> : null}
+          </div>
+          {/* Bottom right (wireframe m-map), above Mapbox's attribution line. */}
+          <div className="absolute bottom-10 right-4">
+            <LocateButton onClick={() => void showLocation()} busy={locating} />
           </div>
         </div>
         {/* Below the map and above the tabs on a phone; floating at the map's top left from 768px. */}
         {selected ? (
           <div className="border-t border-neutral-400 md:absolute md:left-4 md:top-4 md:w-80 md:overflow-hidden md:rounded-xl md:border md:shadow-lg">
-            <PlacePreview marker={selected} distanceText={null} onClose={() => select(null)} />
+            <PlacePreview marker={selected} distanceText={distanceText} onClose={() => select(null)} />
           </div>
         ) : null}
       </div>
