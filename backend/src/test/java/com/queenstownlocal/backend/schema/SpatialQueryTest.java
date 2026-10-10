@@ -29,7 +29,7 @@ class SpatialQueryTest {
 			       ST_X(location::geometry) AS longitude
 			FROM place
 			WHERE status = 'public'
-			  AND ST_Intersects(location, ST_MakeEnvelope(:west, :south, :east, :north, 4326)::geography)
+			  AND ST_Intersects(location::geometry, ST_MakeEnvelope(:west, :south, :east, :north, 4326))
 			""";
 
 	private static final String PLACES_NEAREST_FIRST = """

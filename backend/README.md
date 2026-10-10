@@ -70,7 +70,8 @@ cd backend
 ```text
 src/main/java/com/queenstownlocal/backend
  ├── common/error    오류 코드와 Problem Details 응답
- └── place           Place API
+ ├── map             Map API (지도 영역의 Marker)
+ └── place           Place API, Category 코드
 
 src/main/resources
  ├── application.yml

@@ -422,7 +422,7 @@ SELECT slug, name, category, subtype,
        ST_X(location::geometry) AS longitude
 FROM place
 WHERE status = 'public'
-  AND ST_Intersects(location, ST_MakeEnvelope(:west, :south, :east, :north, 4326)::geography);
+  AND ST_Intersects(location::geometry, ST_MakeEnvelope(:west, :south, :east, :north, 4326));
 
 -- 가까운 순 Place 목록과 거리(m) (PLACE-03)
 SELECT slug, name, category, address, image_url,
@@ -449,6 +449,8 @@ WHERE status = 'public'
   AND (ends_at IS NULL OR ends_at >= now())
 ORDER BY starts_at DESC;
 ```
+
+지도의 영역은 경도와 위도로 된 사각형이므로 `geometry`로 비교한다. `geography`로 바꿔 비교하면 사각형의 변이 지구의 곡면을 따라가서, 폭이 180도를 넘는 영역(지도를 크게 축소했을 때)이 지구의 반대쪽을 가리킨다. 이 조회는 `location`의 GiST 인덱스를 쓰지 않는다. Place가 많아져 느려지면 `(location::geometry)`에 인덱스를 더한다. (6주차에 수정)
 
 ---
 

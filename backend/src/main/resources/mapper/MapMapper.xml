@@ -3,9 +3,9 @@
 <mapper namespace="com.queenstownlocal.backend.map.MapMapper">
 
 	<!--
-		The box query of docs/05-erd.md section 8, with one change: the box is compared as a flat
-		longitude/latitude rectangle (geometry), which is what a map viewport is. As a geography its
-		edges follow the globe, so a box wider than 180 degrees would cover the other side of the world.
+		The box query of docs/05-erd.md section 8. The box is compared as a flat longitude/latitude
+		rectangle (geometry), which is what a map viewport is. As a geography its edges would follow
+		the globe, and a box wider than 180 degrees would cover the other side of the world.
 		ST_MakeEnvelope takes (west, south, east, north).
 	-->
 	<select id="findPlaceMarkers" resultType="com.queenstownlocal.backend.map.PlaceMarker">
