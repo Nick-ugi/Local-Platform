@@ -32,6 +32,21 @@
     "goToMap": "Go to Map",
     "goToExplore": "Go to Explore"
   },
+  "Map": {
+    "filters": "Filters",
+    "locate": "Show my location",
+    "empty": "No places in this area.",
+    "clearFilters": "Clear filters",
+    "loadFailed": "We couldn't load the map data.",
+    "retry": "Try again",
+    "outsideArea": "You're outside the Queenstown area, so the map stays on Queenstown.",
+    "locationDenied": "Location is turned off for this site. Turn it on in your browser settings to see your position.",
+    "locationUnavailable": "We couldn't find your location.",
+    "notConfigured": "The map isn't available right now.",
+    "viewDetails": "View details",
+    "closePreview": "Close",
+    "truncated": "Zoom in to see every place."
+  },
   "Place": {
     "breadcrumb": "Breadcrumb",
     "address": "Address",
