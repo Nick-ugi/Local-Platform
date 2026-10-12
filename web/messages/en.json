@@ -53,6 +53,17 @@
     "emptyAll": "No places yet.",
     "emptyCategory": "No places in this category yet."
   },
+  "Nearby": {
+    "nearestFirst": "Nearest first",
+    "useMyLocation": "Use my location",
+    "locating": "Finding your location…",
+    "fromYourLocation": "From your location",
+    "outsideArea": "You're outside the Queenstown area, so places are ordered from the centre of Queenstown.",
+    "locationDenied": "Location is turned off for this site. Turn it on in your browser settings to see distances.",
+    "locationUnavailable": "We couldn't find your location.",
+    "sortFailed": "We couldn't sort by your location.",
+    "retry": "Try again"
+  },
   "Paging": {
     "label": "Pages",
     "previous": "Previous",

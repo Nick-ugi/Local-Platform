@@ -1,17 +1,10 @@
 "use client";
 
-import {
-  type Category,
-  distanceMeters,
-  formatDistance,
-  type LatLng,
-  type MapBounds,
-  type MapMarker,
-} from "@queenstown/shared";
+import { type Category, distanceMeters, formatDistance, type MapBounds, type MapMarker } from "@queenstown/shared";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
-import { locate, wasLocationGranted } from "@/lib/geo/location";
+import { useState } from "react";
+import { useVisitorPosition } from "@/lib/geo/useVisitorPosition";
 import { type Camera, loadCamera, saveCamera } from "@/lib/map/camera";
 import { parseFilter, serializeFilter, toggleFilter } from "@/lib/map/filter";
 import { useMarkers } from "@/lib/map/useMarkers";
@@ -76,38 +69,19 @@ export function MapScreen() {
   const [unavailable, setUnavailable] = useState(false);
   const { status, markers, truncated, retry } = useMarkers(bounds, filter);
 
-  const [userLocation, setUserLocation] = useState<LatLng | null>(null);
-  const [locating, setLocating] = useState(false);
-  const [locationProblem, setLocationProblem] = useState<keyof typeof LOCATION_PROBLEMS | null>(null);
-
-  useEffect(() => {
-    let gone = false;
-    void wasLocationGranted().then(async (granted) => {
-      if (!granted) {
-        return;
-      }
-      const result = await locate();
-      if (!gone && result.status === "inside") {
-        setUserLocation(result.position);
-      }
-    });
-    return () => {
-      gone = true;
-    };
-  }, []);
+  const {
+    position: userLocation,
+    problem: locationProblem,
+    locating,
+    request: requestLocation,
+    dismissProblem: dismissLocationProblem,
+  } = useVisitorPosition();
 
   async function showLocation() {
-    setLocating(true);
-    const result = await locate();
-    setLocating(false);
+    const result = await requestLocation();
+    // Without a usable position the map stays where it is.
     if (result.status === "inside") {
-      setUserLocation(result.position);
       setCamera({ ...result.position, zoom: LOCATE_ZOOM });
-      setLocationProblem(null);
-    } else {
-      // The map stays where it is, and distances from an earlier position would mislead.
-      setUserLocation(null);
-      setLocationProblem(result.status);
     }
   }
 
@@ -164,7 +138,7 @@ export function MapScreen() {
     setBounds(box);
     saveCamera(position);
     // The visitor has gone on to something else; the message has been read.
-    setLocationProblem(null);
+    dismissLocationProblem();
   }
 
   const distanceText = userLocation && selected ? formatDistance(distanceMeters(userLocation, selected)) : null;

@@ -2,8 +2,8 @@ import type { Page, PlaceSummary } from "@queenstown/shared";
 import { useTranslations } from "next-intl";
 import { explorePath, type ListQuery, pageCount } from "@/lib/places/listUrl";
 import { CategoryNav } from "./CategoryNav";
+import { NearbyPlaces } from "./NearbyPlaces";
 import { Pagination } from "./Pagination";
-import { PlaceGrid } from "./PlaceGrid";
 
 type Props = {
   query: ListQuery;
@@ -28,13 +28,7 @@ export function ExploreScreen({ query, result }: Props) {
         {category === null ? tPages("explore") : tCategory(category)}
       </h1>
       <CategoryNav active={category} />
-      {result.items.length > 0 ? (
-        <PlaceGrid places={result.items} />
-      ) : (
-        <p className="px-4 py-10 text-center text-neutral-600 md:px-8">
-          {t(category === null ? "emptyAll" : "emptyCategory")}
-        </p>
-      )}
+      <NearbyPlaces query={query} initial={result} emptyText={t(category === null ? "emptyAll" : "emptyCategory")} />
       <Pagination path={explorePath(category)} page={query.page} pages={pageCount(result.total, result.size)} />
     </div>
   );
