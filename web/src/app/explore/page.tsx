@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
-import { useTranslations } from "next-intl";
+import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { ExploreScreen } from "@/components/place/ExploreScreen";
+import { loadPlaceList } from "@/lib/places/loadPlaceList";
+
+type Props = { searchParams: Promise<{ page?: string | string[] }> };
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Pages");
   return { title: t("explore") };
 }
 
-// Placeholder: the screen itself arrives with its feature week.
-export default function ExplorePage() {
-  const t = useTranslations("Pages");
-  return <h1 className="px-4 py-6 text-xl font-bold md:p-8">{t("explore")}</h1>;
+export default async function ExplorePage({ searchParams }: Props) {
+  const { page } = await searchParams;
+  const list = await loadPlaceList({ category: null, q: null }, page);
+  if (!list) {
+    notFound();
+  }
+  return <ExploreScreen query={list.query} result={list.result} />;
 }

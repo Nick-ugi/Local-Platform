@@ -47,6 +47,18 @@
     "closePreview": "Close",
     "truncated": "Zoom in to see every place."
   },
+  "Explore": {
+    "all": "All",
+    "categories": "Categories",
+    "emptyAll": "No places yet.",
+    "emptyCategory": "No places in this category yet."
+  },
+  "Paging": {
+    "label": "Pages",
+    "previous": "Previous",
+    "next": "Next",
+    "position": "Page {page} of {pages}"
+  },
   "Place": {
     "breadcrumb": "Breadcrumb",
     "address": "Address",
