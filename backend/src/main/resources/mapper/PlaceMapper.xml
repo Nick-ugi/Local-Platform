@@ -13,4 +13,47 @@
 		  AND status = 'public'
 	</select>
 
+	<!--
+		The places a list shows. Every pattern has to match the name, the description or the address.
+		The patterns arrive with % and _ escaped by a backslash, so a search for "100%" finds that text.
+	-->
+	<sql id="publicPlaces">
+		FROM place
+		WHERE status = 'public'
+		<if test="category != null">
+		  AND category = #{category}
+		</if>
+		<foreach collection="patterns" item="pattern">
+		  AND (name ILIKE #{pattern} ESCAPE '\'
+		       OR description ILIKE #{pattern} ESCAPE '\'
+		       OR address ILIKE #{pattern} ESCAPE '\')
+		</foreach>
+	</sql>
+
+	<!--
+		Nearest first, as in docs/05-erd.md section 8. Places at the same distance keep the order of
+		their ids, so a place cannot appear on two pages. ST_MakePoint takes (longitude, latitude).
+	-->
+	<select id="findPublicPlaces" resultType="com.queenstownlocal.backend.place.PlaceSummary">
+		SELECT slug, name, category, subtype, address, image_url, latitude, longitude,
+		       <choose>
+		         <when test="withDistance">round(distance)::int</when>
+		         <otherwise>NULL::int</otherwise>
+		       </choose> AS distance_m
+		FROM (
+		    SELECT id, slug, name, category, subtype, address, image_url,
+		           ST_Y(location::geometry) AS latitude,
+		           ST_X(location::geometry) AS longitude,
+		           ST_Distance(location, ST_SetSRID(ST_MakePoint(#{lng}, #{lat}), 4326)::geography) AS distance
+		    <include refid="publicPlaces"/>
+		) AS found
+		ORDER BY distance, id
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+	<select id="countPublicPlaces" resultType="long">
+		SELECT count(*)
+		<include refid="publicPlaces"/>
+	</select>
+
 </mapper>

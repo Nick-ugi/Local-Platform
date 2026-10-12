@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 
 import com.queenstownlocal.backend.common.error.ApiException;
+import com.queenstownlocal.backend.common.validation.Ranges;
 import com.queenstownlocal.backend.place.PlaceCategory;
 
 @Service
@@ -25,10 +26,10 @@ public class MapService {
 	}
 
 	public MarkersResponse findMarkers(double west, double south, double east, double north, String filter) {
-		requireWithin("west", west, 180);
-		requireWithin("east", east, 180);
-		requireWithin("south", south, 90);
-		requireWithin("north", north, 90);
+		Ranges.requireWithin("west", west, 180);
+		Ranges.requireWithin("east", east, 180);
+		Ranges.requireWithin("south", south, 90);
+		Ranges.requireWithin("north", north, 90);
 		if (west >= east) {
 			throw ApiException.invalid("west", "must be less than east");
 		}
@@ -47,13 +48,6 @@ public class MapService {
 				MAX_MARKERS + 1);
 		boolean truncated = found.size() > MAX_MARKERS;
 		return new MarkersResponse(truncated ? found.subList(0, MAX_MARKERS) : found, truncated);
-	}
-
-	private static void requireWithin(String field, double value, int limit) {
-		// Written so that NaN, which fails every comparison, is rejected as well.
-		if (!(value >= -limit && value <= limit)) {
-			throw ApiException.invalid(field, "must be between -" + limit + " and " + limit);
-		}
 	}
 
 	/** Splits the comma-separated filter. Empty entries are skipped and an unknown value is rejected. */
