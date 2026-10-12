@@ -3,9 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { SearchBox } from "@/components/search/SearchBox";
 import { MENU, activeMenu } from "./menu";
 
-/** Desktop top menu (wireframe d-map), shown from 768px up. The search box joins it in week 7. */
+/** Desktop top menu with the search box (wireframe d-map), shown from 768px up. */
 export function TopNav() {
   const t = useTranslations("Nav");
   const active = activeMenu(usePathname() ?? "");
@@ -27,6 +28,10 @@ export function TopNav() {
           </Link>
         ))}
       </nav>
+      {/* On every screen (wireframe d-map). Phones have the box in the screens themselves. */}
+      <div className="ml-auto w-80">
+        <SearchBox />
+      </div>
     </header>
   );
 }

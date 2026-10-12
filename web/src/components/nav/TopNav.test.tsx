@@ -4,7 +4,12 @@ import { renderWithMessages } from "@/test/render";
 import { TopNav } from "./TopNav";
 
 const location = vi.hoisted(() => ({ pathname: "/" }));
-vi.mock("next/navigation", () => ({ usePathname: () => location.pathname }));
+// The search box in the menu reads the address and goes to the results.
+vi.mock("next/navigation", () => ({
+  usePathname: () => location.pathname,
+  useSearchParams: () => new URLSearchParams(),
+  useRouter: () => ({ push: vi.fn() }),
+}));
 
 function menuLinks() {
   return within(screen.getByRole("navigation", { name: "Main" })).getAllByRole("link");
@@ -40,4 +45,12 @@ test("marks nothing on a path outside every menu", () => {
   for (const link of menuLinks()) {
     expect(link).not.toHaveAttribute("aria-current");
   }
+});
+
+test("has the search box", () => {
+  location.pathname = "/";
+  renderWithMessages(<TopNav />);
+
+  expect(screen.getByRole("search")).toHaveAttribute("action", "/search");
+  expect(screen.getByRole("searchbox", { name: "Search places" })).toBeInTheDocument();
 });

@@ -64,6 +64,15 @@
     "sortFailed": "We couldn't sort by your location.",
     "retry": "Try again"
   },
+  "Search": {
+    "label": "Search places",
+    "clear": "Clear search",
+    "title": "Search",
+    "titleFor": "Search: {q}",
+    "hint": "Search for a place by name or keyword.",
+    "count": "{count, plural, one {# result} other {# results}}",
+    "empty": "No places match “{q}”."
+  },
   "Paging": {
     "label": "Pages",
     "previous": "Previous",
