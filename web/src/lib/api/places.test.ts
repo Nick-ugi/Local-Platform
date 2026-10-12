@@ -1,7 +1,7 @@
-import type { PlaceDetail } from "@queenstown/shared";
+import type { Page, PlaceDetail, PlaceSummary } from "@queenstown/shared";
 import { beforeEach, expect, test, vi } from "vitest";
 import { ApiError, apiGet } from "./client";
-import { getPlace } from "./places";
+import { getPlace, getPlaces } from "./places";
 
 // Keep the real ApiError; replace only the network call.
 vi.mock("./client", async (importOriginal) => ({
@@ -72,4 +72,54 @@ test.each([
   apiGetMock.mockRejectedValue(error);
 
   await expect(getPlace("lakeside-kitchen")).rejects.toBe(error);
+});
+
+const emptyPage: Page<PlaceSummary> = { items: [], page: 1, size: 20, total: 0 };
+
+test("asks for the plain list", async () => {
+  apiGetMock.mockResolvedValue(emptyPage);
+
+  await expect(getPlaces({})).resolves.toBe(emptyPage);
+  expect(apiGetMock).toHaveBeenCalledWith("/places", undefined);
+});
+
+test("sends category, query and page", async () => {
+  apiGetMock.mockResolvedValue(emptyPage);
+
+  await getPlaces({ category: "food", q: " pizza ", page: 2 });
+
+  expect(apiGetMock).toHaveBeenCalledWith("/places?category=food&q=pizza&page=2", undefined);
+});
+
+test("leaves out nulls, a blank query and page 1", async () => {
+  apiGetMock.mockResolvedValue(emptyPage);
+
+  await getPlaces({ category: null, q: "  ", position: null, page: 1 });
+
+  expect(apiGetMock).toHaveBeenCalledWith("/places", undefined);
+});
+
+test("rounds the position to four decimals", async () => {
+  apiGetMock.mockResolvedValue(emptyPage);
+
+  await getPlaces({ position: { latitude: -45.031234, longitude: 168.662678 } });
+
+  expect(apiGetMock).toHaveBeenCalledWith("/places?lat=-45.0312&lng=168.6627", undefined);
+});
+
+test("sends the size when given", async () => {
+  apiGetMock.mockResolvedValue(emptyPage);
+
+  await getPlaces({ size: 3 });
+
+  expect(apiGetMock).toHaveBeenCalledWith("/places?size=3", undefined);
+});
+
+test("passes the signal on", async () => {
+  apiGetMock.mockResolvedValue(emptyPage);
+  const options = { signal: new AbortController().signal };
+
+  await getPlaces({ q: "pizza" }, options);
+
+  expect(apiGetMock).toHaveBeenCalledWith("/places?q=pizza", options);
 });

@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { expect, test } from 'vitest'
-import { CATEGORIES, ERROR_CODES, FACILITY_SUBTYPES, NOTICE_TYPES, STATUSES } from './codes'
+import { CATEGORIES, ERROR_CODES, FACILITY_SUBTYPES, NOTICE_TYPES, STATUSES, isCategory } from './codes'
 import { SERVICE_CENTER, SERVICE_RADIUS_KM } from './geo'
 
 // The code values live in three places: here, the DB constraints and the backend's Java code.
@@ -58,4 +58,23 @@ test('error codes match the backend enum', () => {
 test('service centre is the Queenstown centre from the API specification', () => {
   expect(SERVICE_CENTER).toEqual({ latitude: -45.0312, longitude: 168.6626 })
   expect(SERVICE_RADIUS_KM).toBe(50)
+})
+
+test('the backend lists places from the same centre', () => {
+  const placeServiceJava = readFileSync(
+    new URL('java/com/queenstownlocal/backend/place/PlaceService.java', backend),
+    'utf8',
+  )
+
+  expect(placeServiceJava).toContain(`CENTER_LATITUDE = ${SERVICE_CENTER.latitude};`)
+  expect(placeServiceJava).toContain(`CENTER_LONGITUDE = ${SERVICE_CENTER.longitude};`)
+})
+
+test.each(CATEGORIES)('isCategory knows %s', (category) => {
+  expect(isCategory(category)).toBe(true)
+})
+
+// "constructor" is there because a lookup in a plain object would find an inherited property.
+test.each(['hotel', '', 'Food', 'constructor'])('isCategory refuses "%s"', (value) => {
+  expect(isCategory(value)).toBe(false)
 })

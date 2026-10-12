@@ -22,6 +22,30 @@ export interface PlaceDetail {
   updatedAt: string
 }
 
+/** One page of a list. Every list endpoint answers in this shape. */
+export interface Page<T> {
+  items: T[]
+  /** Counts from 1. */
+  page: number
+  size: number
+  /** How many items the whole list has. */
+  total: number
+}
+
+/** A place in the list of GET /places. */
+export interface PlaceSummary {
+  slug: string
+  name: string
+  category: Category
+  subtype: FacilitySubtype | null
+  address: string
+  imageUrl: string | null
+  latitude: number
+  longitude: number
+  /** Whole metres from the position the request named, or null when it named none. */
+  distanceM: number | null
+}
+
 /** The part of the map on screen: longitudes for west and east, latitudes for south and north. */
 export interface MapBounds {
   west: number

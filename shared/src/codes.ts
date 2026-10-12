@@ -4,6 +4,11 @@
 export const CATEGORIES = ['food', 'cafe', 'bar', 'activity', 'shopping', 'facility'] as const
 export type Category = (typeof CATEGORIES)[number]
 
+/** True for a category code, which is how a URL segment or a query value is checked. */
+export function isCategory(value: string): value is Category {
+  return (CATEGORIES as readonly string[]).includes(value)
+}
+
 /** Subtypes of the `facility` category. Other categories have no subtype. */
 export const FACILITY_SUBTYPES = ['toilet', 'parking', 'information', 'library', 'medical', 'other'] as const
 export type FacilitySubtype = (typeof FACILITY_SUBTYPES)[number]
