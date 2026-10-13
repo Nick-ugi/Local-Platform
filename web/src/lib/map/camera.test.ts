@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import { DEFAULT_CAMERA, loadCamera, saveCamera } from "./camera";
+import { DEFAULT_CAMERA, PLACE_ZOOM, hasSavedCamera, loadCamera, saveCamera } from "./camera";
 
 beforeEach(() => {
   window.sessionStorage.clear();
@@ -46,4 +46,25 @@ test("works without session storage", () => {
 
   expect(() => saveCamera({ latitude: -45.0195, longitude: 168.732, zoom: 12 })).not.toThrow();
   expect(loadCamera()).toEqual(DEFAULT_CAMERA);
+});
+
+test("knows of no saved position on a first visit", () => {
+  expect(hasSavedCamera()).toBe(false);
+});
+
+test("knows of a saved position", () => {
+  saveCamera({ latitude: -45.0195, longitude: 168.732, zoom: 12.5 });
+
+  expect(hasSavedCamera()).toBe(true);
+});
+
+test("a damaged value is not a saved position", () => {
+  window.sessionStorage.setItem("map.camera", '{"latitude":"x"');
+
+  expect(hasSavedCamera()).toBe(false);
+});
+
+test("a place is shown closer than the town", () => {
+  expect(PLACE_ZOOM).toBe(16);
+  expect(PLACE_ZOOM).toBeGreaterThan(DEFAULT_CAMERA.zoom);
 });

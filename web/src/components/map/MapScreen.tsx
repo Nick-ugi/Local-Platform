@@ -1,11 +1,19 @@
 "use client";
 
-import { type Category, distanceMeters, formatDistance, type MapBounds, type MapMarker } from "@queenstown/shared";
+import {
+  type Category,
+  distanceMeters,
+  formatDistance,
+  type MapBounds,
+  type MapMarker,
+  type PlaceDetail,
+} from "@queenstown/shared";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getPlace } from "@/lib/api/places";
 import { useVisitorPosition } from "@/lib/geo/useVisitorPosition";
-import { type Camera, loadCamera, saveCamera } from "@/lib/map/camera";
+import { type Camera, hasSavedCamera, loadCamera, PLACE_ZOOM, saveCamera } from "@/lib/map/camera";
 import { parseFilter, serializeFilter, toggleFilter } from "@/lib/map/filter";
 import { useMarkers } from "@/lib/map/useMarkers";
 import { FilterChips } from "./FilterChips";
@@ -41,6 +49,32 @@ function Notice({ text, action }: { text: string; action?: Action }) {
       ) : null}
     </div>
   );
+}
+
+/** Rewrites the query of the URL in place. history.replaceState keeps useSearchParams in step. */
+function writeUrl(change: (params: URLSearchParams) => void) {
+  const { pathname, search } = window.location;
+  const params = new URLSearchParams(search);
+  change(params);
+  // A comma means the same escaped or not; unescaped the URL reads as the IA document writes it.
+  const query = params.toString().replaceAll("%2C", ",");
+  const next = query ? `${pathname}?${query}` : pathname;
+  if (next !== pathname + search) {
+    window.history.replaceState(null, "", next);
+  }
+}
+
+/** The marker of a place that was fetched on its own. */
+function toMarker(place: PlaceDetail): MapMarker {
+  return {
+    kind: "place",
+    slug: place.slug,
+    latitude: place.latitude,
+    longitude: place.longitude,
+    name: place.name,
+    category: place.category,
+    subtype: place.subtype,
+  };
 }
 
 /**
@@ -95,15 +129,56 @@ export function MapScreen() {
   }
   const selected = found ?? (remembered !== null && remembered.slug === selectedSlug ? remembered : null);
 
-  /** Rewrites the query of the URL in place. history.replaceState keeps useSearchParams in step. */
-  function writeUrl(change: (params: URLSearchParams) => void) {
-    const params = new URLSearchParams(searchParams.toString());
-    change(params);
-    // A comma means the same escaped or not; unescaped the URL reads as the IA document writes it.
-    const query = params.toString().replaceAll("%2C", ",");
-    const { pathname } = window.location;
-    window.history.replaceState(null, "", query ? `${pathname}?${query}` : pathname);
-  }
+  // Whether the map had a position of its own before this screen opened. It is read once, here,
+  // because the map saves its position as soon as it has loaded.
+  const [hadSavedCamera] = useState(hasSavedCamera);
+
+  const gone = useRef(false);
+  useEffect(() => {
+    gone.current = false;
+    return () => {
+      gone.current = true;
+    };
+  }, []);
+
+  // A link can name a place the map is not showing: its marker is outside the box, or a filter
+  // hides it. That place is asked for on its own, once. Its preview opens either way; the map
+  // moves to it only for a visitor who had not positioned the map, so the way back from a detail
+  // page still shows what the visitor left (docs/03-user-flow.md, "뒤로 가기").
+  const missingSlug = selectedSlug !== null && status === "ready" && selected === null ? selectedSlug : null;
+  const lookedUp = useRef<string | null>(null);
+  useEffect(() => {
+    if (missingSlug === null || lookedUp.current === missingSlug) {
+      return;
+    }
+    lookedUp.current = missingSlug;
+    getPlace(missingSlug).then(
+      (place) => {
+        // By now the visitor may have picked another place, or left the screen.
+        if (gone.current || new URLSearchParams(window.location.search).get("place") !== missingSlug) {
+          return;
+        }
+        if (place === null) {
+          writeUrl((params) => params.delete("place"));
+          return;
+        }
+        setRemembered(toMarker(place));
+        if (!hadSavedCamera) {
+          setCamera({ latitude: place.latitude, longitude: place.longitude, zoom: PLACE_ZOOM });
+        }
+        // The link is about this place, so a filter that would hide its marker gives way.
+        writeUrl((params) => {
+          const shown = parseFilter(params.get("filter"));
+          if (shown.length > 0 && !shown.includes(place.category)) {
+            params.delete("filter");
+          }
+        });
+      },
+      () => {
+        // The map works without this preview, and the place may still be found on it.
+      },
+    );
+  }, [missingSlug, hadSavedCamera]);
 
   function toggle(key: Category) {
     const next = toggleFilter(filter, key);

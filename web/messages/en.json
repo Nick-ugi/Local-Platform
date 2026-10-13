@@ -84,6 +84,7 @@
     "address": "Address",
     "openingHours": "Opening hours",
     "contact": "Contact",
+    "viewOnMap": "View on map",
     "source": "Source: <link>{source}</link>",
     "updated": "Updated {date}"
   }

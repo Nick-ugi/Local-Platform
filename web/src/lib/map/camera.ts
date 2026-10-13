@@ -51,3 +51,18 @@ export function saveCamera(camera: Camera): void {
     // Remembering the position is a convenience; the map works without it.
   }
 }
+
+/** How close the map goes when it opens on one place. */
+export const PLACE_ZOOM = 16;
+
+/**
+ * True when the map has been positioned earlier in this tab: by the visitor moving it, or by a
+ * "View on map" link saving where it should open.
+ */
+export function hasSavedCamera(): boolean {
+  try {
+    return isCamera(JSON.parse(window.sessionStorage.getItem(STORAGE_KEY) ?? "null"));
+  } catch {
+    return false;
+  }
+}
