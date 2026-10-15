@@ -861,6 +861,7 @@ Citizen / Resident / Tourist
 - [x] 4주차 Web Foundation ([web/README.md](web/README.md))
 - [x] 5주차 Mobile Web (하단 탭, 반응형 배치, 상세 화면의 뒤로 가기)
 - [x] 6주차 Map Core (Mapbox 지도, Marker와 Preview, 필터 칩, 현재 위치)
+- [x] 7주차 Place (Explore 목록과 Category, 가까운 순, 검색, 상세의 빠른 행동과 공유, "View on map", 상세의 SEO, Seed 데이터 형식)
 
 ### Next
 
