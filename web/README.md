@@ -71,12 +71,15 @@ src/app/api/v1/[...path]  브라우저의 API 요청을 Backend로 전달한다.
 src/components            화면 조각
 src/components/map        Map 화면. MapView만 mapbox-gl을 다룬다.
 src/components/place      Explore 목록, Place 카드와 상세, 빠른 행동과 공유
+src/components/local      Notices / Events 목록과 상세
 src/components/search     검색창과 검색 결과
 src/lib/api               API 호출. 모든 실패를 ApiError로 바꾼다.
 src/lib/map               Map의 로직: URL의 filter, 영역, Marker 요청, 지도 위치 저장
 src/lib/geo               현재 위치 요청과 서비스 지역 판단, 방문자의 위치(Map과 목록이 함께 쓴다)
 src/lib/places            목록의 URL(Category, 검색어, 쪽)과 목록 읽기
-src/lib/seo               상세 화면의 metadata (검색엔진, 공유 링크)
+src/lib/local             Notices / Events 목록의 URL(type, when)과 목록 읽기
+src/lib/dates.ts          Event의 일시, Notice의 기간 (뉴질랜드 시간)
+src/lib/seo               상세 화면의 metadata (검색엔진, 공유 링크), sitemap.xml의 항목
 src/lib/share.ts          공유 또는 링크 복사
 src/lib/site.ts           사이트의 공개 주소 (SITE_URL)
 src/lib/format.ts         날짜, URL, 전화번호, 길찾기 링크
@@ -97,6 +100,11 @@ src/test/render.tsx       테스트에서 문구와 함께 렌더링하는 도�
 - **목록의 상태는 URL에 있고 위치는 없다.** Category는 경로(`/explore/cafe`), 검색어와 쪽은 query(`/search?q=pizza`, `?page=2`)다. 서버가 Queenstown 중심 기준으로 목록을 먼저 그리고, 위치를 쓸 수 있는 브라우저에서만 같은 쪽을 위치 기준으로 다시 받아 바꾼다. 늦게 온 답은 버리고, 실패하면 서버가 그린 목록을 그대로 둔다.
 - **방문자의 위치는 반올림해 API에만 보낸다.** 소수 넷째 자리(약 11m)로 반올림하고, 서비스 지역 밖이면 보내지 않는다. 화면의 URL과 로그에는 넣지 않는다.
 - **"View on map"은 지도의 위치를 미리 저장한다.** 누르면 그 Place의 좌표를 지도 위치로 저장하고 `/?place={slug}`로 간다. 지도는 그 위치에서 열려 Preview가 뜬다. 공유받은 링크처럼 저장 없이 들어오면 Map 화면이 Place를 찾아 그곳으로 옮긴다.
+- **지도의 Marker는 `kind`와 `slug`로 구분한다.** slug는 종류마다 따로 고유해서 Place와 Event가 같은 slug를 가질 수 있다. 지도는 `place:market`, `event:market` 같은 key로 Marker를 고르고(`lib/map/selection.ts`), URL에는 `?place=`, `?event=`, `?notice=` 중 하나만 둔다. 필터는 Category와 `event`, `notice`다(`lib/map/filter.ts`).
+- **링크가 가리키는 Event와 Notice가 지도에 없으면 따로 찾는다.** Place와 같은 규칙이다. 끝난 Event와 Notice, 위치가 없는 Notice는 지도에 그릴 수 없으므로 URL에서 지운다.
+- **Event와 Notice의 시각은 뉴질랜드 시간으로 표시한다.** `lib/dates.ts`가 하루짜리, 여러 날, 끝이 없는 경우를 나눈다. 자정에 끝나는 Event는 그날 저녁의 것으로 본다.
+- **끝난 Event와 Notice의 상세는 200이다.** 종료 안내를 보여주고 `robots`를 `noindex`로 한다. 목록, 지도, sitemap.xml에서는 빠진다.
+- **sitemap.xml과 robots.txt는 요청할 때마다 만든다.** 빌드할 때 Backend가 없어도 되고, Backend가 실패하면 sitemap.xml은 고정 페이지만 준다.
 - **Place의 값은 믿지 않는다.** 웹사이트와 이미지는 `http(s)`만 링크와 그림이 된다. 숫자로 걸 수 없는 전화번호는 글자로만 보인다. 열리지 않는 이미지는 자리를 남기지 않는다. 서버가 그린 이미지가 hydration 전에 실패하면 `onError`가 오지 않으므로 `PlaceImage`가 처음 그릴 때 한 번 더 확인한다.
 - **`@types/geojson`은 `mapbox-gl`의 타입 때문에 있다.** `mapbox-gl`의 타입이 이 패키지를 전제로 하면서 의존성으로 두지 않는다. 지우면 지도의 Feature에 `properties`가 없다는 타입 오류가 난다.
 - **기준 폭은 768px 하나다.** 767px 이하는 하단 탭, 768px 이상은 상단 메뉴를 보여준다. 폭에 따른 표시는 CSS(`md:`)로만 처리한다. 서버가 만드는 HTML은 모든 기기에 같고, 숨긴 쪽은 `display: none`이라 키보드와 화면 낭독기에 잡히지 않는다. 메뉴 항목은 `components/nav/menu.ts` 한곳에서 정의한다.

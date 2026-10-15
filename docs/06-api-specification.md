@@ -210,6 +210,8 @@ Marker의 공통 필드
 
 Preview의 거리는 클라이언트가 현재 위치와 Marker의 좌표로 계산한다.
 
+Marker는 모두 합쳐 500개까지다. Notice(시작의 내림차순), Event(시작 순), Place 순으로 채운다. 기간이 있는 Marker가 먼저 잘리지 않게 하기 위해서다. `filter`에 Category가 없고 `event`나 `notice`만 있으면 Place는 나오지 않는다. slug는 종류마다 따로 고유하므로 Marker는 `kind`와 `slug`로 구분한다.
+
 ```json
 {
   "markers": [
@@ -391,7 +393,9 @@ Web은 방문자의 위치를 소수 넷째 자리(약 11m)로 반올림해 보�
 | when | | `today`, `week`, `month`. 없으면 전체 |
 | page, size | | 목록의 공통 파라미터 |
 
-`when`의 기간은 `Pacific/Auckland` 기준이다. 기간과 하루라도 겹치는 Event가 나온다.
+`when`의 기간은 `Pacific/Auckland` 기준이다. 기간과 하루라도 겹치는 Event가 나온다. 이미 끝난 Event는 기간에 걸쳐도 나오지 않는다. 시작이 같으면 먼저 등록한 Event가 앞이다.
+
+`endsAt`이 없는 Event는 시작한 날(뉴질랜드 날짜)이 끝날 때까지 진행 중이다. 일광 절약 시간이 바뀌는 날은 23시간이나 25시간이고, 그날의 실제 자정에 끝난다.
 
 | when | 기간 |
 |---|---|
@@ -457,7 +461,7 @@ Web은 방문자의 위치를 소수 넷째 자리(약 11m)로 반올림해 보�
 
 ### GET /notices
 
-유효한 Notice를 `startsAt` 내림차순으로 응답한다.
+유효한 Notice를 `startsAt` 내림차순으로 응답한다. `endsAt`이 없거나 아직 지나지 않은 Notice가 유효하고, 아직 시작하지 않은 Notice도 나온다(미리 알아야 할 통제가 있다). 시작이 같으면 나중에 등록한 Notice가 앞이다.
 
 | 파라미터 | 필수 | 설명 |
 |---|---|---|
@@ -503,7 +507,7 @@ Web은 방문자의 위치를 소수 넷째 자리(약 11m)로 반올림해 보�
 
 ### GET /sitemap
 
-Web의 Next.js 서버가 `sitemap.xml`을 만들 때 호출한다. Place는 `public`인 항목, Event와 Notice는 목록에 나오는 항목만 담는다.
+Web의 Next.js 서버가 `sitemap.xml`을 만들 때 호출한다. Place는 `public`인 항목, Event와 Notice는 목록에 나오는 항목만 담는다. 각 목록은 등록 순이다.
 
 | 응답 필드 | 타입 | 설명 |
 |---|---|---|

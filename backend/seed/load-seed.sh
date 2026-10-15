@@ -8,10 +8,12 @@ set -euo pipefail
 seed_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # COPY ... FROM STDIN inside a script reads the lines that follow it, up to a line "\.".
-# sed adds the last newline when a file has none, so "\." starts a line of its own.
+# sed drops the carriage returns of Windows line ends (a file saved by Excel), which COPY refuses
+# when they are mixed with plain ones, and adds the last newline when a file has none, so "\."
+# starts a line of its own.
 copy() {
   printf 'COPY %s FROM STDIN (FORMAT csv, HEADER true);\n' "$1"
-  sed -e '$a\' "$seed_dir/$2"
+  sed -e 's/\r$//' -e '$a\' "$seed_dir/$2"
   printf '\\.\n'
 }
 
