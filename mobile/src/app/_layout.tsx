@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 import { useTranslations } from "use-intl";
+import { VisitorPositionProvider } from "@/geo/VisitorPosition";
 import { AppIntlProvider } from "@/i18n/AppIntlProvider";
 
 function RootStack() {
@@ -17,7 +18,9 @@ function RootStack() {
 export default function RootLayout() {
   return (
     <AppIntlProvider>
-      <RootStack />
+      <VisitorPositionProvider>
+        <RootStack />
+      </VisitorPositionProvider>
     </AppIntlProvider>
   );
 }

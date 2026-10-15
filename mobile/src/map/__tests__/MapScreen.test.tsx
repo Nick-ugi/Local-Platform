@@ -1,8 +1,8 @@
 import type { MapMarker } from "@queenstown/shared";
-import { act, fireEvent, render, screen } from "@testing-library/react-native";
+import { act, fireEvent, screen } from "@testing-library/react-native";
 import type { ComponentProps } from "react";
 import { type LocationResult, locate } from "@/geo/location";
-import { AppIntlProvider } from "@/i18n/AppIntlProvider";
+import { renderScreen } from "@/test/render";
 import { MapScreen } from "../MapScreen";
 import type { MapView } from "../MapView";
 import { type MarkersState, useMarkers } from "../useMarkers";
@@ -46,11 +46,7 @@ function mapProps() {
 /** Opens the screen and lets the position asked for on arrival come back. */
 async function openMap(result: LocationResult) {
   locateMock.mockResolvedValue(result);
-  render(
-    <AppIntlProvider>
-      <MapScreen />
-    </AppIntlProvider>,
-  );
+  renderScreen(<MapScreen />);
   await act(async () => {});
 }
 
@@ -81,11 +77,7 @@ test("a map that cannot start gives way to the notice", async () => {
 
 test("asks for the position as soon as it opens, and starts on Queenstown", async () => {
   locateMock.mockReturnValue(new Promise(() => {}));
-  render(
-    <AppIntlProvider>
-      <MapScreen />
-    </AppIntlProvider>,
-  );
+  renderScreen(<MapScreen />);
 
   expect(locateMock).toHaveBeenCalledTimes(1);
   expect(mapProps().token).toBe("pk.test");

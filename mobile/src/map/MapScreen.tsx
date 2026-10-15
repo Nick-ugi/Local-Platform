@@ -1,8 +1,9 @@
 import { CATEGORIES, type MapBounds } from "@queenstown/shared";
-import { useEffect, useEffectEvent, useState } from "react";
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
-import { type LocationResult, locate } from "@/geo/location";
+import type { LocationResult } from "@/geo/location";
+import { type LocationProblem, useVisitorPosition } from "@/geo/VisitorPosition";
 import { type Camera, DEFAULT_CAMERA, LOCATE_ZOOM } from "./camera";
 import { LocateButton } from "./LocateButton";
 import { MapNotice } from "./MapNotice";
@@ -16,8 +17,6 @@ const LOCATION_PROBLEMS = {
   unavailable: "locationUnavailable",
 } as const;
 
-type LocationProblem = keyof typeof LOCATION_PROBLEMS;
-
 /**
  * Week 9 shows places only (MAP-03); events and notices come to the app with week 10. Naming the
  * categories leaves the other kinds out, as on the web's map with chips chosen.
@@ -28,8 +27,8 @@ const PLACES_ONLY = [...CATEGORIES];
  * The Map tab (wireframe a-map, MAP-01 ~ MAP-03): Queenstown on the map with the places in view,
  * the visitor's position and the button that brings the map back to it.
  *
- * The app asks for the position as soon as the screen opens. With a position inside the service
- * area the map goes there; otherwise it stays on Queenstown and says why.
+ * The app asks for the position when it starts (VisitorPositionProvider). With a position inside
+ * the service area the map goes there; otherwise it stays on Queenstown and says why.
  */
 export function MapScreen() {
   const t = useTranslations("Map");
@@ -39,41 +38,23 @@ export function MapScreen() {
   const [bounds, setBounds] = useState<MapBounds | null>(null);
   const { status, markers, truncated, retry } = useMarkers(bounds, PLACES_ONLY);
   const [unavailable, setUnavailable] = useState(false);
-  const [showUserLocation, setShowUserLocation] = useState(false);
-  // The position is asked for as soon as the screen opens, so it starts out busy.
-  const [locating, setLocating] = useState(true);
+  const { result, locating, request } = useVisitorPosition();
   const [problem, setProblem] = useState<LocationProblem | null>(null);
 
-  function show(result: LocationResult) {
-    setLocating(false);
-    if (result.status === "inside" || result.status === "outside") {
-      setShowUserLocation(true);
-    }
-    if (result.status === "inside") {
+  // Each answer from the phone, on arrival or from the button, is acted on once: inside the area
+  // the map goes there, otherwise it stays and says why. The answer is compared while rendering,
+  // so the move and the message come with the render that shows the new answer.
+  const [handled, setHandled] = useState<LocationResult | null>(null);
+  if (result !== handled) {
+    setHandled(result);
+    if (result?.status === "inside") {
       setProblem(null);
       setCamera({ ...result.position, zoom: LOCATE_ZOOM });
     } else {
-      setProblem(result.status);
+      setProblem(result?.status ?? null);
     }
   }
-
-  async function showLocation() {
-    setLocating(true);
-    show(await locate());
-  }
-
-  const showOnArrival = useEffectEvent(show);
-  useEffect(() => {
-    let gone = false;
-    void locate().then((result) => {
-      if (!gone) {
-        showOnArrival(result);
-      }
-    });
-    return () => {
-      gone = true;
-    };
-  }, []);
+  const showUserLocation = result?.status === "inside" || result?.status === "outside";
 
   if (!token || unavailable) {
     return (
@@ -102,7 +83,7 @@ export function MapScreen() {
       </View>
       {/* Bottom right, above Mapbox's attribution (wireframe a-map). */}
       <View style={styles.locate}>
-        <LocateButton onPress={() => void showLocation()} busy={locating} />
+        <LocateButton onPress={() => void request()} busy={locating} />
       </View>
     </View>
   );
