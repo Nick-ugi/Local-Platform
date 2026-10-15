@@ -105,12 +105,21 @@ class PlaceDetailApiTest {
 
 	@Test
 	void oddSlugsAreNotFoundRatherThanErrors() throws Exception {
-		List<String> paths = List.of("/api/v1/places/%27%3B%20drop%20table%20place%3B--",
-				"/api/v1/places/" + "a".repeat(2000), "/api/v1/places/%ED%95%9C%EA%B8%80");
+		List<String> paths = List.of("/api/v1/places/" + "a".repeat(2000), "/api/v1/places/%ED%95%9C%EA%B8%80",
+				"/api/v1/places/%27%20drop%20table%20place--");
 
 		for (String path : paths) {
 			expectPlaceNotFound(mvc.perform(get(URI.create(path))));
 		}
+	}
+
+	/** Spring Security's firewall turns away an escaped semicolon before the lookup; still a 404, not an error. */
+	@Test
+	void anEscapedSemicolonIsNotFound() throws Exception {
+		mvc.perform(get(URI.create("/api/v1/places/%27%3B%20drop%20table%20place%3B--")))
+			.andExpect(status().isNotFound())
+			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+			.andExpect(jsonPath("$.code").value("NOT_FOUND"));
 	}
 
 	/** The detail is the service's own message, so this also proves the request reached the place lookup. */

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.queenstownlocal.backend.auth.UserMapper">
+
+	<select id="insert" resultType="long" flushCache="true" useCache="false">
+		INSERT INTO app_user (email, password_hash)
+		VALUES (#{email}, #{passwordHash})
+		RETURNING id
+	</select>
+
+	<!-- uq_app_user_email is on lower(email), so this lookup uses it. -->
+	<select id="findByEmail" resultType="com.queenstownlocal.backend.auth.UserAccount">
+		SELECT id, email, password_hash, role
+		FROM app_user
+		WHERE lower(email) = lower(#{email})
+	</select>
+
+	<select id="findById" resultType="com.queenstownlocal.backend.auth.UserAccount">
+		SELECT id, email, password_hash, role
+		FROM app_user
+		WHERE id = #{id}
+	</select>
+
+</mapper>
