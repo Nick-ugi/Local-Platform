@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { PlaceImage } from "./PlaceImage";
 
 const fallback = <span>no image</span>;
@@ -43,4 +43,38 @@ test("tries again when it is given another address", () => {
   rerender(<PlaceImage src="https://img.example/other.jpg" alt="" />);
 
   expect(container.querySelector("img")).toHaveAttribute("src", "https://img.example/other.jpg");
+});
+
+/** Makes every image report that it finished loading, with `naturalWidth` as given. */
+function stubLoadedImages(naturalWidth: number) {
+  const complete = vi.spyOn(HTMLImageElement.prototype, "complete", "get").mockReturnValue(true);
+  const width = vi.spyOn(HTMLImageElement.prototype, "naturalWidth", "get").mockReturnValue(naturalWidth);
+  return () => {
+    complete.mockRestore();
+    width.mockRestore();
+  };
+}
+
+test("gives way to the fallback when the image failed before the page came alive", () => {
+  // A server-rendered image can fail before React attaches onError, so the error event is missed.
+  const restore = stubLoadedImages(0);
+  try {
+    const { container } = render(<PlaceImage src="https://img.example/gone.jpg" alt="" fallback={fallback} />);
+
+    expect(container.querySelector("img")).toBeNull();
+    expect(screen.getByText("no image")).toBeInTheDocument();
+  } finally {
+    restore();
+  }
+});
+
+test("keeps an image that already loaded", () => {
+  const restore = stubLoadedImages(800);
+  try {
+    render(<PlaceImage src="https://img.example/a.jpg" alt="Lakeside Kitchen" fallback={fallback} />);
+
+    expect(screen.getByRole("img", { name: "Lakeside Kitchen" })).toBeInTheDocument();
+  } finally {
+    restore();
+  }
 });

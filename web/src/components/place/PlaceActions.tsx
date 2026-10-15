@@ -3,8 +3,10 @@ import { useTranslations } from "next-intl";
 import { directionsUrl, httpUrl, telHref } from "@/lib/format";
 import { ShareButton } from "./ShareButton";
 
+// Four labels share a phone's width (about 80px each), so they get a smaller size and never break
+// inside a word, which the article's overflow-wrap would otherwise allow.
 const actionClass =
-  "flex min-h-11 w-full items-center justify-center rounded-lg border border-neutral-300 px-2 text-sm font-semibold";
+  "flex min-h-11 w-full items-center justify-center rounded-lg border border-neutral-300 px-1 text-[13px] font-semibold [overflow-wrap:normal]";
 
 /**
  * The quick actions of a detail page (PLACE-05): Call, Website, Directions, Share, in equal
