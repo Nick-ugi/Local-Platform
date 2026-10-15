@@ -16,6 +16,13 @@
     "shopping": "Shopping",
     "facility": "Facilities"
   },
+  "Subtype": {
+    "toilet": "Public toilet",
+    "parking": "Parking",
+    "information": "Information centre",
+    "library": "Library",
+    "medical": "Medical"
+  },
   "Pages": {
     "map": "Map",
     "explore": "Explore",
@@ -86,6 +93,13 @@
     "contact": "Contact",
     "viewOnMap": "View on map",
     "source": "Source: <link>{source}</link>",
-    "updated": "Updated {date}"
+    "updated": "Updated {date}",
+    "actions": "Quick actions",
+    "call": "Call",
+    "website": "Website",
+    "directions": "Directions",
+    "share": "Share",
+    "linkCopied": "Link copied",
+    "shareFailed": "Couldn't share this page. Copy the address from your browser instead."
   }
 }
