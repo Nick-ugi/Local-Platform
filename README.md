@@ -865,6 +865,7 @@ Citizen / Resident / Tourist
 - [x] 8주차 Event / Notice / Public (Notices / Events 목록과 상세, 지도의 Event · Notice Marker, Sitemap과 robots, About, Event · Notice Seed 형식)
 - [x] 9주차 App Prototype (Expo SDK 57, Map / Explore / More 탭, Queenstown 지도와 현재 위치, 영역의 Place Marker, Android 에뮬레이터에서 확인)
 - [x] 10주차 App Core (지도의 칩과 Place · Event · Notice Marker, 요약 카드, Explore와 검색, Place · Event · Notice 상세와 빠른 행동, 공유, "View on map", Android 에뮬레이터에서 확인)
+- [ ] 11주차 User / Favorite / Admin (가입과 로그인, Favorite(Web · App), Admin Web의 Place · Event · Notice 등록과 수정) — 코드와 테스트, Web과 Admin의 브라우저 확인 완료, App 에뮬레이터 확인 전
 
 ### Next
 
