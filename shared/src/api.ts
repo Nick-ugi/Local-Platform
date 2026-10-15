@@ -1,6 +1,6 @@
 // Response types of the REST API (docs/06-api-specification.md).
 
-import type { Category, ErrorCode, FacilitySubtype, NoticeType } from './codes'
+import type { Category, ErrorCode, FacilitySubtype, NoticeType, Status } from './codes'
 
 /** GET /places/{slug} */
 export interface PlaceDetail {
@@ -177,3 +177,85 @@ export interface ProblemDetail {
   /** Present only when the input was invalid. */
   errors?: FieldError[]
 }
+
+/** The account a token response names, and the body of GET /me. */
+export interface AuthUser {
+  email: string
+  role: 'user' | 'admin'
+}
+
+/** What POST /auth/signup, /auth/login and /auth/refresh answer (docs/06-api-specification.md, section 8). */
+export interface TokenResponse {
+  accessToken: string
+  refreshToken: string
+  /** Seconds the access token lasts. */
+  expiresIn: number
+  user: AuthUser
+}
+
+/** GET /me/favorites: saved places, most recently saved first. distanceM is always null. */
+export interface FavoritesResponse {
+  items: PlaceSummary[]
+}
+
+/** The body of POST and PUT /admin/places (docs/06-api-specification.md, section 9). */
+export interface AdminPlaceInput {
+  name: string
+  category: Category
+  subtype: FacilitySubtype | null
+  description: string | null
+  address: string
+  latitude: number
+  longitude: number
+  openingHours: string | null
+  phone: string | null
+  website: string | null
+  imageUrl: string | null
+  source: string
+  sourceUrl: string
+  status: Status
+}
+
+/** The body of POST and PUT /admin/events. Times are ISO 8601 with an offset. */
+export interface AdminEventInput {
+  title: string
+  description: string | null
+  startsAt: string
+  endsAt: string | null
+  venueName: string
+  address: string | null
+  latitude: number
+  longitude: number
+  imageUrl: string | null
+  source: string
+  sourceUrl: string
+  status: Status
+}
+
+/** The body of POST and PUT /admin/notices. Without a location both coordinates are null. */
+export interface AdminNoticeInput {
+  title: string
+  type: NoticeType
+  summary: string
+  startsAt: string
+  endsAt: string | null
+  locationName: string | null
+  latitude: number | null
+  longitude: number | null
+  sourceOrg: string
+  sourceUrl: string
+  isOfficial: boolean
+  status: Status
+}
+
+/** What the admin API answers for an item: the input with its id, slug and times (UTC). */
+interface AdminRecord {
+  id: number
+  slug: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type AdminPlace = AdminPlaceInput & AdminRecord
+export type AdminEvent = AdminEventInput & AdminRecord
+export type AdminNotice = AdminNoticeInput & AdminRecord

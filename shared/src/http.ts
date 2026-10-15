@@ -25,8 +25,9 @@ export class ApiError extends Error {
 }
 
 /**
- * GET a URL and read its JSON body. Rejects with an ApiError for every failure. A request the
- * caller cancelled is not a failure: it rejects with the abort error itself.
+ * Calls a URL and reads its JSON body; an answer without one (204) gives undefined. Rejects with
+ * an ApiError for every failure. A request the caller cancelled is not a failure: it rejects with
+ * the abort error itself.
  */
 export async function requestJson<T>(url: string, init: RequestInit = {}): Promise<T> {
   let response: Response
@@ -41,6 +42,9 @@ export async function requestJson<T>(url: string, init: RequestInit = {}): Promi
 
   if (!response.ok) {
     throw await toApiError(response)
+  }
+  if (response.status === 204) {
+    return undefined as T
   }
   return (await response.json()) as T
 }
