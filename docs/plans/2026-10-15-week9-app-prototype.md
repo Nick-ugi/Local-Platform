@@ -24,7 +24,7 @@
 - Mapbox 공개 토큰은 `EXPO_PUBLIC_MAPBOX_TOKEN`이다. `mobile/.env.local`에 두고 커밋하지 않는다. 토큰이 없으면 지도 대신 안내를 보여준다.
 - 위치 권한은 처음 실행할 때 묻는다(Web과 다르다, docs/03-user-flow.md). 거부하거나 서비스 지역 밖이면 Queenstown을 보여주고 이유를 알린다.
 - 지도 로직은 `shared`에 있고 Web과 App이 같은 함수를 쓴다. 좌표의 순서를 바꾸는 곳은 `toFeatureCollection` 한 곳뿐이다.
-- 문구는 `mobile/messages/en.json`에 둔다. 탭 이름 등 Web과 같은 문구는 같은 키를 쓴다.
+- 문구는 `mobile/src/messages/en.json`에 둔다. 탭 이름 등 Web과 같은 문구는 같은 키를 쓴다.
 - 누르는 대상은 44pt 이상이다.
 - 검증과 커밋을 한 명령에 묶을 때는 테스트, Lint, 타입 검사가 모두 통과했을 때만 커밋되게 한다(`&&`).
 - 커밋 메시지는 영어, 마지막 줄에 `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`를 붙인다.
@@ -49,13 +49,13 @@ shared/src/map
  └── selection.ts           keyOf, parseKey, readSelection, writeSelection
 
 mobile
- ├── app.json               이름, bundle id, @rnmapbox/maps · expo-location plugin, 개발 빌드의 http 허용
- ├── app/_layout.tsx        use-intl Provider, 탭
- ├── app/(tabs)/_layout.tsx Map / Explore / More 탭 (NAV-02)
- ├── app/(tabs)/index.tsx   Map
- ├── app/(tabs)/explore.tsx 10주차까지 자리만
- ├── app/(tabs)/more.tsx    About으로 가는 목록
- ├── messages/en.json
+ ├── app.config.ts          이름, package id, plugin, 개발 빌드에서만 http 허용 (android/는 생성물이라 커밋하지 않는다)
+ ├── src/app/_layout.tsx    use-intl Provider, 탭
+ ├── src/app/(tabs)/_layout.tsx Map / Explore / More 탭 (NAV-02)
+ ├── src/app/(tabs)/index.tsx   Map
+ ├── src/app/(tabs)/explore.tsx 10주차까지 자리만
+ ├── src/app/(tabs)/more.tsx    About으로 가는 목록
+ ├── src/messages/en.json
  ├── src/api/client.ts      apiGet (EXPO_PUBLIC_API_BASE_URL), ApiError
  ├── src/api/map.ts         getMarkers
  ├── src/map/MapScreen.tsx  상태를 모으는 컨테이너
@@ -71,7 +71,7 @@ mobile
 
 - `create-expo-app`(blank-typescript)으로 `mobile`을 만들고 루트 `workspaces`에 더한다. 이름은 `@queenstown/mobile`, `@queenstown/shared`를 의존성으로 둔다.
 - expo-router, @rnmapbox/maps, expo-location, expo-dev-client, expo-build-properties를 `npx expo install`로 더한다(SDK 57과 맞는 버전).
-- `app.json`: 이름 "Queenstown Local", `android.package` / `ios.bundleIdentifier` `com.queenstownlocal.app`, plugin 설정, 개발 빌드에서만 cleartext 허용.
+- `app.config.ts`: 이름 "Queenstown Local", `android.package` / `ios.bundleIdentifier` `com.queenstownlocal.app`, plugin 설정, 개발 빌드에서만 cleartext 허용(`APP_VARIANT=production`이면 막는다). `android/`, `ios/`는 생성물이라 커밋하지 않는다.
 - jest-expo, @testing-library/react-native, ESLint(eslint-config-expo). 루트 `npm test`, `npm run lint`가 `mobile`까지 돈다.
 - 확인: `npx expo export --platform android` 번들에 React 19.2.3 하나. **PC에서** `npx expo run:android`로 에뮬레이터에 빌드가 설치되고 빈 화면이 뜬다. Web의 `npm test`, `next build`가 그대로 통과한다.
 
