@@ -1,8 +1,7 @@
-import type { MapMarker } from "@queenstown/shared";
+import { type MapMarker, toFeatureCollection } from "@queenstown/shared";
 import { act, render, waitFor } from "@testing-library/react";
 import type { ComponentProps } from "react";
 import { beforeEach, expect, test, vi } from "vitest";
-import { toFeatureCollection } from "@/lib/map/geojson";
 import { MapView } from "./MapView";
 
 // A stand-in for the Mapbox map. It records what the component asks of it and lets a test fire

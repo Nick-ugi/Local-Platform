@@ -1,7 +1,7 @@
 "use client";
 
+import { FILTER_KEYS, type FilterKey } from "@queenstown/shared";
 import { useTranslations } from "next-intl";
-import { FILTER_KEYS, type FilterKey } from "@/lib/map/filter";
 
 type Props = {
   selected: readonly FilterKey[];

@@ -1,6 +1,21 @@
 "use client";
 
-import { distanceMeters, formatDistance, type MapBounds, type MapMarker } from "@queenstown/shared";
+import {
+  distanceMeters,
+  type FilterKey,
+  filterHides,
+  formatDistance,
+  keyOf,
+  type MapBounds,
+  type MapMarker,
+  parseFilter,
+  parseKey,
+  readSelection,
+  type Selection,
+  serializeFilter,
+  toggleFilter,
+  writeSelection,
+} from "@queenstown/shared";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
@@ -9,8 +24,6 @@ import { getNotice } from "@/lib/api/notices";
 import { getPlace } from "@/lib/api/places";
 import { useVisitorPosition } from "@/lib/geo/useVisitorPosition";
 import { type Camera, hasSavedCamera, loadCamera, PLACE_ZOOM, saveCamera } from "@/lib/map/camera";
-import { type FilterKey, filterHides, parseFilter, serializeFilter, toggleFilter } from "@/lib/map/filter";
-import { keyOf, parseKey, readSelection, type Selection, writeSelection } from "@/lib/map/selection";
 import { useMarkers } from "@/lib/map/useMarkers";
 import { FilterChips } from "./FilterChips";
 import { LocateButton } from "./LocateButton";
