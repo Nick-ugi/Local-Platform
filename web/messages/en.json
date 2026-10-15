@@ -147,5 +147,16 @@
     "eventEnded": "This event has ended.",
     "updated": "Updated {date}",
     "newTab": "(opens in a new tab)"
+  },
+  "About": {
+    "title": "About Queenstown Local",
+    "description": "What Queenstown Local is and where its places, events and notices come from.",
+    "intro": "Queenstown Local puts what you need around Queenstown on one map: places to eat, drink, shop and visit, public facilities, what's on, and notices such as road works and closures.",
+    "audience": "It is for visitors, people who live here and people who have just moved here.",
+    "sourcesTitle": "Where the information comes from",
+    "places": "Places come from the businesses' own websites and public listings. Each place shows its source and when it was last updated.",
+    "events": "Events come from their organisers. Each event links to its official page.",
+    "notices": "Notices summarise information from public sources such as Queenstown Lakes District Council. A notice marked Official comes from a public authority. Each notice links to its original.",
+    "original": "Queenstown Local is not an official channel. If anything here differs from the original source, the original is right."
   }
 }
