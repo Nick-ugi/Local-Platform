@@ -65,8 +65,7 @@
     "all": "All",
     "categories": "Categories",
     "emptyAll": "No places yet.",
-    "emptyCategory": "No places in this category yet.",
-    "comingSoon": "Places to explore are coming soon. The map shows them already."
+    "emptyCategory": "No places in this category yet."
   },
   "Nearby": {
     "nearestFirst": "Nearest first",

@@ -5,6 +5,8 @@ declare global {
     interface Matchers<R> {
       /** The router's current path, such as "/explore". */
       toHavePathname(pathname: string): R;
+      /** The router's current query, such as { q: "coffee" }. */
+      toHaveSearchParams(params: Record<string, string | string[]>): R;
     }
   }
 }

@@ -127,10 +127,14 @@ export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch }: Prop
     return key === "event" ? tPages("events") : key === "notice" ? tPages("notices") : tCategory(key);
   }
 
+  // Without a map, Search still works.
   if (!token || unavailable) {
     return (
-      <View style={styles.centred}>
-        <Text style={styles.message}>{t("notConfigured")}</Text>
+      <View style={styles.container}>
+        <SearchBar onPress={onSearch} />
+        <View style={styles.centred}>
+          <Text style={styles.message}>{t("notConfigured")}</Text>
+        </View>
       </View>
     );
   }

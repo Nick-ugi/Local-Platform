@@ -1,18 +1,17 @@
-import { StyleSheet, Text, View } from "react-native";
-import { useTranslations } from "use-intl";
+import { useRouter } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ExploreScreen } from "@/places/ExploreScreen";
 
-/** The Explore tab. Its list of places arrives in week 10 (App Core). */
+/** The Explore tab. Like the Map, it starts below the status bar and has no header of its own. */
 export default function ExploreTab() {
-  const t = useTranslations("Explore");
+  const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{t("comingSoon")}</Text>
-    </View>
+    <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: "#fff" }}>
+      <ExploreScreen
+        onOpen={(place) => router.push(`/places/${encodeURIComponent(place.slug)}`)}
+        onSearch={() => router.push("/search")}
+      />
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24 },
-  text: { fontSize: 16, color: "#525252", textAlign: "center" },
-});

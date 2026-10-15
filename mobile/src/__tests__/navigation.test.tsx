@@ -5,10 +5,33 @@ import ExploreTab from "@/app/(tabs)/explore";
 import MapTab from "@/app/(tabs)/index";
 import MoreTab from "@/app/(tabs)/more";
 import AboutScreen from "@/app/about";
+import SearchRoute from "@/app/search";
 
 // The Map tab asks for the position when it opens. Here that question is never answered, so the
 // map's state does not change under the navigation being tested.
 jest.mock("@/geo/location", () => ({ locate: () => new Promise(() => {}) }));
+
+// Explore and Search list one place.
+jest.mock("@/api/places", () => ({
+  getPlaces: jest.fn(async () => ({
+    items: [
+      {
+        slug: "harbour-coffee",
+        name: "Harbour Coffee",
+        category: "cafe",
+        subtype: null,
+        address: "5 Marine Parade",
+        imageUrl: null,
+        latitude: -45.0335,
+        longitude: 168.659,
+        distanceM: null,
+      },
+    ],
+    page: 1,
+    size: 20,
+    total: 1,
+  })),
+}));
 
 const routes = {
   _layout: RootLayout,
@@ -17,6 +40,7 @@ const routes = {
   "(tabs)/explore": ExploreTab,
   "(tabs)/more": MoreTab,
   about: AboutScreen,
+  search: SearchRoute,
 };
 
 /** The tab bar's buttons. React Navigation labels each one like "Map, tab, 1 of 3". */
@@ -40,12 +64,13 @@ test("opens on the Map tab with Map, Explore and More in order", () => {
   expect(tab("Map")).toBeSelected();
 });
 
-test("the tabs lead to Explore and More", () => {
+test("the tabs lead to Explore and More", async () => {
   renderRouter(routes, { initialUrl: "/" });
 
   fireEvent.press(tab("Explore"));
   expect(screen).toHavePathname("/explore");
-  expect(screen.getByText(/coming soon/)).toBeOnTheScreen();
+  expect(await screen.findByText("Harbour Coffee")).toBeOnTheScreen();
+  expect(screen.getByText("Nearest first")).toBeOnTheScreen();
 
   fireEvent.press(tab("More"));
   expect(screen).toHavePathname("/more");
@@ -60,4 +85,28 @@ test("More leads to About", () => {
   expect(screen).toHavePathname("/about");
   expect(screen.getByText("About Queenstown Local")).toBeOnTheScreen();
   expect(screen.getByText("Where the information comes from")).toBeOnTheScreen();
+});
+
+test("the search box on the Map leads to Search, and a search names its words", async () => {
+  renderRouter(routes, { initialUrl: "/" });
+
+  fireEvent.press(screen.getByRole("search", { name: "Search places" }));
+  expect(screen).toHavePathname("/search");
+
+  fireEvent.changeText(screen.getByLabelText("Search places"), "  harbour   coffee ");
+  fireEvent(screen.getByLabelText("Search places"), "submitEditing");
+
+  expect(screen).toHavePathname("/search");
+  expect(screen).toHaveSearchParams({ q: "harbour coffee" });
+  expect(await screen.findByText("1 result")).toBeOnTheScreen();
+});
+
+test("Explore's search box leads to Search too", async () => {
+  renderRouter(routes, { initialUrl: "/explore" });
+  await screen.findByText("Harbour Coffee");
+
+  fireEvent.press(screen.getByRole("search", { name: "Search places" }));
+
+  expect(screen).toHavePathname("/search");
+  expect(screen.getByText("Search for a place by name or keyword.")).toBeOnTheScreen();
 });

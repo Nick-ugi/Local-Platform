@@ -18,7 +18,7 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen name="index" options={{ title: t("map"), headerShown: false }} />
-      <Tabs.Screen name="explore" options={{ title: t("explore") }} />
+      <Tabs.Screen name="explore" options={{ title: t("explore"), headerShown: false }} />
       <Tabs.Screen name="more" options={{ title: t("more") }} />
     </Tabs>
   );
