@@ -1,7 +1,8 @@
 import { displayUrl, formatDate, httpUrl, type PlaceDetail, telHref } from "@queenstown/shared";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import type { ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
+import { FavoriteButton } from "@/components/account/FavoriteButton";
 import { BackLink } from "@/components/nav/BackLink";
 import { PlaceActions } from "./PlaceActions";
 import { PlaceImage } from "./PlaceImage";
@@ -53,9 +54,15 @@ export function PlaceDetailView({ place }: { place: PlaceDetail }) {
           className="order-2 aspect-[16/9] w-full rounded-xl bg-neutral-200 object-cover md:order-none"
         />
 
-        <header className="order-3 md:order-none">
-          <h1 className="text-2xl font-bold">{place.name}</h1>
-          <p className="text-neutral-600">{kind}</p>
+        <header className="order-3 flex items-start gap-2 md:order-none">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-2xl font-bold">{place.name}</h1>
+            <p className="text-neutral-600">{kind}</p>
+          </div>
+          {/* The heart reads ?favorite= after a visit to Log in, which a server render cannot wait for. */}
+          <Suspense fallback={<span className="size-11 shrink-0" />}>
+            <FavoriteButton slug={place.slug} />
+          </Suspense>
         </header>
 
         {place.description ? <p className="order-5 md:order-none">{place.description}</p> : null}
