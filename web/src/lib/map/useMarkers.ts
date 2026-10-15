@@ -1,7 +1,6 @@
-import type { MapBounds, MapMarker } from "@queenstown/shared";
+import type { FilterKey, MapBounds, MapMarker } from "@queenstown/shared";
 import { useCallback, useEffect, useState } from "react";
 import { getMarkers } from "@/lib/api/map";
-import type { FilterKey } from "./filter";
 
 /** How long the map has to stay still before its markers are requested. */
 const SETTLE_MS = 300;

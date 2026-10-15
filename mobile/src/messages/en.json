@@ -1,0 +1,40 @@
+{
+  "Nav": {
+    "brand": "Queenstown Local",
+    "map": "Map",
+    "explore": "Explore",
+    "more": "More",
+    "back": "Back"
+  },
+  "Pages": {
+    "map": "Map",
+    "explore": "Explore",
+    "more": "More",
+    "about": "About"
+  },
+  "Explore": {
+    "comingSoon": "Places to explore are coming soon. The map shows them already."
+  },
+  "Map": {
+    "locate": "Show my location",
+    "empty": "No places in this area.",
+    "loadFailed": "We couldn't load the map data.",
+    "retry": "Try again",
+    "outsideArea": "You're outside the Queenstown area, so the map stays on Queenstown.",
+    "notConfigured": "The map isn't available right now.",
+    "truncated": "Zoom in to see every place.",
+    "locationDenied": "Location is turned off for this app. Turn it on in your phone's settings to see your position.",
+    "locationUnavailable": "We couldn't find your location."
+  },
+  "About": {
+    "title": "About Queenstown Local",
+    "description": "What Queenstown Local is and where its places, events and notices come from.",
+    "intro": "Queenstown Local puts what you need around Queenstown on one map: places to eat, drink, shop and visit, public facilities, what's on, and notices such as road works and closures.",
+    "audience": "It is for visitors, people who live here and people who have just moved here.",
+    "sourcesTitle": "Where the information comes from",
+    "places": "Places come from the businesses' own websites and public listings. Each place shows its source and when it was last updated.",
+    "events": "Events come from their organisers. Each event links to its official page.",
+    "notices": "Notices summarise information from public sources such as Queenstown Lakes District Council. A notice marked Official comes from a public authority. Each notice links to its original.",
+    "original": "Queenstown Local is not an official channel. If anything here differs from the original source, the original is right."
+  }
+}

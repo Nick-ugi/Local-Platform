@@ -1,6 +1,15 @@
 "use client";
 
-import type { LatLng, MapBounds, MapMarker } from "@queenstown/shared";
+import {
+  type LatLng,
+  type MapBounds,
+  type MapMarker,
+  toFeatureCollection,
+  toLngLat,
+  toMapBounds,
+  toPositionCollection,
+  wrapLongitude,
+} from "@queenstown/shared";
 import type {
   ExpressionSpecification,
   FilterSpecification,
@@ -10,9 +19,7 @@ import type {
 } from "mapbox-gl";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { toMapBounds, wrapLongitude } from "@/lib/map/bounds";
 import type { Camera } from "@/lib/map/camera";
-import { toFeatureCollection, toLngLat, toPositionCollection } from "@/lib/map/geojson";
 
 type Props = {
   /** Mapbox public token. */
@@ -20,7 +27,7 @@ type Props = {
   /** Where the map looks when it is created. Giving a new object afterwards moves the map there. */
   camera: Camera;
   markers: readonly MapMarker[];
-  /** The key of the selected marker (lib/map/selection.ts), or null. */
+  /** The key of the selected marker (shared/src/map/selection.ts), or null. */
   selectedKey: string | null;
   /** The visitor's position, drawn as a dot, or null to draw none. */
   userLocation: LatLng | null;
@@ -150,8 +157,8 @@ function isRefusal(error: unknown): boolean {
 
 /**
  * The map itself. This is the only file that touches mapbox-gl; everything that can be decided
- * without the SDK lives in lib/map. The SDK is imported inside an effect, so it is neither part
- * of the server render nor of the first script the browser loads.
+ * without the SDK lives in shared/src/map and lib/map. The SDK is imported inside an effect, so it
+ * is neither part of the server render nor of the first script the browser loads.
  */
 export function MapView({
   token,

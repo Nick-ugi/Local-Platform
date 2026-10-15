@@ -3,7 +3,8 @@
   "private": true,
   "workspaces": [
     "shared",
-    "web"
+    "web",
+    "mobile"
   ],
   "scripts": {
     "test": "npm run test --workspaces --if-present",

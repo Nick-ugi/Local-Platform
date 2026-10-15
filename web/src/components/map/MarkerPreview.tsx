@@ -1,11 +1,10 @@
-import type { MapMarker } from "@queenstown/shared";
+import { detailPath, type MapMarker } from "@queenstown/shared";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useId } from "react";
 import { NoticeBadges } from "@/components/local/NoticeBadges";
 import { NoticePeriodText } from "@/components/local/NoticePeriodText";
 import { formatEventWhen } from "@/lib/dates";
-import { detailPath } from "@/lib/map/selection";
 
 type Props = {
   marker: MapMarker;

@@ -1,0 +1,23 @@
+import { Stack } from "expo-router";
+import { useTranslations } from "use-intl";
+import { AppIntlProvider } from "@/i18n/AppIntlProvider";
+
+function RootStack() {
+  const t = useTranslations("Pages");
+
+  // The tabs, with the screens that open on top of them (docs/02-information-architecture.md, App).
+  return (
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="about" options={{ title: t("about") }} />
+    </Stack>
+  );
+}
+
+export default function RootLayout() {
+  return (
+    <AppIntlProvider>
+      <RootStack />
+    </AppIntlProvider>
+  );
+}
