@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.queenstownlocal.backend.admin.AdminEventMapper">
+
+	<sql id="columns">
+		id, slug, title, description, starts_at, ends_at, venue_name, address,
+		ST_Y(location::geometry) AS latitude,
+		ST_X(location::geometry) AS longitude,
+		image_url, source, source_url, status, created_at, updated_at
+	</sql>
+
+	<sql id="filters">
+		FROM event
+		<where>
+			<if test="pattern != null">title ILIKE #{pattern} ESCAPE '\'</if>
+			<if test="status != null">AND status = #{status}</if>
+		</where>
+	</sql>
+
+	<select id="find" resultType="com.queenstownlocal.backend.admin.AdminEvent">
+		SELECT <include refid="columns"/>
+		<include refid="filters"/>
+		ORDER BY updated_at DESC, id DESC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+	<select id="count" resultType="long">
+		SELECT count(*)
+		<include refid="filters"/>
+	</select>
+
+	<select id="findById" resultType="com.queenstownlocal.backend.admin.AdminEvent">
+		SELECT <include refid="columns"/>
+		FROM event
+		WHERE id = #{id}
+	</select>
+
+	<select id="findSlugs" resultType="string">
+		SELECT slug FROM event WHERE slug = #{base} OR starts_with(slug, #{base} || '-')
+	</select>
+
+	<select id="insert" resultType="long" flushCache="true" useCache="false">
+		INSERT INTO event (slug, title, description, starts_at, ends_at, venue_name, address, location, image_url,
+		                   source, source_url, status, created_at, updated_at)
+		VALUES (#{slug}, #{event.title}, #{event.description}, #{event.startsAt}, #{event.endsAt},
+		        #{event.venueName}, #{event.address},
+		        ST_SetSRID(ST_MakePoint(#{event.longitude}, #{event.latitude}), 4326)::geography,
+		        #{event.imageUrl}, #{event.source}, #{event.sourceUrl}, #{event.status}, #{now}, #{now})
+		RETURNING id
+	</select>
+
+	<update id="update">
+		UPDATE event
+		SET title = #{event.title}, description = #{event.description}, starts_at = #{event.startsAt},
+		    ends_at = #{event.endsAt}, venue_name = #{event.venueName}, address = #{event.address},
+		    location = ST_SetSRID(ST_MakePoint(#{event.longitude}, #{event.latitude}), 4326)::geography,
+		    image_url = #{event.imageUrl}, source = #{event.source}, source_url = #{event.sourceUrl},
+		    status = #{event.status}, updated_at = #{now}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

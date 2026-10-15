@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.queenstownlocal.backend.admin.AdminPlaceMapper">
+
+	<sql id="columns">
+		id, slug, name, category, subtype, description, address,
+		ST_Y(location::geometry) AS latitude,
+		ST_X(location::geometry) AS longitude,
+		opening_hours, phone, website, image_url, source, source_url, status, created_at, updated_at
+	</sql>
+
+	<sql id="filters">
+		FROM place
+		<where>
+			<if test="pattern != null">name ILIKE #{pattern} ESCAPE '\'</if>
+			<if test="status != null">AND status = #{status}</if>
+			<if test="category != null">AND category = #{category}</if>
+		</where>
+	</sql>
+
+	<!-- Every status, most recently changed first (docs/06-api-specification.md, section 9). -->
+	<select id="find" resultType="com.queenstownlocal.backend.admin.AdminPlace">
+		SELECT <include refid="columns"/>
+		<include refid="filters"/>
+		ORDER BY updated_at DESC, id DESC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+	<select id="count" resultType="long">
+		SELECT count(*)
+		<include refid="filters"/>
+	</select>
+
+	<select id="findById" resultType="com.queenstownlocal.backend.admin.AdminPlace">
+		SELECT <include refid="columns"/>
+		FROM place
+		WHERE id = #{id}
+	</select>
+
+	<select id="findSlugs" resultType="string">
+		SELECT slug FROM place WHERE slug = #{base} OR starts_with(slug, #{base} || '-')
+	</select>
+
+	<!-- ST_MakePoint takes (longitude, latitude). Blank optional text arrives as null (AdminService). -->
+	<select id="insert" resultType="long" flushCache="true" useCache="false">
+		INSERT INTO place (slug, name, category, subtype, description, address, location, opening_hours, phone,
+		                   website, image_url, source, source_url, status, created_at, updated_at)
+		VALUES (#{slug}, #{place.name}, #{place.category}, #{place.subtype}, #{place.description}, #{place.address},
+		        ST_SetSRID(ST_MakePoint(#{place.longitude}, #{place.latitude}), 4326)::geography,
+		        #{place.openingHours}, #{place.phone}, #{place.website}, #{place.imageUrl}, #{place.source},
+		        #{place.sourceUrl}, #{place.status}, #{now}, #{now})
+		RETURNING id
+	</select>
+
+	<update id="update">
+		UPDATE place
+		SET name = #{place.name}, category = #{place.category}, subtype = #{place.subtype},
+		    description = #{place.description}, address = #{place.address},
+		    location = ST_SetSRID(ST_MakePoint(#{place.longitude}, #{place.latitude}), 4326)::geography,
+		    opening_hours = #{place.openingHours}, phone = #{place.phone}, website = #{place.website},
+		    image_url = #{place.imageUrl}, source = #{place.source}, source_url = #{place.sourceUrl},
+		    status = #{place.status}, updated_at = #{now}
+		WHERE id = #{id}
+	</update>
+
+</mapper>
