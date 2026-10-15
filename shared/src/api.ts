@@ -1,6 +1,6 @@
 // Response types of the REST API (docs/06-api-specification.md).
 
-import type { Category, ErrorCode, FacilitySubtype } from './codes'
+import type { Category, ErrorCode, FacilitySubtype, NoticeType } from './codes'
 
 /** GET /places/{slug} */
 export interface PlaceDetail {
@@ -44,6 +44,66 @@ export interface PlaceSummary {
   longitude: number
   /** Whole metres from the position the request named, or null when it named none. */
   distanceM: number | null
+}
+
+/** An event in the list of GET /events. Times are ISO 8601, UTC. */
+export interface EventSummary {
+  slug: string
+  title: string
+  startsAt: string
+  /** Null for an event that lasts until the end of the day it starts on. */
+  endsAt: string | null
+  venueName: string
+  imageUrl: string | null
+  latitude: number
+  longitude: number
+}
+
+/** GET /events/{slug} */
+export interface EventDetail extends EventSummary {
+  description: string | null
+  address: string | null
+  source: string
+  sourceUrl: string
+  updatedAt: string
+  /** True once the event is over. Its page stays and says so. */
+  ended: boolean
+}
+
+/** A notice in the list of GET /notices. Times are ISO 8601, UTC. */
+export interface NoticeSummary {
+  slug: string
+  title: string
+  type: NoticeType
+  isOfficial: boolean
+  startsAt: string
+  /** Null for a notice that stays until it is taken down. */
+  endsAt: string | null
+}
+
+/** GET /notices/{slug}. A notice without a location has null coordinates and locationName. */
+export interface NoticeDetail extends NoticeSummary {
+  summary: string
+  locationName: string | null
+  latitude: number | null
+  longitude: number | null
+  sourceOrg: string
+  sourceUrl: string
+  updatedAt: string
+  ended: boolean
+}
+
+/** A detail page in GET /sitemap. */
+export interface SitemapEntry {
+  slug: string
+  updatedAt: string
+}
+
+/** GET /sitemap */
+export interface SitemapResponse {
+  places: SitemapEntry[]
+  events: SitemapEntry[]
+  notices: SitemapEntry[]
 }
 
 /** The part of the map on screen: longitudes for west and east, latitudes for south and north. */

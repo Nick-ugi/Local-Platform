@@ -1,19 +1,10 @@
 import type { Category, LatLng, Page, PlaceDetail, PlaceSummary } from "@queenstown/shared";
-import { ApiError, apiGet } from "./client";
+import { apiGet } from "./client";
+import { getDetail } from "./detail";
 
-/**
- * A public place, or null when there is none for the slug. A slug the server refuses to parse
- * (status 400) cannot belong to a place either, so it is treated the same as 404.
- */
-export async function getPlace(slug: string): Promise<PlaceDetail | null> {
-  try {
-    return await apiGet<PlaceDetail>(`/places/${encodeURIComponent(slug)}`);
-  } catch (error) {
-    if (error instanceof ApiError && (error.status === 404 || error.status === 400)) {
-      return null;
-    }
-    throw error;
-  }
+/** A public place, or null when there is none for the slug. */
+export function getPlace(slug: string): Promise<PlaceDetail | null> {
+  return getDetail<PlaceDetail>("places", slug);
 }
 
 /** What a list of places is narrowed and ordered by. Anything left out or null does not apply. */

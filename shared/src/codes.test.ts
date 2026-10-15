@@ -1,6 +1,16 @@
 import { readFileSync } from 'node:fs'
 import { expect, test } from 'vitest'
-import { CATEGORIES, ERROR_CODES, FACILITY_SUBTYPES, NOTICE_TYPES, STATUSES, isCategory } from './codes'
+import {
+  CATEGORIES,
+  ERROR_CODES,
+  EVENT_PERIODS,
+  FACILITY_SUBTYPES,
+  NOTICE_TYPES,
+  STATUSES,
+  isCategory,
+  isEventPeriod,
+  isNoticeType,
+} from './codes'
 import { SERVICE_CENTER, SERVICE_RADIUS_KM } from './geo'
 
 // The code values live in three places: here, the DB constraints and the backend's Java code.
@@ -88,4 +98,24 @@ test.each(CATEGORIES)('isCategory knows %s', (category) => {
 // "constructor" is there because a lookup in a plain object would find an inherited property.
 test.each(['hotel', '', 'Food', 'constructor'])('isCategory refuses "%s"', (value) => {
   expect(isCategory(value)).toBe(false)
+})
+
+test.each(NOTICE_TYPES)('isNoticeType knows %s', (type) => {
+  expect(isNoticeType(type)).toBe(true)
+})
+
+test.each(['fire', '', 'Road-Work', 'constructor'])('isNoticeType refuses "%s"', (value) => {
+  expect(isNoticeType(value)).toBe(false)
+})
+
+test('event periods are the ones the backend accepts', () => {
+  const eventServiceJava = readFileSync(
+    new URL('java/com/queenstownlocal/backend/event/EventService.java', backend),
+    'utf8',
+  )
+  const javaPeriods = [...eventServiceJava.matchAll(/case "([a-z]+)" ->/g)].map((match) => match[1])
+
+  expect(javaPeriods).toEqual([...EVENT_PERIODS])
+  expect(EVENT_PERIODS.every(isEventPeriod)).toBe(true)
+  expect(isEventPeriod('year')).toBe(false)
 })

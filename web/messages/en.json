@@ -23,11 +23,20 @@
     "library": "Library",
     "medical": "Medical"
   },
+  "NoticeType": {
+    "road-work": "Road Work",
+    "road-closure": "Road Closure",
+    "public-notice": "Public Notice",
+    "emergency": "Emergency"
+  },
   "Pages": {
     "map": "Map",
     "explore": "Explore",
     "local": "Local",
-    "more": "More"
+    "more": "More",
+    "notices": "Notices",
+    "events": "Events",
+    "about": "About"
   },
   "State": {
     "loading": "Loading…",
@@ -103,5 +112,27 @@
     "share": "Share",
     "linkCopied": "Link copied",
     "shareFailed": "Couldn't share this page. Copy the address from your browser instead."
+  },
+  "Local": {
+    "sections": "Local",
+    "notices": "Notices",
+    "events": "Events",
+    "noticeTypes": "Notice types",
+    "eventPeriods": "Dates",
+    "allTypes": "All types",
+    "all": "All",
+    "today": "Today",
+    "week": "This Week",
+    "month": "This Month",
+    "official": "Official",
+    "from": "From {date}",
+    "noNotices": "There are no current notices.",
+    "noNoticesOfType": "There are no current notices of this type.",
+    "showAllTypes": "Show all types",
+    "noEvents": "There are no upcoming events.",
+    "noEventsInPeriod": "There are no events in this period.",
+    "showAllEvents": "Show all events",
+    "noticesDescription": "Road works, closures and public notices in Queenstown, with where they apply.",
+    "eventsDescription": "Events on in Queenstown, by date."
   }
 }
