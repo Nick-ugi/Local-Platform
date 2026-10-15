@@ -134,5 +134,18 @@
     "showAllEvents": "Show all events",
     "noticesDescription": "Road works, closures and public notices in Queenstown, with where they apply.",
     "eventsDescription": "Events on in Queenstown, by date."
+  },
+  "Detail": {
+    "period": "Period",
+    "location": "Location",
+    "source": "Source",
+    "openOriginal": "Open original",
+    "when": "When",
+    "where": "Where",
+    "eventPage": "Official event page",
+    "noticeEnded": "This notice has ended.",
+    "eventEnded": "This event has ended.",
+    "updated": "Updated {date}",
+    "newTab": "(opens in a new tab)"
   }
 }

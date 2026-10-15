@@ -45,3 +45,17 @@ test("opens the map on the place", () => {
     zoom: 16,
   });
 });
+
+test("selects an event or a notice by its own parameter", () => {
+  renderWithMessages(
+    <div onClick={(event) => event.preventDefault()}>
+      <ViewOnMapLink place={kitchen} kind="event" />
+      <ViewOnMapLink place={kitchen} kind="notice" />
+    </div>,
+  );
+
+  expect(screen.getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual([
+    "/?event=lakeside-kitchen",
+    "/?notice=lakeside-kitchen",
+  ]);
+});
