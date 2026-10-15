@@ -26,11 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jayway.jsonpath.JsonPath;
 import com.queenstownlocal.backend.TestcontainersConfiguration;
+import com.queenstownlocal.backend.support.ClockConfiguration;
+import com.queenstownlocal.backend.support.MutableClock;
 import com.queenstownlocal.backend.support.TestData;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestcontainersConfiguration.class)
+@Import({ TestcontainersConfiguration.class, ClockConfiguration.class })
 @Transactional
 class MapMarkersApiTest {
 
@@ -46,10 +48,15 @@ class MapMarkersApiTest {
 	@Autowired
 	JdbcClient jdbc;
 
+	@Autowired
+	MutableClock clock;
+
 	// a: Queenstown centre, b: about 170 m away, c: Frankton about 5.6 km away,
 	// d: next to a but private, e: a public toilet near the lakefront
 	@BeforeEach
 	void seed() {
+		// Wednesday 14 October 2026, 10:00 in Queenstown.
+		clock.set(ClockConfiguration.WEDNESDAY_MORNING);
 		TestData.insertPlace(jdbc, "a", "food", null, -45.0312, 168.6626, "public");
 		TestData.insertPlace(jdbc, "b", "cafe", null, -45.0322, 168.6610, "public");
 		TestData.insertPlace(jdbc, "c", "shopping", null, -45.0195, 168.7320, "public");
@@ -102,9 +109,62 @@ class MapMarkersApiTest {
 	}
 
 	@Test
-	void filterIgnoresKindsWithoutMarkersYet() throws Exception {
-		assertThat(slugs(markers().param("filter", "event"))).isEmpty();
-		assertThat(slugs(markers().param("filter", "notice,food"))).containsExactly("a");
+	void eventsAndNoticesThatAreOnJoinThePlaces() throws Exception {
+		insertEventsAndNotices();
+
+		assertThat(slugs(markers())).containsExactlyInAnyOrder("a", "b", "e", "market", "works");
+	}
+
+	@Test
+	void filterChoosesKinds() throws Exception {
+		insertEventsAndNotices();
+
+		assertThat(slugs(markers().param("filter", "event"))).containsExactly("market");
+		assertThat(slugs(markers().param("filter", "notice,food"))).containsExactlyInAnyOrder("works", "a");
+	}
+
+	@Test
+	void eventAndNoticeMarkersHaveTheirOwnFields() throws Exception {
+		insertEventsAndNotices();
+		String json = body(markers());
+
+		Map<String, Object> event = marker(json, "market");
+		assertThat(event.keySet()).containsExactlyInAnyOrder("kind", "slug", "latitude", "longitude", "title",
+				"startsAt", "endsAt", "venueName");
+		assertThat(event).containsEntry("kind", "event")
+			.containsEntry("startsAt", "2026-10-16T04:00:00Z")
+			.containsEntry("endsAt", "2026-10-16T08:00:00Z")
+			.containsEntry("venueName", "Earnslaw Park");
+
+		Map<String, Object> notice = marker(json, "works");
+		assertThat(notice.keySet()).containsExactlyInAnyOrder("kind", "slug", "latitude", "longitude", "title", "type",
+				"isOfficial", "startsAt", "endsAt");
+		assertThat(notice).containsEntry("kind", "notice")
+			.containsEntry("type", "road-work")
+			.containsEntry("isOfficial", true)
+			.containsEntry("endsAt", null);
+	}
+
+	@Test
+	void aPlaceAndAnEventMayShareASlug() throws Exception {
+		TestData.insertEvent(jdbc, "a", "2026-10-16T17:00:00+13:00", null, "public");
+
+		String json = body(markers());
+
+		assertThat(JsonPath.<List<String>>read(json, "$.markers[?(@.slug == 'a')].kind"))
+			.containsExactlyInAnyOrder("place", "event");
+	}
+
+	@Test
+	void datedMarkersAreKeptWhenTheAreaHoldsTooMany() throws Exception {
+		insertEventsAndNotices();
+		insertPlacesInTheBox(600);
+
+		String json = body(markers());
+
+		assertThat(JsonPath.<List<String>>read(json, "$.markers[*].slug")).hasSize(500)
+			.startsWith("works", "market");
+		assertThat(JsonPath.<Boolean>read(json, "$.truncated")).isTrue();
 	}
 
 	@Test
@@ -210,6 +270,24 @@ class MapMarkersApiTest {
 			.andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
 			.andExpect(jsonPath("$.code").value("VALIDATION_FAILED"))
 			.andExpect(jsonPath("$.errors[0].field").value(field));
+	}
+
+	/**
+	 * Inside the box: the event "market" on Friday and the notice "works" without an end. Left out
+	 * of the map: an event that is over, a notice that has ended, a notice without a location and a
+	 * private one.
+	 */
+	private void insertEventsAndNotices() {
+		TestData.insertEvent(jdbc, "market", "2026-10-16T17:00:00+13:00", "2026-10-16T21:00:00+13:00", "public");
+		TestData.insertEvent(jdbc, "over", "2026-10-13T17:00:00+13:00", "2026-10-13T21:00:00+13:00", "public");
+		TestData.insertNotice(jdbc, "works", "road-work", "2026-10-05T18:00:00+13:00", null, -45.0312, 168.6626,
+				"public");
+		TestData.insertNotice(jdbc, "ended", "road-work", "2026-10-01T09:00:00+13:00", "2026-10-14T09:00:00+13:00",
+				-45.0312, 168.6626, "public");
+		TestData.insertNotice(jdbc, "nowhere", "public-notice", "2026-10-12T09:00:00+13:00", null, null, null,
+				"public");
+		TestData.insertNotice(jdbc, "hidden", "emergency", "2026-10-12T09:00:00+13:00", null, -45.0312, 168.6626,
+				"private");
 	}
 
 	/** Adds public places along a line inside the default box, next to the three the seed put there. */
