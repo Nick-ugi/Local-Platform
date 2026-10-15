@@ -45,6 +45,17 @@ test('notice types match the notice type constraint', () => {
   expect(constraintValues('ck_notice_type')).toEqual([...NOTICE_TYPES])
 })
 
+test('notice types match the backend list', () => {
+  const noticeTypeJava = readFileSync(
+    new URL('java/com/queenstownlocal/backend/notice/NoticeType.java', backend),
+    'utf8',
+  )
+  const listStart = noticeTypeJava.indexOf('List.of(')
+  const list = noticeTypeJava.slice(listStart, noticeTypeJava.indexOf(')', listStart))
+
+  expect([...list.matchAll(/"([^"]+)"/g)].map((match) => match[1])).toEqual([...NOTICE_TYPES])
+})
+
 test('statuses match the status constraint', () => {
   expect(constraintValues('ck_place_status')).toEqual([...STATUSES])
 })

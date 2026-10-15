@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.queenstownlocal.backend.notice.NoticeMapper">
+
+	<!-- A notice without a location has null coordinates. ST_X is the longitude, ST_Y the latitude. -->
+	<select id="findPublicBySlug" resultType="com.queenstownlocal.backend.notice.NoticeDetail">
+		SELECT slug, title, type, is_official, starts_at, ends_at, summary, location_name,
+		       ST_Y(location::geometry) AS latitude,
+		       ST_X(location::geometry) AS longitude,
+		       source_org, source_url, updated_at,
+		       COALESCE(ends_at &lt; #{now}, false) AS ended
+		FROM notice
+		WHERE slug = #{slug}
+		  AND status = 'public'
+	</select>
+
+	<!-- Listed notices (docs/05-erd.md section 5): public, and without an end or not past it. -->
+	<sql id="listed">
+		FROM notice
+		WHERE status = 'public'
+		  AND (ends_at IS NULL OR ends_at &gt;= #{now})
+		<if test="type != null">
+		  AND type = #{type}
+		</if>
+	</sql>
+
+	<!-- Latest first; notices that start together keep the order of their ids, so none is on two pages. -->
+	<select id="findListed" resultType="com.queenstownlocal.backend.notice.NoticeSummary">
+		SELECT slug, title, type, is_official, starts_at, ends_at
+		<include refid="listed"/>
+		ORDER BY starts_at DESC, id DESC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+	<select id="countListed" resultType="long">
+		SELECT count(*)
+		<include refid="listed"/>
+	</select>
+
+</mapper>
