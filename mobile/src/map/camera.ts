@@ -12,3 +12,6 @@ export const DEFAULT_CAMERA: Camera = { ...SERVICE_CENTER, zoom: 14 };
 
 /** How close the map goes when it moves to the visitor. */
 export const LOCATE_ZOOM = 15;
+
+/** How close the map goes when it opens on one place, event or notice. */
+export const PLACE_ZOOM = 16;
