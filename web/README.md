@@ -32,9 +32,9 @@ npm run dev -w web
 
 API 주소는 환경 변수 `API_BASE_URL`에서 읽는다. 없으면 `http://localhost:8080`을 쓴다. 값을 바꾸려면 `web/.env.example`을 `web/.env.local`로 복사해 수정한다.
 
-### 지도 토큰
-
 검색엔진과 공유 링크에 쓰는 canonical 주소와 `og:url`은 `SITE_URL`(사이트의 공개 주소)을 기준으로 만든다. 없으면 `http://localhost:3001`이다. 배포할 때는 반드시 넣는다.
+
+### 지도 토큰
 
 Map 화면의 지도는 Mapbox의 공개 토큰(`pk.`로 시작한다)이 있어야 뜬다. `web/.env.local`에 넣는다. 이 파일은 커밋하지 않는다.
 
