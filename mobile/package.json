@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "dependencies": {
+    "@formatjs/intl-pluralrules": "^6.3.15",
     "@queenstown/shared": "*",
     "@rnmapbox/maps": "^10.3.8",
     "expo": "~57.0.29",
