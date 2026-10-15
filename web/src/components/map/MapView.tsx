@@ -20,13 +20,14 @@ type Props = {
   /** Where the map looks when it is created. Giving a new object afterwards moves the map there. */
   camera: Camera;
   markers: readonly MapMarker[];
-  selectedSlug: string | null;
+  /** The key of the selected marker (lib/map/selection.ts), or null. */
+  selectedKey: string | null;
   /** The visitor's position, drawn as a dot, or null to draw none. */
   userLocation: LatLng | null;
   /** Called when the map has loaded and after every move, with the visible box. */
   onMove: (bounds: MapBounds, camera: Camera) => void;
-  /** Called with the marker that was clicked, or null for a click on the map itself. */
-  onSelect: (slug: string | null) => void;
+  /** Called with the key of the marker that was clicked, or null for a click on the map itself. */
+  onSelect: (key: string | null) => void;
   /** Called when no map can be shown: no WebGL, or Mapbox refused the token. */
   onUnavailable: () => void;
 };
@@ -49,13 +50,13 @@ const RADIUS_PX = 14;
 /** A click this far outside a marker still counts, which makes the marker a 44 px target. */
 const REACH_PX = 22 - RADIUS_PX;
 
-/** Matches the selected marker only. No marker has an empty slug, so null matches none. */
-function onlySlug(slug: string | null): FilterSpecification {
-  return ["==", ["get", "slug"], slug ?? ""];
+/** Matches the selected marker only. No marker has an empty key, so null matches none. */
+function onlyKey(key: string | null): FilterSpecification {
+  return ["==", ["get", "key"], key ?? ""];
 }
 
-function labelColor(selectedSlug: string | null): ExpressionSpecification {
-  return ["case", ["==", ["get", "slug"], selectedSlug ?? ""], PAPER, INK];
+function labelColor(selectedKey: string | null): ExpressionSpecification {
+  return ["case", ["==", ["get", "key"], selectedKey ?? ""], PAPER, INK];
 }
 
 /** The visitor's position: a blue dot with a halo (wireframe m-map-place). */
@@ -103,7 +104,7 @@ function addMarkerLayers(map: MapboxMap) {
     id: SELECTED,
     type: "circle",
     source: SOURCE,
-    filter: onlySlug(null),
+    filter: onlyKey(null),
     paint: {
       "circle-radius": RADIUS_PX + 6,
       "circle-color": INK,
@@ -127,8 +128,8 @@ function addMarkerLayers(map: MapboxMap) {
   });
 }
 
-/** The slug of the marker at the pointer, or null when there is none within reach. */
-function slugAt(map: MapboxMap, event: MapMouseEvent): string | null {
+/** The key of the marker at the pointer, or null when there is none within reach. */
+function keyAt(map: MapboxMap, event: MapMouseEvent): string | null {
   const { x, y } = event.point;
   const found = map.queryRenderedFeatures(
     [
@@ -137,8 +138,8 @@ function slugAt(map: MapboxMap, event: MapMouseEvent): string | null {
     ],
     { layers: [CIRCLES] },
   );
-  const slug: unknown = found[0]?.properties?.slug;
-  return typeof slug === "string" ? slug : null;
+  const key: unknown = found[0]?.properties?.key;
+  return typeof key === "string" ? key : null;
 }
 
 /** True for the answer Mapbox gives to a token it does not accept. */
@@ -156,7 +157,7 @@ export function MapView({
   token,
   camera,
   markers,
-  selectedSlug,
+  selectedKey,
   userLocation,
   onMove,
   onSelect,
@@ -176,7 +177,7 @@ export function MapView({
     const center = target.getCenter();
     onMove(bounds, { latitude: center.lat, longitude: wrapLongitude(center.lng), zoom: target.getZoom() });
   });
-  const reportSelect = useEffectEvent((slug: string | null) => onSelect(slug));
+  const reportSelect = useEffectEvent((key: string | null) => onSelect(key));
   const reportUnavailable = useEffectEvent(() => onUnavailable());
 
   useEffect(() => {
@@ -211,9 +212,9 @@ export function MapView({
         // The markers go on last, so they stay on top of the visitor's dot.
         addVisitorLayers(target);
         addMarkerLayers(target);
-        target.on("click", (event) => reportSelect(slugAt(target, event)));
+        target.on("click", (event) => reportSelect(keyAt(target, event)));
         target.on("mousemove", (event) => {
-          target.getCanvas().style.cursor = slugAt(target, event) === null ? "" : "pointer";
+          target.getCanvas().style.cursor = keyAt(target, event) === null ? "" : "pointer";
         });
         setMap(target);
         reportMove(target);
@@ -246,9 +247,9 @@ export function MapView({
     if (!map) {
       return;
     }
-    map.setFilter(SELECTED, onlySlug(selectedSlug));
-    map.setPaintProperty(LABELS, "text-color", labelColor(selectedSlug));
-  }, [map, selectedSlug]);
+    map.setFilter(SELECTED, onlyKey(selectedKey));
+    map.setPaintProperty(LABELS, "text-color", labelColor(selectedKey));
+  }, [map, selectedKey]);
 
   useEffect(() => {
     map?.getSource<GeoJSONSource>(VISITOR)?.setData(toPositionCollection(userLocation));

@@ -8,7 +8,7 @@ function chips() {
   return within(screen.getByRole("group", { name: "Filters" })).getAllByRole("button");
 }
 
-test("shows the six category chips in order", () => {
+test("shows the six category chips, then Events and Notices", () => {
   renderWithMessages(<FilterChips selected={[]} onToggle={() => {}} />);
 
   expect(chips().map((chip) => chip.textContent)).toEqual([
@@ -18,11 +18,13 @@ test("shows the six category chips in order", () => {
     "Activities",
     "Shopping",
     "Facilities",
+    "Events",
+    "Notices",
   ]);
 });
 
 test("marks the selected chips as pressed", () => {
-  renderWithMessages(<FilterChips selected={["food", "bar"]} onToggle={() => {}} />);
+  renderWithMessages(<FilterChips selected={["food", "bar", "notice"]} onToggle={() => {}} />);
 
   expect(chips().map((chip) => [chip.textContent, chip.getAttribute("aria-pressed")])).toEqual([
     ["Food", "true"],
@@ -31,6 +33,8 @@ test("marks the selected chips as pressed", () => {
     ["Activities", "false"],
     ["Shopping", "false"],
     ["Facilities", "false"],
+    ["Events", "false"],
+    ["Notices", "true"],
   ]);
 });
 
@@ -42,4 +46,14 @@ test("reports the chip that was pressed", async () => {
 
   expect(onToggle).toHaveBeenCalledTimes(1);
   expect(onToggle).toHaveBeenCalledWith("cafe");
+});
+
+test("reports the Events and Notices chips by kind", async () => {
+  const onToggle = vi.fn();
+  renderWithMessages(<FilterChips selected={[]} onToggle={onToggle} />);
+
+  await userEvent.click(screen.getByRole("button", { name: "Events" }));
+  await userEvent.click(screen.getByRole("button", { name: "Notices" }));
+
+  expect(onToggle.mock.calls).toEqual([["event"], ["notice"]]);
 });

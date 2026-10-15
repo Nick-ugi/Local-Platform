@@ -125,8 +125,35 @@ export interface PlaceMarker {
   subtype: FacilitySubtype | null
 }
 
-/** A marker of any kind. Events and notices join when the map shows them. */
-export type MapMarker = PlaceMarker
+/** An event among the markers of GET /map/markers. */
+export interface EventMarker {
+  kind: 'event'
+  slug: string
+  latitude: number
+  longitude: number
+  title: string
+  startsAt: string
+  endsAt: string | null
+  venueName: string
+}
+
+/** A notice among the markers of GET /map/markers. Only notices with a location are on the map. */
+export interface NoticeMarker {
+  kind: 'notice'
+  slug: string
+  latitude: number
+  longitude: number
+  title: string
+  type: NoticeType
+  isOfficial: boolean
+  startsAt: string
+  endsAt: string | null
+}
+
+/** A marker of any kind. Slugs are unique within a kind only, so a marker is told by both. */
+export type MapMarker = PlaceMarker | EventMarker | NoticeMarker
+
+export type MarkerKind = MapMarker['kind']
 
 /** GET /map/markers */
 export interface MarkersResponse {

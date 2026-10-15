@@ -1,4 +1,5 @@
-import type { Category, FacilitySubtype, LatLng, MapMarker } from "@queenstown/shared";
+import type { Category, LatLng, MapMarker, MarkerKind } from "@queenstown/shared";
+import { keyOf } from "./selection";
 
 // The API and the app's own types say latitude and longitude. GeoJSON and Mapbox want
 // [longitude, latitude]. This file is the one place where the order is turned round.
@@ -7,9 +8,9 @@ export type LngLat = [longitude: number, latitude: number];
 
 /** What the map's layers read from each marker. */
 export interface MarkerProperties {
-  slug: string;
-  category: Category;
-  subtype: FacilitySubtype | null;
+  /** "event:lakefront-night-market": slugs are unique within a kind only (lib/map/selection.ts). */
+  key: string;
+  kind: MarkerKind;
   /** The letter drawn inside the marker until the categories get icons. */
   label: string;
 }
@@ -28,7 +29,10 @@ interface PointCollection<P> {
 export type MarkerCollection = PointCollection<MarkerProperties>;
 export type PositionCollection = PointCollection<Record<string, never>>;
 
-// The wireframes mark a public facility with P.
+// The wireframes mark a public facility with P and a notice with "!" (m-map-notice).
+const EVENT_LABEL = "E";
+const NOTICE_LABEL = "!";
+
 const LABELS: Record<Category, string> = {
   food: "F",
   cafe: "C",
@@ -50,10 +54,9 @@ export function toFeatureCollection(markers: readonly MapMarker[]): MarkerCollec
       type: "Feature",
       geometry: { type: "Point", coordinates: toLngLat(marker) },
       properties: {
-        slug: marker.slug,
-        category: marker.category,
-        subtype: marker.subtype,
-        label: LABELS[marker.category],
+        key: keyOf(marker),
+        kind: marker.kind,
+        label: marker.kind === "place" ? LABELS[marker.category] : marker.kind === "event" ? EVENT_LABEL : NOTICE_LABEL,
       },
     })),
   };

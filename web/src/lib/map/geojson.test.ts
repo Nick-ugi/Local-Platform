@@ -33,12 +33,42 @@ test("carries what the layers need", () => {
   expect(collection.type).toBe("FeatureCollection");
   expect(collection.features.map((feature) => feature.type)).toEqual(Array(6).fill("Feature"));
   expect(collection.features.map((feature) => feature.properties)).toEqual([
-    { slug: "a", category: "food", subtype: null, label: "F" },
-    { slug: "b", category: "cafe", subtype: null, label: "C" },
-    { slug: "c", category: "bar", subtype: null, label: "B" },
-    { slug: "d", category: "activity", subtype: null, label: "A" },
-    { slug: "e", category: "shopping", subtype: null, label: "S" },
-    { slug: "f", category: "facility", subtype: "toilet", label: "P" },
+    { key: "place:a", kind: "place", label: "F" },
+    { key: "place:b", kind: "place", label: "C" },
+    { key: "place:c", kind: "place", label: "B" },
+    { key: "place:d", kind: "place", label: "A" },
+    { key: "place:e", kind: "place", label: "S" },
+    { key: "place:f", kind: "place", label: "P" },
+  ]);
+});
+
+test("marks events and notices apart from places", () => {
+  const event: MapMarker = {
+    kind: "event",
+    slug: "a",
+    latitude: -45.0331,
+    longitude: 168.6597,
+    title: "Market",
+    startsAt: "2026-10-09T04:00:00Z",
+    endsAt: null,
+    venueName: "Earnslaw Park",
+  };
+  const notice: MapMarker = {
+    kind: "notice",
+    slug: "a",
+    latitude: -45.0312,
+    longitude: 168.6626,
+    title: "Works",
+    type: "road-work",
+    isOfficial: true,
+    startsAt: "2026-10-05T18:00:00Z",
+    endsAt: null,
+  };
+
+  expect(toFeatureCollection([marker("a", "food"), event, notice]).features.map((f) => f.properties)).toEqual([
+    { key: "place:a", kind: "place", label: "F" },
+    { key: "event:a", kind: "event", label: "E" },
+    { key: "notice:a", kind: "notice", label: "!" },
   ]);
 });
 
