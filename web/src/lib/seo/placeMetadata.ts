@@ -1,6 +1,5 @@
-import type { PlaceDetail } from "@queenstown/shared";
+import { httpUrl, type PlaceDetail } from "@queenstown/shared";
 import type { Metadata } from "next";
-import { httpUrl } from "@/lib/format";
 import { shorten } from "./text";
 
 /**

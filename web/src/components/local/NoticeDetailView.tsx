@@ -1,10 +1,9 @@
-import type { NoticeDetail } from "@queenstown/shared";
+import { formatDate, httpUrl, type NoticeDetail } from "@queenstown/shared";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { BackLink } from "@/components/nav/BackLink";
 import { ShareButton } from "@/components/place/ShareButton";
 import { ViewOnMapLink } from "@/components/place/ViewOnMapLink";
-import { formatDate, httpUrl } from "@/lib/format";
 import { DetailRow, EndedNotice, sideActionClass } from "./DetailParts";
 import { NoticeBadges } from "./NoticeBadges";
 import { NoticePeriodText } from "./NoticePeriodText";

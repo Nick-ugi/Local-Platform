@@ -1,12 +1,10 @@
-import type { EventDetail } from "@queenstown/shared";
+import { type EventDetail, formatDate, formatEventWhen, httpUrl } from "@queenstown/shared";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { BackLink } from "@/components/nav/BackLink";
 import { PlaceImage } from "@/components/place/PlaceImage";
 import { ShareButton } from "@/components/place/ShareButton";
 import { ViewOnMapLink } from "@/components/place/ViewOnMapLink";
-import { formatEventWhen } from "@/lib/dates";
-import { formatDate, httpUrl } from "@/lib/format";
 import { DetailRow, EndedNotice, sideActionClass } from "./DetailParts";
 
 /**

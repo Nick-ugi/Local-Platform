@@ -1,7 +1,7 @@
 "use client";
 
+import { httpUrl } from "@queenstown/shared";
 import { type ReactNode, useEffect, useRef, useState } from "react";
-import { httpUrl } from "@/lib/format";
 
 type Props = {
   src: string | null;

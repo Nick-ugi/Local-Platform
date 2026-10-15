@@ -1,10 +1,10 @@
+import { formatEventWhen } from "@queenstown/shared";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { cache } from "react";
 import { EventDetailView } from "@/components/local/EventDetailView";
 import { getEvent } from "@/lib/api/events";
-import { formatEventWhen } from "@/lib/dates";
 import { eventMetadata } from "@/lib/seo/localMetadata";
 
 type Props = { params: Promise<{ slug: string }> };

@@ -1,7 +1,6 @@
-import type { EventSummary } from "@queenstown/shared";
+import { type EventSummary, formatEventWhen } from "@queenstown/shared";
 import Link from "next/link";
 import { PlaceImage } from "@/components/place/PlaceImage";
-import { formatEventWhen } from "@/lib/dates";
 
 const imageClass = "h-16 w-24 shrink-0 rounded-lg object-cover";
 

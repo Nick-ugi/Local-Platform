@@ -1,10 +1,10 @@
+import { normalizeQuery } from "@queenstown/shared";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BackLink } from "@/components/nav/BackLink";
 import { SearchBox } from "@/components/search/SearchBox";
 import { SearchResults } from "@/components/search/SearchResults";
-import { normalizeQuery } from "@/lib/places/listUrl";
 import { loadPlaceList } from "@/lib/places/loadPlaceList";
 
 type Props = { searchParams: Promise<{ q?: string | string[]; page?: string | string[] }> };
