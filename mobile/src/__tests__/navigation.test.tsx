@@ -1,4 +1,4 @@
-import { fireEvent, renderRouter, screen, waitFor, within } from "expo-router/testing-library";
+import { act, fireEvent, renderRouter, screen, waitFor, within } from "expo-router/testing-library";
 import { getPlace } from "@/api/places";
 import RootLayout from "@/app/_layout";
 import TabsLayout from "@/app/(tabs)/_layout";
@@ -7,6 +7,9 @@ import MapTab from "@/app/(tabs)/index";
 import MoreTab from "@/app/(tabs)/more";
 import AboutScreen from "@/app/about";
 import EventRoute from "@/app/events/[slug]";
+import FavoritesRoute from "@/app/favorites";
+import LoginRoute from "@/app/login";
+import SignupRoute from "@/app/signup";
 import NoticeRoute from "@/app/notices/[slug]";
 import PlaceRoute from "@/app/places/[slug]";
 import SearchRoute from "@/app/search";
@@ -69,6 +72,9 @@ const routes = {
   "places/[slug]": PlaceRoute,
   "events/[slug]": EventRoute,
   "notices/[slug]": NoticeRoute,
+  login: LoginRoute,
+  signup: SignupRoute,
+  favorites: FavoritesRoute,
 };
 
 /** The tab bar's buttons. React Navigation labels each one like "Map, tab, 1 of 3". */
@@ -80,8 +86,10 @@ function tab(name: string) {
   return screen.getByRole("button", { name: new RegExp(`^${name}, tab,`) });
 }
 
-test("opens on the Map tab with Map, Explore and More in order", () => {
+test("opens on the Map tab with Map, Explore and More in order", async () => {
   renderRouter(routes, { initialUrl: "/" });
+  // The app looks for a stored session as it starts.
+  await act(async () => {});
 
   expect(screen).toHavePathname("/");
   expect(tabs().map((button) => button.props.accessibilityLabel)).toEqual([
@@ -105,8 +113,9 @@ test("the tabs lead to Explore and More", async () => {
   expect(within(screen.getByRole("link", { name: /About/ })).getByText("About")).toBeOnTheScreen();
 });
 
-test("More leads to About", () => {
+test("More leads to About", async () => {
   renderRouter(routes, { initialUrl: "/more" });
+  await act(async () => {});
 
   fireEvent.press(screen.getByRole("link", { name: /About/ }));
 

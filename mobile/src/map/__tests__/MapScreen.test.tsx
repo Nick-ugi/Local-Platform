@@ -95,6 +95,8 @@ test("asks for the position as soon as it opens, and starts on Queenstown", asyn
   expect(mapProps().token).toBe("pk.test");
   expect(mapProps().camera).toEqual({ latitude: -45.0312, longitude: 168.6626, zoom: 14 });
   expect(screen.getByRole("button", { name: "Show my location" })).toBeDisabled();
+  // The app looks for a stored session as it starts.
+  await act(async () => {});
 });
 
 test("a position in Queenstown moves the map there and shows it", async () => {

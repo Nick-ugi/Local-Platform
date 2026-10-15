@@ -1,5 +1,6 @@
 import { render } from "@testing-library/react-native";
 import type { ReactElement, ReactNode } from "react";
+import { AuthProvider } from "@/auth/AuthProvider";
 import { VisitorPositionProvider } from "@/geo/VisitorPosition";
 import { AppIntlProvider } from "@/i18n/AppIntlProvider";
 
@@ -7,7 +8,9 @@ import { AppIntlProvider } from "@/i18n/AppIntlProvider";
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <AppIntlProvider>
-      <VisitorPositionProvider>{children}</VisitorPositionProvider>
+      <AuthProvider>
+        <VisitorPositionProvider>{children}</VisitorPositionProvider>
+      </AuthProvider>
     </AppIntlProvider>
   );
 }

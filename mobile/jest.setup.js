@@ -7,3 +7,19 @@ jest.mock("expo-location", () => ({
     throw new Error("No location under Jest");
   }),
 }));
+
+// The phone's secure storage, as a plain in-memory store. Tests that care read it through the
+// module itself.
+jest.mock("expo-secure-store", () => {
+  const items = new Map();
+  return {
+    __items: items,
+    getItemAsync: jest.fn(async (key) => items.get(key) ?? null),
+    setItemAsync: jest.fn(async (key, value) => {
+      items.set(key, value);
+    }),
+    deleteItemAsync: jest.fn(async (key) => {
+      items.delete(key);
+    }),
+  };
+});

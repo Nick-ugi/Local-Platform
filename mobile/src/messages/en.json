@@ -34,7 +34,10 @@
     "about": "About",
     "events": "Events",
     "notices": "Notices",
-    "search": "Search"
+    "search": "Search",
+    "login": "Log in",
+    "signup": "Sign up",
+    "favorites": "Favorites"
   },
   "State": {
     "loading": "Loading…",
@@ -126,5 +129,33 @@
     "events": "Events come from their organisers. Each event links to its official page.",
     "notices": "Notices summarise information from public sources such as Queenstown Lakes District Council. A notice marked Official comes from a public authority. Each notice links to its original.",
     "original": "Queenstown Local is not an official channel. If anything here differs from the original source, the original is right."
+  },
+  "Account": {
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "At least 8 characters.",
+    "login": "Log in",
+    "signup": "Create account",
+    "logout": "Log out",
+    "newHere": "New here?",
+    "createAccount": "Create account",
+    "haveAccount": "Have an account?",
+    "signedInAs": "Signed in as {email}",
+    "wrongCredentials": "The email or password is wrong.",
+    "emailUsed": "This email already has an account. Log in instead.",
+    "invalidEmail": "Enter an email address like name@example.com.",
+    "shortPassword": "Use at least 8 characters.",
+    "failed": "We couldn't sign you in. Please try again.",
+    "favorites": "Favorites"
+  },
+  "Favorites": {
+    "save": "Save to favorites",
+    "saved": "Saved to favorites",
+    "saveFailed": "We couldn't save this place. Please try again.",
+    "empty": "No saved places yet. Save places from their screen with the heart.",
+    "loginToSee": "Log in to see the places you saved.",
+    "remove": "Remove {name} from favorites",
+    "loadFailed": "We couldn't load your favorites.",
+    "retry": "Try again"
   }
 }

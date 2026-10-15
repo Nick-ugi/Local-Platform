@@ -113,12 +113,17 @@ src/places                Explore와 Search의 가까운 순 목록 (usePlaceLis
 src/detail                Place / Event / Notice 상세와 그 상태(로딩, 다시 시도, 없음)
 src/links                 전화, 웹사이트, 길찾기, 공유 (Linking, Share)
 src/geo                   위치 권한과 현재 위치. App 전체가 VisitorPositionProvider로 같은 답을 쓴다.
+src/auth                  로그인, 가입, Favorite. Refresh Token은 expo-secure-store에 둔다.
 src/local                 Notice의 유형, Official, 기간
 src/ui                    칩, 검색창, 상태 안내, 이미지, 색
 src/i18n, src/messages    화면 문구
 ```
 
 ## 알아 둘 것
+
+- **11주차에 네이티브 모듈(`expo-secure-store`)이 들어왔다.** 그 전의 개발 빌드에는 없으므로 `npm run android`로 한 번 다시 빌드한다. 그 뒤로는 Metro만 띄우면 된다.
+- **로그인은 기기에 남는다.** Refresh Token은 기기의 보안 저장소에, Access Token은 메모리에만 둔다. 앱을 껐다 켜도 로그인되어 있다. Log out은 서버의 Refresh Token도 무효로 만든다.
+- **하트를 누르다 로그인하러 가면** 로그인한 뒤 돌아와 저장까지 끝난다(m-login 1번).
 
 - **React가 두 벌이다.** App은 Expo SDK 57의 React 19.2.3, Web은 19.3.0을 쓴다. npm은 App의 것을 `mobile/node_modules`에, Web의 것을 루트에 둔다. Metro는 App의 것을 고르고 번들에는 하나만 들어간다. Jest는 Node처럼 찾으므로 `jest.config.js`에서 `react`를 App의 것으로 보낸다. React Native는 React의 버전이 정확히 맞아야 하므로 `react-test-renderer`도 `19.2.3`에 고정한다.
 - **지도 SDK 없이 정할 수 있는 것은 `shared`에 있다.** GeoJSON 변환, 영역, Marker의 key는 Web과 같은 함수(`shared/src/map`)를 쓴다. Marker 요청 훅(`src/map/useMarkers.ts`)은 Web의 것과 규칙이 같다.
