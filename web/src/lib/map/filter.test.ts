@@ -1,5 +1,6 @@
 import { expect, test } from "vitest";
-import { parseFilter, serializeFilter, toggleFilter } from "./filter";
+import type { MapMarker } from "@queenstown/shared";
+import { filterHides, parseFilter, serializeFilter, toggleFilter } from "./filter";
 
 test("reads the filter from the URL value", () => {
   expect(parseFilter("food,cafe")).toEqual(["food", "cafe"]);
@@ -10,7 +11,11 @@ test("keeps the category order whatever the URL order", () => {
 });
 
 test("drops unknown values and repeats", () => {
-  expect(parseFilter("food,hotel,food,,event")).toEqual(["food"]);
+  expect(parseFilter("food,hotel,food,,places")).toEqual(["food"]);
+});
+
+test("reads events and notices after the categories", () => {
+  expect(parseFilter("notice,event,cafe")).toEqual(["cafe", "event", "notice"]);
 });
 
 test("reads nothing from a missing or empty value", () => {
@@ -30,4 +35,20 @@ test("toggling adds and removes", () => {
 
 test("toggling keeps the category order", () => {
   expect(toggleFilter(["cafe", "shopping"], "food")).toEqual(["food", "cafe", "shopping"]);
+});
+
+test("toggling an event or notice chip keeps the chip order", () => {
+  expect(toggleFilter(["notice"], "food")).toEqual(["food", "notice"]);
+  expect(toggleFilter(["food", "notice"], "event")).toEqual(["food", "event", "notice"]);
+});
+
+test("a filter hides the markers whose chip is off", () => {
+  const place = { kind: "place", category: "food" } as MapMarker;
+  const event = { kind: "event" } as MapMarker;
+
+  expect(filterHides([], place)).toBe(false);
+  expect(filterHides(["food"], place)).toBe(false);
+  expect(filterHides(["cafe"], place)).toBe(true);
+  expect(filterHides(["event"], event)).toBe(false);
+  expect(filterHides(["food", "notice"], event)).toBe(true);
 });

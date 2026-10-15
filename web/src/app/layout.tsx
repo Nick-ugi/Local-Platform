@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
 import { BottomNav } from "@/components/nav/BottomNav";
 import { TopNav } from "@/components/nav/TopNav";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 // viewport-fit=cover lets the bottom tabs read the safe-area inset on phones.
@@ -15,7 +16,8 @@ export const viewport: Viewport = {
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Nav");
   const brand = t("brand");
-  return { title: { default: brand, template: `%s | ${brand}` } };
+  // Canonical links and og:url are written as paths; metadataBase makes them full addresses.
+  return { metadataBase: siteUrl(), title: { default: brand, template: `%s | ${brand}` } };
 }
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

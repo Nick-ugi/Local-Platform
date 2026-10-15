@@ -109,3 +109,50 @@ test("does not turn a non-web address into a link", () => {
   // The source name is still shown, just not as a link.
   expect(document.body.textContent).toContain("Source: Business website");
 });
+
+test("shows the category under the name", () => {
+  const { rerender } = renderWithMessages(<PlaceDetailView place={full} />);
+  expect(screen.getByText("Food", { selector: "p" })).toBeInTheDocument();
+
+  rerender(<PlaceDetailView place={{ ...full, category: "facility", subtype: "toilet" }} />);
+  expect(screen.getByText("Facilities · Public toilet", { selector: "p" })).toBeInTheDocument();
+
+  rerender(<PlaceDetailView place={{ ...full, category: "facility", subtype: "other" }} />);
+  expect(screen.getByText("Facilities", { selector: "p" })).toBeInTheDocument();
+});
+
+test("links to the map", () => {
+  renderWithMessages(<PlaceDetailView place={full} />);
+
+  expect(screen.getByRole("link", { name: "View on map" })).toHaveAttribute("href", "/?place=lakeside-kitchen");
+});
+
+test("offers the quick actions", () => {
+  renderWithMessages(<PlaceDetailView place={full} />);
+
+  const actions = within(screen.getByRole("group", { name: "Quick actions" }));
+  expect(actions.getByRole("link", { name: "Call" })).toBeInTheDocument();
+  expect(actions.getByRole("button", { name: "Share" })).toBeInTheDocument();
+});
+
+test("shows the image only when it can", () => {
+  const { rerender } = renderWithMessages(
+    <PlaceDetailView place={{ ...full, imageUrl: "https://lakesidekitchen.example/front.jpg" }} />,
+  );
+  expect(screen.getByRole("img", { name: "Lakeside Kitchen" })).toHaveAttribute(
+    "src",
+    "https://lakesidekitchen.example/front.jpg",
+  );
+
+  for (const imageUrl of [null, "javascript:alert(1)"]) {
+    rerender(<PlaceDetailView place={{ ...full, imageUrl }} />);
+    expect(screen.queryByRole("img")).toBeNull();
+  }
+});
+
+test("shows a phone it cannot dial as text", () => {
+  renderWithMessages(<PlaceDetailView place={{ ...full, phone: "call us" }} />);
+
+  expect(screen.getByText("call us")).toBeInTheDocument();
+  expect(screen.queryByRole("link", { name: "call us" })).toBeNull();
+});

@@ -56,6 +56,16 @@ cd backend
 curl http://localhost:8080/actuator/health
 ```
 
+## Seed 데이터
+
+방문자에게 보이는 Place, Event, Notice는 `seed/`의 CSV에 두고 저장소 루트에서 올린다. 열의 뜻과 지켜야 할 것은 [seed/README.md](seed/README.md)에 있다.
+
+```bash
+bash backend/seed/load-seed.sh
+```
+
+한 트랜잭션으로 실행하므로 한 줄이라도 거부되면 아무것도 바뀌지 않는다. 같은 파일을 다시 올려도 값이 바뀐 줄만 고친다.
+
 ## 테스트
 
 Docker가 실행 중이어야 한다. 테스트는 Testcontainers로 PostGIS를 따로 띄우므로 로컬 DB의 데이터를 건드리지 않는다.
@@ -71,7 +81,9 @@ cd backend
 src/main/java/com/queenstownlocal/backend
  ├── common/error    오류 코드와 Problem Details 응답
  ├── map             Map API (지도 영역의 Marker)
- └── place           Place API, Category 코드
+ └── place           Place API (목록, 검색, 상세), Category 코드
+
+seed                 Place, Event, Notice의 Seed 데이터와 올리는 스크립트
 
 src/main/resources
  ├── application.yml

@@ -16,11 +16,27 @@
     "shopping": "Shopping",
     "facility": "Facilities"
   },
+  "Subtype": {
+    "toilet": "Public toilet",
+    "parking": "Parking",
+    "information": "Information centre",
+    "library": "Library",
+    "medical": "Medical"
+  },
+  "NoticeType": {
+    "road-work": "Road Work",
+    "road-closure": "Road Closure",
+    "public-notice": "Public Notice",
+    "emergency": "Emergency"
+  },
   "Pages": {
     "map": "Map",
     "explore": "Explore",
     "local": "Local",
-    "more": "More"
+    "more": "More",
+    "notices": "Notices",
+    "events": "Events",
+    "about": "About"
   },
   "State": {
     "loading": "Loading…",
@@ -47,12 +63,100 @@
     "closePreview": "Close",
     "truncated": "Zoom in to see every place."
   },
+  "Explore": {
+    "all": "All",
+    "categories": "Categories",
+    "emptyAll": "No places yet.",
+    "emptyCategory": "No places in this category yet.",
+    "description": "Find places to eat, drink, shop and visit in Queenstown.",
+    "categoryDescription": "{category} in Queenstown."
+  },
+  "Nearby": {
+    "nearestFirst": "Nearest first",
+    "useMyLocation": "Use my location",
+    "locating": "Finding your location…",
+    "fromYourLocation": "From your location",
+    "outsideArea": "You're outside the Queenstown area, so places are ordered from the centre of Queenstown.",
+    "locationDenied": "Location is turned off for this site. Turn it on in your browser settings to see distances.",
+    "locationUnavailable": "We couldn't find your location.",
+    "sortFailed": "We couldn't sort by your location.",
+    "retry": "Try again"
+  },
+  "Search": {
+    "label": "Search places",
+    "clear": "Clear search",
+    "title": "Search",
+    "titleFor": "Search: {q}",
+    "hint": "Search for a place by name or keyword.",
+    "count": "{count, plural, one {# result} other {# results}}",
+    "empty": "No places match “{q}”."
+  },
+  "Paging": {
+    "label": "Pages",
+    "previous": "Previous",
+    "next": "Next",
+    "position": "Page {page} of {pages}"
+  },
   "Place": {
     "breadcrumb": "Breadcrumb",
     "address": "Address",
     "openingHours": "Opening hours",
     "contact": "Contact",
+    "viewOnMap": "View on map",
     "source": "Source: <link>{source}</link>",
-    "updated": "Updated {date}"
+    "updated": "Updated {date}",
+    "actions": "Quick actions",
+    "call": "Call",
+    "website": "Website",
+    "directions": "Directions",
+    "share": "Share",
+    "linkCopied": "Link copied",
+    "shareFailed": "Couldn't share this page. Copy the address from your browser instead."
+  },
+  "Local": {
+    "sections": "Local",
+    "notices": "Notices",
+    "events": "Events",
+    "noticeTypes": "Notice types",
+    "eventPeriods": "Dates",
+    "allTypes": "All types",
+    "all": "All",
+    "today": "Today",
+    "week": "This Week",
+    "month": "This Month",
+    "official": "Official",
+    "from": "From {date}",
+    "noNotices": "There are no current notices.",
+    "noNoticesOfType": "There are no current notices of this type.",
+    "showAllTypes": "Show all types",
+    "noEvents": "There are no upcoming events.",
+    "noEventsInPeriod": "There are no events in this period.",
+    "showAllEvents": "Show all events",
+    "noticesDescription": "Road works, closures and public notices in Queenstown, with where they apply.",
+    "eventsDescription": "Events on in Queenstown, by date."
+  },
+  "Detail": {
+    "period": "Period",
+    "location": "Location",
+    "source": "Source",
+    "openOriginal": "Open original",
+    "when": "When",
+    "where": "Where",
+    "eventPage": "Official event page",
+    "noticeEnded": "This notice has ended.",
+    "eventEnded": "This event has ended.",
+    "updated": "Updated {date}",
+    "newTab": "(opens in a new tab)"
+  },
+  "About": {
+    "title": "About Queenstown Local",
+    "description": "What Queenstown Local is and where its places, events and notices come from.",
+    "intro": "Queenstown Local puts what you need around Queenstown on one map: places to eat, drink, shop and visit, public facilities, what's on, and notices such as road works and closures.",
+    "audience": "It is for visitors, people who live here and people who have just moved here.",
+    "sourcesTitle": "Where the information comes from",
+    "places": "Places come from the businesses' own websites and public listings. Each place shows its source and when it was last updated.",
+    "events": "Events come from their organisers. Each event links to its official page.",
+    "notices": "Notices summarise information from public sources such as Queenstown Lakes District Council. A notice marked Official comes from a public authority. Each notice links to its original.",
+    "original": "Queenstown Local is not an official channel. If anything here differs from the original source, the original is right."
   }
 }

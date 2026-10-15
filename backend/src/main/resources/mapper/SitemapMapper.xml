@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.queenstownlocal.backend.sitemap.SitemapMapper">
+
+	<!-- The same rules as the lists (docs/05-erd.md section 5), in a fixed order. -->
+
+	<select id="findPlaces" resultType="com.queenstownlocal.backend.sitemap.SitemapEntry">
+		SELECT slug, updated_at
+		FROM place
+		WHERE status = 'public'
+		ORDER BY id
+	</select>
+
+	<select id="findEvents" resultType="com.queenstownlocal.backend.sitemap.SitemapEntry">
+		SELECT slug, updated_at
+		FROM event
+		WHERE status = 'public'
+		  AND <include refid="com.queenstownlocal.backend.event.EventMapper.effectiveEnd"/> &gt;= #{now}
+		ORDER BY id
+	</select>
+
+	<select id="findNotices" resultType="com.queenstownlocal.backend.sitemap.SitemapEntry">
+		SELECT slug, updated_at
+		FROM notice
+		WHERE status = 'public'
+		  AND (ends_at IS NULL OR ends_at &gt;= #{now})
+		ORDER BY id
+	</select>
+
+</mapper>

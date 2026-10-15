@@ -1,8 +1,11 @@
-import type { MapMarker } from "@queenstown/shared";
+import type { EventDetail, MapMarker, NoticeDetail, PlaceDetail } from "@queenstown/shared";
 import { act, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ComponentProps } from "react";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
+import { getEvent } from "@/lib/api/events";
+import { getNotice } from "@/lib/api/notices";
+import { getPlace } from "@/lib/api/places";
 import { type LocationResult, locate, wasLocationGranted } from "@/lib/geo/location";
 import type { MarkersState } from "@/lib/map/useMarkers";
 import { useMarkers } from "@/lib/map/useMarkers";
@@ -24,6 +27,10 @@ const markersState = vi.hoisted(() => ({ current: null as MarkersState | null })
 vi.mock("@/lib/map/useMarkers", () => ({ useMarkers: vi.fn(() => markersState.current) }));
 
 vi.mock("@/lib/geo/location", () => ({ locate: vi.fn(), wasLocationGranted: vi.fn() }));
+
+vi.mock("@/lib/api/places", () => ({ getPlace: vi.fn() }));
+vi.mock("@/lib/api/events", () => ({ getEvent: vi.fn() }));
+vi.mock("@/lib/api/notices", () => ({ getNotice: vi.fn() }));
 
 // Next.js keeps useSearchParams in step with history.replaceState. This does the same on top of
 // jsdom's real address bar, so the tests can read the URL a visitor would see.
@@ -93,6 +100,16 @@ beforeEach(() => {
   // A first visit: the browser has not been asked for the position yet.
   vi.mocked(wasLocationGranted).mockReset().mockResolvedValue(false);
   vi.mocked(locate).mockReset().mockResolvedValue({ status: "unavailable" });
+  // A lookup that no test answers stays open, so it cannot change a screen behind a test's back.
+  vi.mocked(getPlace)
+    .mockReset()
+    .mockReturnValue(new Promise(() => {}));
+  vi.mocked(getEvent)
+    .mockReset()
+    .mockReturnValue(new Promise(() => {}));
+  vi.mocked(getNotice)
+    .mockReset()
+    .mockReturnValue(new Promise(() => {}));
 });
 
 afterEach(() => {
@@ -185,20 +202,20 @@ test("selecting a marker shows its preview and puts it in the URL", () => {
   expect(screen.queryByRole("heading", { name: "Lakeside Kitchen" })).not.toBeInTheDocument();
   const entries = window.history.length;
 
-  act(() => mapProps().onSelect("lakeside-kitchen"));
+  act(() => mapProps().onSelect("place:lakeside-kitchen"));
 
   expect(screen.getByRole("heading", { name: "Lakeside Kitchen" })).toBeInTheDocument();
   expect(screen.getByRole("link", { name: "View details" })).toHaveAttribute("href", "/places/lakeside-kitchen");
   expect(window.location.search).toBe("?place=lakeside-kitchen");
   expect(window.history.length).toBe(entries);
-  expect(mapProps().selectedSlug).toBe("lakeside-kitchen");
+  expect(mapProps().selectedKey).toBe("place:lakeside-kitchen");
 });
 
 test("reads the selection from the URL", () => {
   openMap("/?place=lakeside-kitchen");
 
   expect(screen.getByRole("heading", { name: "Lakeside Kitchen" })).toBeInTheDocument();
-  expect(mapProps().selectedSlug).toBe("lakeside-kitchen");
+  expect(mapProps().selectedKey).toBe("place:lakeside-kitchen");
 });
 
 test("shows no preview for a place that is not among the markers", () => {
@@ -214,7 +231,7 @@ test("closing the preview clears the selection", async () => {
 
   expect(screen.queryByRole("heading", { name: "Lakeside Kitchen" })).not.toBeInTheDocument();
   expect(window.location.search).toBe("?filter=food");
-  expect(mapProps().selectedSlug).toBeNull();
+  expect(mapProps().selectedKey).toBeNull();
 });
 
 test("a click on the map itself closes the preview", () => {
@@ -485,4 +502,300 @@ test("offers no location button when there is no map", () => {
   openMap();
 
   expect(screen.queryByRole("button", { name: "Show my location" })).not.toBeInTheDocument();
+});
+
+// A link such as /?place=frankton-market can name a place the map is not showing: the marker is
+// outside the box, or hidden by a filter. The screen then asks the API for that one place.
+
+const market: PlaceDetail = {
+  slug: "frankton-market",
+  name: "Frankton Market",
+  category: "shopping",
+  subtype: null,
+  address: "Frankton",
+  imageUrl: null,
+  latitude: -45.0195,
+  longitude: 168.732,
+  description: null,
+  openingHours: null,
+  phone: null,
+  website: null,
+  source: "Check data",
+  sourceUrl: "https://example.com",
+  updatedAt: "2026-10-02T01:30:00Z",
+};
+
+/** A lookup the test answers by hand. */
+function pendingPlace() {
+  let resolve!: (place: PlaceDetail | null) => void;
+  const promise = new Promise<PlaceDetail | null>((res) => {
+    resolve = res;
+  });
+  return { promise, resolve };
+}
+
+test("a place from the URL that is not on screen is looked up and shown", async () => {
+  vi.mocked(getPlace).mockResolvedValue(market);
+
+  openMap("/?place=frankton-market");
+
+  expect(await screen.findByRole("heading", { name: "Frankton Market" })).toBeInTheDocument();
+  expect(getPlace).toHaveBeenCalledTimes(1);
+  expect(getPlace).toHaveBeenCalledWith("frankton-market");
+  // A first arrival: the map goes to the place the link is about.
+  expect(mapProps().camera).toEqual({ latitude: -45.0195, longitude: 168.732, zoom: 16 });
+  expect(window.location.search).toBe("?place=frankton-market");
+});
+
+test("it leaves a map the visitor has positioned where it is", async () => {
+  const lakefront = { latitude: -45.0331, longitude: 168.6597, zoom: 15 };
+  window.sessionStorage.setItem("map.camera", JSON.stringify(lakefront));
+  vi.mocked(getPlace).mockResolvedValue(market);
+
+  openMap("/?place=frankton-market");
+
+  // Back from a detail page: the preview returns, the map stays where the visitor left it.
+  expect(await screen.findByRole("heading", { name: "Frankton Market" })).toBeInTheDocument();
+  expect(mapProps().camera).toEqual(lakefront);
+});
+
+test("the lookup waits for the markers", () => {
+  markersAre({ status: "loading", markers: [] });
+
+  openMap("/?place=frankton-market");
+
+  expect(getPlace).not.toHaveBeenCalled();
+});
+
+test("a marker that is on screen is not looked up", () => {
+  openMap("/?place=lakeside-kitchen");
+
+  expect(screen.getByRole("heading", { name: "Lakeside Kitchen" })).toBeInTheDocument();
+  expect(getPlace).not.toHaveBeenCalled();
+});
+
+test("a place that no longer exists leaves the URL", async () => {
+  vi.mocked(getPlace).mockResolvedValue(null);
+
+  openMap("/?filter=food&place=gone");
+
+  await waitFor(() => expect(window.location.search).toBe("?filter=food"));
+  expect(screen.queryByRole("link", { name: "View details" })).not.toBeInTheDocument();
+  expect(mapProps().selectedKey).toBeNull();
+});
+
+test("a failed lookup changes nothing", async () => {
+  vi.mocked(getPlace).mockRejectedValue(new Error("down"));
+
+  openMap("/?place=frankton-market");
+  await waitFor(() => expect(getPlace).toHaveBeenCalled());
+  await act(async () => {});
+
+  expect(window.location.search).toBe("?place=frankton-market");
+  expect(screen.queryByRole("link", { name: "View details" })).not.toBeInTheDocument();
+  expect(mapProps().camera).toEqual({ latitude: -45.0312, longitude: 168.6626, zoom: 14 });
+});
+
+test("a place is looked up once", async () => {
+  vi.mocked(getPlace).mockRejectedValue(new Error("down"));
+  openMap("/?place=frankton-market");
+  await waitFor(() => expect(getPlace).toHaveBeenCalledTimes(1));
+  await act(async () => {});
+
+  // Each move of the map brings a new answer without the place.
+  markersAre({ markers: [] });
+  act(() => mapProps().onMove(queenstownBox, { latitude: -45.03, longitude: 168.66, zoom: 14 }));
+  await act(async () => {});
+
+  expect(getPlace).toHaveBeenCalledTimes(1);
+});
+
+test("the place wins over a filter that hides it", async () => {
+  vi.mocked(getPlace).mockResolvedValue(market);
+
+  openMap("/?filter=cafe&place=frankton-market");
+
+  expect(await screen.findByRole("heading", { name: "Frankton Market" })).toBeInTheDocument();
+  expect(window.location.search).toBe("?place=frankton-market");
+  expect(screen.queryAllByRole("button", { pressed: true })).toEqual([]);
+});
+
+test("a filter that shows the place stays", async () => {
+  vi.mocked(getPlace).mockResolvedValue(market);
+
+  openMap("/?filter=cafe,shopping&place=frankton-market");
+
+  expect(await screen.findByRole("heading", { name: "Frankton Market" })).toBeInTheDocument();
+  expect(window.location.search).toBe("?filter=cafe,shopping&place=frankton-market");
+});
+
+test("an answer for a place the visitor has left is dropped", async () => {
+  const lookup = pendingPlace();
+  vi.mocked(getPlace).mockReturnValue(lookup.promise);
+  openMap("/?place=frankton-market");
+  await waitFor(() => expect(getPlace).toHaveBeenCalled());
+
+  // The visitor picks another place before the answer arrives.
+  act(() => mapProps().onSelect("place:lakeside-kitchen"));
+  await act(async () => {
+    lookup.resolve(market);
+    await lookup.promise;
+  });
+
+  expect(screen.getByRole("heading", { name: "Lakeside Kitchen" })).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Frankton Market" })).not.toBeInTheDocument();
+  expect(window.location.search).toBe("?place=lakeside-kitchen");
+  expect(mapProps().camera).toEqual({ latitude: -45.0312, longitude: 168.6626, zoom: 14 });
+});
+
+test("an answer that arrives after the screen has gone touches nothing", async () => {
+  const lookup = pendingPlace();
+  vi.mocked(getPlace).mockReturnValue(lookup.promise);
+  const { unmount } = openMap("/?place=gone");
+  await waitFor(() => expect(getPlace).toHaveBeenCalled());
+
+  unmount();
+  // By now the address belongs to another screen.
+  window.history.replaceState(null, "", "/places/somewhere?place=gone");
+  await act(async () => {
+    lookup.resolve(null);
+    await lookup.promise;
+  });
+
+  expect(window.location.pathname + window.location.search).toBe("/places/somewhere?place=gone");
+});
+
+// Events and notices share the map with places. A slug is unique within its kind only.
+
+const nightMarket: MapMarker = {
+  kind: "event",
+  slug: "lakefront-night-market",
+  latitude: -45.0331,
+  longitude: 168.6597,
+  title: "Lakefront Night Market",
+  startsAt: "2026-10-09T17:00:00+13:00",
+  endsAt: "2026-10-09T21:00:00+13:00",
+  venueName: "Earnslaw Park",
+};
+
+const roadWorks: MapMarker = {
+  kind: "notice",
+  slug: "shotover-street-road-works",
+  latitude: -45.0312,
+  longitude: 168.6626,
+  title: "Shotover Street road works",
+  type: "road-work",
+  isOfficial: true,
+  startsAt: "2026-10-06T07:00:00+13:00",
+  endsAt: null,
+};
+
+const eventDetail: EventDetail = {
+  ...(nightMarket as Extract<MapMarker, { kind: "event" }>),
+  imageUrl: null,
+  description: null,
+  address: null,
+  source: "Organiser",
+  sourceUrl: "https://nightmarket.example",
+  updatedAt: "2026-10-01T22:00:00Z",
+  ended: false,
+};
+
+const noticeDetail: NoticeDetail = {
+  slug: "lake-esplanade-closure",
+  title: "Lake Esplanade closed",
+  type: "road-closure",
+  isOfficial: true,
+  startsAt: "2026-10-17T08:00:00+13:00",
+  endsAt: "2026-10-17T18:00:00+13:00",
+  summary: "Closed for an event.",
+  locationName: "Lake Esplanade",
+  latitude: -45.0352,
+  longitude: 168.655,
+  sourceOrg: "QLDC",
+  sourceUrl: "https://qldc.example",
+  updatedAt: "2026-10-10T20:00:00Z",
+  ended: false,
+};
+
+test("selecting an event shows its card and replaces a selected place in the URL", () => {
+  markersAre({ markers: [kitchen, nightMarket] });
+  openMap("/?place=lakeside-kitchen");
+
+  act(() => mapProps().onSelect("event:lakefront-night-market"));
+
+  expect(window.location.search).toBe("?event=lakefront-night-market");
+  expect(mapProps().selectedKey).toBe("event:lakefront-night-market");
+  expect(screen.getByRole("heading", { name: "Lakefront Night Market" })).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "View details" })).toHaveAttribute(
+    "href",
+    "/events/lakefront-night-market",
+  );
+});
+
+test("reads a selected notice from the URL", () => {
+  markersAre({ markers: [kitchen, roadWorks] });
+  openMap("/?notice=shotover-street-road-works");
+
+  expect(mapProps().selectedKey).toBe("notice:shotover-street-road-works");
+  expect(screen.getByRole("heading", { name: "Shotover Street road works" })).toBeInTheDocument();
+  expect(screen.getByText("Road Work")).toBeInTheDocument();
+});
+
+test("an event selects the event, not a place with the same slug", () => {
+  const samePlace: MapMarker = { ...kitchen, slug: "lakefront-night-market", name: "Night Market Cafe" };
+  markersAre({ markers: [samePlace, nightMarket] });
+  openMap("/?event=lakefront-night-market");
+
+  expect(mapProps().selectedKey).toBe("event:lakefront-night-market");
+  expect(screen.getByRole("heading", { name: "Lakefront Night Market" })).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: "Night Market Cafe" })).not.toBeInTheDocument();
+});
+
+test("turning off the Events chip closes the card of a selected event", async () => {
+  markersAre({ markers: [kitchen, nightMarket] });
+  openMap("/?filter=food,event&event=lakefront-night-market");
+
+  await userEvent.click(screen.getByRole("button", { name: "Events" }));
+
+  expect(window.location.search).toBe("?filter=food");
+});
+
+test("an event from the URL that is not on screen is looked up and shown", async () => {
+  vi.mocked(getEvent).mockResolvedValue(eventDetail);
+
+  openMap("/?filter=food&event=lakefront-night-market");
+
+  expect(await screen.findByRole("heading", { name: "Lakefront Night Market" })).toBeInTheDocument();
+  expect(getEvent).toHaveBeenCalledWith("lakefront-night-market");
+  expect(getPlace).not.toHaveBeenCalled();
+  expect(mapProps().camera).toEqual({ latitude: -45.0331, longitude: 168.6597, zoom: 16 });
+  // The link is about the event, so the filter that hid it gives way.
+  expect(window.location.search).toBe("?event=lakefront-night-market");
+});
+
+test("an event that has ended leaves the URL", async () => {
+  vi.mocked(getEvent).mockResolvedValue({ ...eventDetail, ended: true });
+
+  openMap("/?event=lakefront-night-market");
+
+  await waitFor(() => expect(window.location.search).toBe(""));
+  expect(screen.queryByRole("heading", { name: "Lakefront Night Market" })).not.toBeInTheDocument();
+});
+
+test("a notice from the URL that is not on screen is looked up and shown", async () => {
+  vi.mocked(getNotice).mockResolvedValue(noticeDetail);
+
+  openMap("/?notice=lake-esplanade-closure");
+
+  expect(await screen.findByRole("heading", { name: "Lake Esplanade closed" })).toBeInTheDocument();
+  expect(mapProps().selectedKey).toBe("notice:lake-esplanade-closure");
+});
+
+test("a notice without a location leaves the URL", async () => {
+  vi.mocked(getNotice).mockResolvedValue({ ...noticeDetail, latitude: null, longitude: null, locationName: null });
+
+  openMap("/?filter=notice&notice=lake-esplanade-closure");
+
+  await waitFor(() => expect(window.location.search).toBe("?filter=notice"));
 });

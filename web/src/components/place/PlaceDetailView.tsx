@@ -4,81 +4,121 @@ import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { BackLink } from "@/components/nav/BackLink";
 import { displayUrl, formatDate, httpUrl, telHref } from "@/lib/format";
+import { PlaceActions } from "./PlaceActions";
+import { PlaceImage } from "./PlaceImage";
+import { ViewOnMapLink } from "./ViewOnMapLink";
 
 const externalLinkClass = "text-blue-700 underline underline-offset-2";
 
 /**
- * Place detail (wireframe d-place). The image, quick actions, "View on map" and Favorite arrive
- * with the Place and Map weeks. Rows the place has no value for are left out.
+ * Place detail (wireframes m-place and d-place). Rows the place has no value for are left out;
+ * the source and the date it was updated are always there.
+ *
+ * There is one DOM for both widths. From 768px it is two columns: the picture, name and
+ * description on the left, everything the visitor acts on in a 360px column on the right. On a
+ * phone the two column wrappers are `display: contents`, so their children join one column and
+ * `order` puts the quick actions right under the name.
  */
 export function PlaceDetailView({ place }: { place: PlaceDetail }) {
   const t = useTranslations("Place");
   const tNav = useTranslations("Nav");
   const tCategory = useTranslations("Category");
+  const tSubtype = useTranslations("Subtype");
 
   const website = place.website ? httpUrl(place.website) : null;
+  const tel = place.phone ? telHref(place.phone) : null;
   const sourceUrl = httpUrl(place.sourceUrl);
   const hasContact = Boolean(place.phone || website);
+  const kind =
+    place.subtype && place.subtype !== "other"
+      ? `${tCategory(place.category)} · ${tSubtype(place.subtype)}`
+      : tCategory(place.category);
 
   return (
-    <article className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 py-4 [overflow-wrap:anywhere] md:px-8 md:py-6">
+    <article className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-4 py-4 [overflow-wrap:anywhere] md:grid md:max-w-5xl md:grid-cols-[minmax(0,1fr)_360px] md:items-start md:gap-x-8 md:gap-y-5 md:px-8 md:py-6">
       {/* Phones get a Back link (wireframe m-place), wider screens the breadcrumb (d-place). */}
-      <div className="-mb-3 md:hidden">
+      <div className="order-1 -mb-3 md:hidden">
         <BackLink fallbackHref="/explore" />
       </div>
-      <nav aria-label={t("breadcrumb")} className="hidden gap-2 text-sm text-neutral-500 md:flex">
+      <nav aria-label={t("breadcrumb")} className="hidden gap-2 text-sm text-neutral-500 md:col-span-2 md:flex">
         <Link href="/explore">{tNav("explore")}</Link>
         <span aria-hidden="true">/</span>
         <Link href={`/explore/${place.category}`}>{tCategory(place.category)}</Link>
       </nav>
 
-      <h1 className="text-2xl font-bold">{place.name}</h1>
+      <div className="contents md:flex md:flex-col md:gap-5">
+        {/* An image that is missing or does not load leaves no gap. */}
+        <PlaceImage
+          src={place.imageUrl}
+          alt={place.name}
+          className="order-2 aspect-[16/9] w-full rounded-xl bg-neutral-200 object-cover md:order-none"
+        />
 
-      {place.description ? <p>{place.description}</p> : null}
+        <header className="order-3 md:order-none">
+          <h1 className="text-2xl font-bold">{place.name}</h1>
+          <p className="text-neutral-600">{kind}</p>
+        </header>
 
-      <Row title={t("address")}>
-        <p>{place.address}</p>
-      </Row>
+        {place.description ? <p className="order-5 md:order-none">{place.description}</p> : null}
+      </div>
 
-      {place.openingHours ? (
-        <Row title={t("openingHours")}>
-          <p>{place.openingHours}</p>
+      <div className="contents md:flex md:flex-col md:gap-5">
+        <div className="order-4 md:order-none">
+          <PlaceActions place={place} />
+        </div>
+
+        <Row title={t("address")} className="order-6">
+          <p>{place.address}</p>
+          <ViewOnMapLink
+            place={place}
+            className="flex min-h-11 items-center self-start font-semibold text-blue-700 underline underline-offset-2"
+          />
         </Row>
-      ) : null}
 
-      {hasContact ? (
-        <Row title={t("contact")}>
-          {place.phone ? (
-            <p>
-              <a href={telHref(place.phone)} className={externalLinkClass}>
-                {place.phone}
-              </a>
-            </p>
-          ) : null}
-          {website ? (
-            <p>
-              <ExternalLink href={website}>{displayUrl(website)}</ExternalLink>
-            </p>
-          ) : null}
-        </Row>
-      ) : null}
+        {place.openingHours ? (
+          <Row title={t("openingHours")} className="order-7">
+            <p>{place.openingHours}</p>
+          </Row>
+        ) : null}
 
-      <footer className="flex flex-col gap-1 border-t border-neutral-200 pt-4 text-sm text-neutral-500">
-        <p>
-          {t.rich("source", {
-            source: place.source,
-            link: (chunks) => (sourceUrl ? <ExternalLink href={sourceUrl}>{chunks}</ExternalLink> : chunks),
-          })}
-        </p>
-        <p>{t("updated", { date: formatDate(place.updatedAt) })}</p>
-      </footer>
+        {hasContact ? (
+          <Row title={t("contact")} className="order-8">
+            {place.phone ? (
+              <p>
+                {tel ? (
+                  <a href={tel} className={externalLinkClass}>
+                    {place.phone}
+                  </a>
+                ) : (
+                  place.phone
+                )}
+              </p>
+            ) : null}
+            {website ? (
+              <p>
+                <ExternalLink href={website}>{displayUrl(website)}</ExternalLink>
+              </p>
+            ) : null}
+          </Row>
+        ) : null}
+
+        <footer className="order-9 flex flex-col gap-1 border-t border-neutral-200 pt-4 text-sm text-neutral-500 md:order-none">
+          <p>
+            {t.rich("source", {
+              source: place.source,
+              link: (chunks) => (sourceUrl ? <ExternalLink href={sourceUrl}>{chunks}</ExternalLink> : chunks),
+            })}
+          </p>
+          <p>{t("updated", { date: formatDate(place.updatedAt) })}</p>
+        </footer>
+      </div>
     </article>
   );
 }
 
-function Row({ title, children }: { title: string; children: ReactNode }) {
+function Row({ title, className = "", children }: { title: string; className?: string; children: ReactNode }) {
   return (
-    <section className="flex flex-col gap-1 border-t border-neutral-200 pt-4">
+    <section className={`${className} flex flex-col gap-1 border-t border-neutral-200 pt-4 md:order-none`}>
       <h2 className="text-xs font-bold uppercase tracking-wide text-neutral-500">{title}</h2>
       {children}
     </section>

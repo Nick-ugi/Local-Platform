@@ -1,6 +1,7 @@
-import type { Category, MapBounds, MapMarker } from "@queenstown/shared";
+import type { MapBounds, MapMarker } from "@queenstown/shared";
 import { useCallback, useEffect, useState } from "react";
 import { getMarkers } from "@/lib/api/map";
+import type { FilterKey } from "./filter";
 
 /** How long the map has to stay still before its markers are requested. */
 const SETTLE_MS = 300;
@@ -24,7 +25,7 @@ const NO_ANSWER: Answer = { markers: [], truncated: false };
  * stayed the same for 300 ms, so dragging the map does not send a request per frame, and a
  * request that is no longer wanted is cancelled so its answer cannot replace a newer one.
  */
-export function useMarkers(bounds: MapBounds | null, filter: readonly Category[]): MarkersState {
+export function useMarkers(bounds: MapBounds | null, filter: readonly FilterKey[]): MarkersState {
   const [answer, setAnswer] = useState<Answer>(NO_ANSWER);
   // Which request the last answer or failure belongs to. While that is not the current one, it is loading.
   const [settled, setSettled] = useState<{ request: string; ok: boolean } | null>(null);

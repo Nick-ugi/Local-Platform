@@ -24,4 +24,33 @@
 		LIMIT #{limit}
 	</select>
 
+	<!-- Events that are not over (docs/05-erd.md section 5), earliest first. -->
+	<select id="findEventMarkers" resultType="com.queenstownlocal.backend.map.EventMarker">
+		SELECT 'event' AS kind, slug,
+		       ST_Y(location::geometry) AS latitude,
+		       ST_X(location::geometry) AS longitude,
+		       title, starts_at, ends_at, venue_name
+		FROM event
+		WHERE status = 'public'
+		  AND <include refid="com.queenstownlocal.backend.event.EventMapper.effectiveEnd"/> &gt;= #{now}
+		  AND ST_Intersects(location::geometry, ST_MakeEnvelope(#{west}, #{south}, #{east}, #{north}, 4326))
+		ORDER BY starts_at, id
+		LIMIT #{limit}
+	</select>
+
+	<!-- Notices that have not ended and have a location, latest first. -->
+	<select id="findNoticeMarkers" resultType="com.queenstownlocal.backend.map.NoticeMarker">
+		SELECT 'notice' AS kind, slug,
+		       ST_Y(location::geometry) AS latitude,
+		       ST_X(location::geometry) AS longitude,
+		       title, type, is_official, starts_at, ends_at
+		FROM notice
+		WHERE status = 'public'
+		  AND (ends_at IS NULL OR ends_at &gt;= #{now})
+		  AND location IS NOT NULL
+		  AND ST_Intersects(location::geometry, ST_MakeEnvelope(#{west}, #{south}, #{east}, #{north}, 4326))
+		ORDER BY starts_at DESC, id DESC
+		LIMIT #{limit}
+	</select>
+
 </mapper>

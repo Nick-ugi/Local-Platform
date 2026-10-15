@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { displayUrl, formatDate, httpUrl, telHref } from "./format";
+import { directionsUrl, displayUrl, formatDate, httpUrl, telHref } from "./format";
 
 test("formats a date in New Zealand time", () => {
   expect(formatDate("2026-10-02T01:30:00Z")).toBe("2 Oct 2026");
@@ -33,4 +33,17 @@ test("accepts only http and https URLs as links", () => {
 test("builds a tel link without the spaces", () => {
   expect(telHref("03 000 0000")).toBe("tel:030000000");
   expect(telHref("+64 3 000 0000")).toBe("tel:+6430000000");
+  expect(telHref("+64 (3) 000-0000")).toBe("tel:+64(3)000-0000");
+});
+
+test("does not build a tel link from something that is not a number", () => {
+  expect(telHref("call us")).toBeNull();
+  expect(telHref("")).toBeNull();
+  expect(telHref("12")).toBeNull();
+});
+
+test("builds a Google Maps directions link to the place", () => {
+  expect(directionsUrl({ latitude: -45.0322, longitude: 168.661 })).toBe(
+    "https://www.google.com/maps/dir/?api=1&destination=-45.0322,168.661",
+  );
 });

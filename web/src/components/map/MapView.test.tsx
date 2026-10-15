@@ -138,7 +138,7 @@ function renderMap(overrides: Partial<Props> = {}) {
     token: "pk.test",
     camera: { latitude: -45.0312, longitude: 168.6626, zoom: 14 },
     markers: [kitchen],
-    selectedSlug: null,
+    selectedKey: null,
     userLocation: null,
     onMove: vi.fn(),
     onSelect: vi.fn(),
@@ -331,15 +331,15 @@ test("reports the marker that was clicked", async () => {
   const { props } = renderMap();
   const map = await loadedMap();
 
-  map.featuresUnderPointer = [{ properties: { slug: "lakeside-kitchen" } }];
+  map.featuresUnderPointer = [{ properties: { key: "place:lakeside-kitchen" } }];
   act(() => map.fire("click", { point: { x: 120, y: 80 } }));
 
   expect(props.onSelect).toHaveBeenCalledTimes(1);
-  expect(props.onSelect).toHaveBeenCalledWith("lakeside-kitchen");
+  expect(props.onSelect).toHaveBeenCalledWith("place:lakeside-kitchen");
 });
 
 test("clears the selection on a click elsewhere", async () => {
-  const { props } = renderMap({ selectedSlug: "lakeside-kitchen" });
+  const { props } = renderMap({ selectedKey: "place:lakeside-kitchen" });
   const map = await loadedMap();
 
   map.featuresUnderPointer = [];
@@ -350,14 +350,14 @@ test("clears the selection on a click elsewhere", async () => {
 });
 
 test("draws the selected marker apart from the others", async () => {
-  const { update } = renderMap({ selectedSlug: "lakeside-kitchen" });
+  const { update } = renderMap({ selectedKey: "place:lakeside-kitchen" });
   const map = await loadedMap();
-  const selectedOnly = ["==", ["get", "slug"], "lakeside-kitchen"];
+  const selectedOnly = ["==", ["get", "key"], "place:lakeside-kitchen"];
   expect(Object.values(map.filters)).toContainEqual(selectedOnly);
 
-  update({ selectedSlug: "beach-street-bakery" });
+  update({ selectedKey: "place:beach-street-bakery" });
 
-  expect(Object.values(map.filters)).toContainEqual(["==", ["get", "slug"], "beach-street-bakery"]);
+  expect(Object.values(map.filters)).toContainEqual(["==", ["get", "key"], "place:beach-street-bakery"]);
   expect(Object.values(map.filters)).not.toContainEqual(selectedOnly);
 });
 
@@ -365,7 +365,7 @@ test("shows a pointer over a marker", async () => {
   renderMap();
   const map = await loadedMap();
 
-  map.featuresUnderPointer = [{ properties: { slug: "lakeside-kitchen" } }];
+  map.featuresUnderPointer = [{ properties: { key: "place:lakeside-kitchen" } }];
   act(() => map.fire("mousemove", { point: { x: 120, y: 80 } }));
   expect(map.canvas.style.cursor).toBe("pointer");
 
@@ -397,7 +397,7 @@ test("leaves a map alone once it has removed it", async () => {
     update({
       token: "pk.other",
       markers: [bakery],
-      selectedSlug: "beach-street-bakery",
+      selectedKey: "place:beach-street-bakery",
       userLocation: { latitude: -45.0312, longitude: 168.6626 },
       camera: { latitude: -45.0195, longitude: 168.732, zoom: 15 },
     }),

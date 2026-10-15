@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.queenstownlocal.backend.event.EventMapper">
+
+	<!--
+		When an event is over (docs/05-erd.md section 5): its end, or without one the end of the New
+		Zealand day it starts on. The day is cut in local time and turned back into an instant, so a
+		day of 23 or 25 hours ends at its real midnight.
+	-->
+	<sql id="effectiveEnd">
+		COALESCE(ends_at,
+		         (date_trunc('day', starts_at AT TIME ZONE 'Pacific/Auckland') + interval '1 day')
+		             AT TIME ZONE 'Pacific/Auckland')
+	</sql>
+
+	<!-- PostGIS stores a point as (longitude, latitude): ST_X is the longitude, ST_Y the latitude. -->
+	<select id="findPublicBySlug" resultType="com.queenstownlocal.backend.event.EventDetail">
+		SELECT slug, title, starts_at, ends_at, venue_name, image_url,
+		       ST_Y(location::geometry) AS latitude,
+		       ST_X(location::geometry) AS longitude,
+		       description, address, source, source_url, updated_at,
+		       <include refid="effectiveEnd"/> &lt; #{now} AS ended
+		FROM event
+		WHERE slug = #{slug}
+		  AND status = 'public'
+	</select>
+
+	<!-- Listed events: public and not over. A span keeps those that start before it ends and end after it starts. -->
+	<sql id="listed">
+		FROM event
+		WHERE status = 'public'
+		  AND <include refid="effectiveEnd"/> &gt;= #{now}
+		<if test="from != null">
+		  AND starts_at &lt; #{to}
+		  AND <include refid="effectiveEnd"/> &gt; #{from}
+		</if>
+	</sql>
+
+	<!-- Earliest first; events that start together keep the order of their ids, so none is on two pages. -->
+	<select id="findListed" resultType="com.queenstownlocal.backend.event.EventSummary">
+		SELECT slug, title, starts_at, ends_at, venue_name, image_url,
+		       ST_Y(location::geometry) AS latitude,
+		       ST_X(location::geometry) AS longitude
+		<include refid="listed"/>
+		ORDER BY starts_at, id
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+	<select id="countListed" resultType="long">
+		SELECT count(*)
+		<include refid="listed"/>
+	</select>
+
+</mapper>

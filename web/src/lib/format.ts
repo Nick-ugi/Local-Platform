@@ -1,3 +1,5 @@
+import type { LatLng } from "@queenstown/shared";
+
 // Dates are shown in New Zealand time wherever the server or the visitor is.
 const DATE_FORMAT = new Intl.DateTimeFormat("en-NZ", {
   day: "numeric",
@@ -21,7 +23,18 @@ export function httpUrl(url: string): string | null {
   return /^https?:\/\//i.test(url) ? url : null;
 }
 
-/** A tel: link target for a phone number as it is displayed. */
-export function telHref(phone: string): string {
+/**
+ * A tel: link target for a phone number as it is displayed, or null when the text is not one that
+ * can be dialled: only digits, spaces and + - ( ), with at least three digits.
+ */
+export function telHref(phone: string): string | null {
+  if (!/^[\d\s+()-]+$/.test(phone) || (phone.match(/\d/g) ?? []).length < 3) {
+    return null;
+  }
   return `tel:${phone.replace(/\s+/g, "")}`;
+}
+
+/** Google Maps directions to a point. On a phone it opens the maps app. */
+export function directionsUrl(place: LatLng): string {
+  return `https://www.google.com/maps/dir/?api=1&destination=${place.latitude},${place.longitude}`;
 }

@@ -1,24 +1,21 @@
 "use client";
 
-import {
-  type Category,
-  distanceMeters,
-  formatDistance,
-  type LatLng,
-  type MapBounds,
-  type MapMarker,
-} from "@queenstown/shared";
+import { distanceMeters, formatDistance, type MapBounds, type MapMarker } from "@queenstown/shared";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
-import { locate, wasLocationGranted } from "@/lib/geo/location";
-import { type Camera, loadCamera, saveCamera } from "@/lib/map/camera";
-import { parseFilter, serializeFilter, toggleFilter } from "@/lib/map/filter";
+import { useEffect, useRef, useState } from "react";
+import { getEvent } from "@/lib/api/events";
+import { getNotice } from "@/lib/api/notices";
+import { getPlace } from "@/lib/api/places";
+import { useVisitorPosition } from "@/lib/geo/useVisitorPosition";
+import { type Camera, hasSavedCamera, loadCamera, PLACE_ZOOM, saveCamera } from "@/lib/map/camera";
+import { type FilterKey, filterHides, parseFilter, serializeFilter, toggleFilter } from "@/lib/map/filter";
+import { keyOf, parseKey, readSelection, type Selection, writeSelection } from "@/lib/map/selection";
 import { useMarkers } from "@/lib/map/useMarkers";
 import { FilterChips } from "./FilterChips";
 import { LocateButton } from "./LocateButton";
 import { MapView } from "./MapView";
-import { PlacePreview } from "./PlacePreview";
+import { MarkerPreview } from "./MarkerPreview";
 
 type Action = { label: string; onClick: () => void };
 
@@ -50,13 +47,57 @@ function Notice({ text, action }: { text: string; action?: Action }) {
   );
 }
 
+/** Rewrites the query of the URL in place. history.replaceState keeps useSearchParams in step. */
+function writeUrl(change: (params: URLSearchParams) => void) {
+  const { pathname, search } = window.location;
+  const params = new URLSearchParams(search);
+  change(params);
+  // A comma means the same escaped or not; unescaped the URL reads as the IA document writes it.
+  const query = params.toString().replaceAll("%2C", ",");
+  const next = query ? `${pathname}?${query}` : pathname;
+  if (next !== pathname + search) {
+    window.history.replaceState(null, "", next);
+  }
+}
+
 /**
- * The Map screen (wireframes m-map, m-map-place and d-map): the filter chips, the map and the
- * preview of the selected place.
+ * The marker for a selection the map is not showing, fetched on its own, or null when there is
+ * none to show: the place, event or notice is gone, the event or notice has ended (the map shows
+ * only current ones), or the notice has no location.
+ */
+async function lookUp({ kind, slug }: Selection): Promise<MapMarker | null> {
+  if (kind === "place") {
+    const place = await getPlace(slug);
+    if (!place) {
+      return null;
+    }
+    const { latitude, longitude, name, category, subtype } = place;
+    return { kind, slug, latitude, longitude, name, category, subtype };
+  }
+  if (kind === "event") {
+    const event = await getEvent(slug);
+    if (!event || event.ended) {
+      return null;
+    }
+    const { latitude, longitude, title, startsAt, endsAt, venueName } = event;
+    return { kind, slug, latitude, longitude, title, startsAt, endsAt, venueName };
+  }
+  const notice = await getNotice(slug);
+  if (!notice || notice.ended || notice.latitude === null || notice.longitude === null) {
+    return null;
+  }
+  const { latitude, longitude, title, type, isOfficial, startsAt, endsAt } = notice;
+  return { kind, slug, latitude, longitude, title, type, isOfficial, startsAt, endsAt };
+}
+
+/**
+ * The Map screen (wireframes m-map, m-map-place, m-map-notice and d-map): the filter chips, the
+ * map with its places, events and notices, and the summary card of the selected one.
  *
- * The filter and the selection live in the URL, as ?filter=food,cafe&place=slug, so the screen can
- * be shared and comes back the same after a visit to a detail page. Changing them replaces the
- * current history entry. The map's position is kept for the tab in session storage.
+ * The filter and the selection live in the URL, as ?filter=food,event&event=slug (or ?place=,
+ * ?notice=), so the screen can be shared and comes back the same after a visit to a detail page.
+ * Changing them replaces the current history entry. The map's position is kept for the tab in
+ * session storage.
  *
  * The browser is asked for the visitor's position only when they press the location button. A
  * visitor who allowed it on an earlier visit gets their dot and distances straight away, but the
@@ -69,45 +110,27 @@ export function MapScreen() {
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
   const filter = parseFilter(searchParams.get("filter"));
-  const selectedSlug = searchParams.get("place");
+  const selection = readSelection(searchParams);
+  const selectedKey = selection ? keyOf(selection) : null;
 
   const [camera, setCamera] = useState(loadCamera);
   const [bounds, setBounds] = useState<MapBounds | null>(null);
   const [unavailable, setUnavailable] = useState(false);
   const { status, markers, truncated, retry } = useMarkers(bounds, filter);
 
-  const [userLocation, setUserLocation] = useState<LatLng | null>(null);
-  const [locating, setLocating] = useState(false);
-  const [locationProblem, setLocationProblem] = useState<keyof typeof LOCATION_PROBLEMS | null>(null);
-
-  useEffect(() => {
-    let gone = false;
-    void wasLocationGranted().then(async (granted) => {
-      if (!granted) {
-        return;
-      }
-      const result = await locate();
-      if (!gone && result.status === "inside") {
-        setUserLocation(result.position);
-      }
-    });
-    return () => {
-      gone = true;
-    };
-  }, []);
+  const {
+    position: userLocation,
+    problem: locationProblem,
+    locating,
+    request: requestLocation,
+    dismissProblem: dismissLocationProblem,
+  } = useVisitorPosition();
 
   async function showLocation() {
-    setLocating(true);
-    const result = await locate();
-    setLocating(false);
+    const result = await requestLocation();
+    // Without a usable position the map stays where it is.
     if (result.status === "inside") {
-      setUserLocation(result.position);
       setCamera({ ...result.position, zoom: LOCATE_ZOOM });
-      setLocationProblem(null);
-    } else {
-      // The map stays where it is, and distances from an earlier position would mislead.
-      setUserLocation(null);
-      setLocationProblem(result.status);
     }
   }
 
@@ -115,26 +138,69 @@ export function MapScreen() {
   // smaller, which can move the marker out of the box; if the preview closed then, the map would
   // grow, the marker would return, and the two would chase each other.
   const [remembered, setRemembered] = useState<MapMarker | null>(null);
-  const found = selectedSlug === null ? undefined : markers.find((marker) => marker.slug === selectedSlug);
+  const found = selectedKey === null ? undefined : markers.find((marker) => keyOf(marker) === selectedKey);
   if (found && found !== remembered) {
     setRemembered(found);
   }
-  const selected = found ?? (remembered !== null && remembered.slug === selectedSlug ? remembered : null);
+  const selected = found ?? (remembered !== null && keyOf(remembered) === selectedKey ? remembered : null);
 
-  /** Rewrites the query of the URL in place. history.replaceState keeps useSearchParams in step. */
-  function writeUrl(change: (params: URLSearchParams) => void) {
-    const params = new URLSearchParams(searchParams.toString());
-    change(params);
-    // A comma means the same escaped or not; unescaped the URL reads as the IA document writes it.
-    const query = params.toString().replaceAll("%2C", ",");
-    const { pathname } = window.location;
-    window.history.replaceState(null, "", query ? `${pathname}?${query}` : pathname);
-  }
+  // Whether the map had a position of its own before this screen opened. It is read once, here,
+  // because the map saves its position as soon as it has loaded.
+  const [hadSavedCamera] = useState(hasSavedCamera);
 
-  function toggle(key: Category) {
+  const gone = useRef(false);
+  useEffect(() => {
+    gone.current = false;
+    return () => {
+      gone.current = true;
+    };
+  }, []);
+
+  // A link can name a place, event or notice the map is not showing: its marker is outside the
+  // box, or a filter hides it. It is asked for on its own, once. Its card opens either way; the
+  // map moves to it only for a visitor who had not positioned the map, so the way back from a
+  // detail page still shows what the visitor left (docs/03-user-flow.md, "뒤로 가기").
+  const missing = selection !== null && status === "ready" && selected === null ? selection : null;
+  const missingKey = missing ? keyOf(missing) : null;
+  const lookedUp = useRef<string | null>(null);
+  useEffect(() => {
+    const target = missingKey === null ? null : parseKey(missingKey);
+    if (target === null || lookedUp.current === missingKey) {
+      return;
+    }
+    lookedUp.current = missingKey;
+    lookUp(target).then(
+      (marker) => {
+        // By now the visitor may have picked something else, or left the screen.
+        const named = readSelection(new URLSearchParams(window.location.search));
+        if (gone.current || named === null || keyOf(named) !== missingKey) {
+          return;
+        }
+        if (marker === null) {
+          writeUrl((params) => writeSelection(params, null));
+          return;
+        }
+        setRemembered(marker);
+        if (!hadSavedCamera) {
+          setCamera({ latitude: marker.latitude, longitude: marker.longitude, zoom: PLACE_ZOOM });
+        }
+        // The link is about this marker, so a filter that would hide it gives way.
+        writeUrl((params) => {
+          if (filterHides(parseFilter(params.get("filter")), marker)) {
+            params.delete("filter");
+          }
+        });
+      },
+      () => {
+        // The map works without this card, and the marker may still be found on it.
+      },
+    );
+  }, [missingKey, hadSavedCamera]);
+
+  function toggle(key: FilterKey) {
     const next = toggleFilter(filter, key);
     const value = serializeFilter(next);
-    const hidesSelected = selected !== null && next.length > 0 && !next.includes(selected.category);
+    const hidesSelected = selected !== null && filterHides(next, selected);
     writeUrl((params) => {
       if (value === null) {
         params.delete("filter");
@@ -142,29 +208,23 @@ export function MapScreen() {
         params.set("filter", value);
       }
       if (hidesSelected) {
-        params.delete("place");
+        writeSelection(params, null);
       }
     });
   }
 
-  function select(slug: string | null) {
-    if (slug === selectedSlug) {
+  function select(key: string | null) {
+    if (key === selectedKey) {
       return;
     }
-    writeUrl((params) => {
-      if (slug === null) {
-        params.delete("place");
-      } else {
-        params.set("place", slug);
-      }
-    });
+    writeUrl((params) => writeSelection(params, key === null ? null : parseKey(key)));
   }
 
   function moved(box: MapBounds, position: Camera) {
     setBounds(box);
     saveCamera(position);
     // The visitor has gone on to something else; the message has been read.
-    setLocationProblem(null);
+    dismissLocationProblem();
   }
 
   const distanceText = userLocation && selected ? formatDistance(distanceMeters(userLocation, selected)) : null;
@@ -186,7 +246,7 @@ export function MapScreen() {
             token={token}
             camera={camera}
             markers={markers}
-            selectedSlug={selectedSlug}
+            selectedKey={selectedKey}
             userLocation={userLocation}
             onMove={moved}
             onSelect={select}
@@ -212,7 +272,7 @@ export function MapScreen() {
         {/* Below the map and above the tabs on a phone; floating at the map's top left from 768px. */}
         {selected ? (
           <div className="border-t border-neutral-400 md:absolute md:left-4 md:top-4 md:w-80 md:overflow-hidden md:rounded-xl md:border md:shadow-lg">
-            <PlacePreview marker={selected} distanceText={distanceText} onClose={() => select(null)} />
+            <MarkerPreview marker={selected} distanceText={distanceText} onClose={() => select(null)} />
           </div>
         ) : null}
       </div>
