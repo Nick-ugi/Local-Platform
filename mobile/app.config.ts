@@ -11,6 +11,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "Queenstown Local",
   slug: "queenstown-local",
+  // The web has its own app (web/). Without this, `expo start` also tries to bundle for the
+  // browser and prints "Web Bundling failed".
+  platforms: ["android", "ios"],
   scheme: "queenstownlocal",
   version: "0.1.0",
   orientation: "portrait",

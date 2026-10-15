@@ -74,6 +74,20 @@ npm start
 - Queenstown 중심: `-45.0312`, `168.6626`
 - 서비스 지역 밖을 볼 때: 서울 `37.5665`, `126.9780`
 
+위치를 바꿨는데 앱이 "We couldn't find your location."이라고 하면 에뮬레이터가 아직 새 위치를 내주지 않은 것이다. 에뮬레이터의 Google 지도를 한 번 열어 위치가 잡히는 것을 보고 돌아와 위치 버튼을 누른다. 빠른 설정의 Location이 켜져 있는지도 본다.
+
+### 자주 나는 문제 (Windows)
+
+| 보이는 것 | 이유와 할 일 |
+|---|---|
+| `Missing script: "android"` | 저장소 루트에서 실행했다. `mobile`에서 실행한다. |
+| `SDK location not found`, `adb`를 찾지 못함 | `ANDROID_HOME`이 없다. 시스템 환경 변수에 `%LOCALAPPDATA%\Android\Sdk`를 넣고 터미널(VS Code는 VS Code 자체)을 다시 연다. 지금 창에서만 쓰려면 PowerShell에서 `$env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"`. |
+| PowerShell에서 `&&`가 안 된다 | Windows PowerShell 5는 `&&`를 모른다. 명령을 한 줄씩 실행한다. |
+| "The map isn't available right now." | `mobile/.env.local`에 `EXPO_PUBLIC_MAPBOX_TOKEN`이 없다. 넣고 `npx expo start --dev-client --clear`. |
+| "We couldn't load the map data." | 앱이 Backend에 닿지 못했다. DB(`docker compose up -d db`)와 Backend(`gradlew.bat bootRun`)를 켠다. `bootRun`은 서버가 도는 동안 `80% EXECUTING`에 머문다. 정상이다. |
+| "No places in this area." | Backend는 응답했고 그 영역에 공개된 Place가 없다. `backend/seed`의 CSV를 채워 올린다([backend/README.md](../backend/README.md)). |
+| Marker를 눌러도 아무 일이 없다 | 9주차의 범위다. Preview와 상세는 10주차다. |
+
 ## 테스트와 Lint
 
 ```bash
