@@ -11,6 +11,9 @@ function RootStack() {
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="search" options={{ title: t("search") }} />
+      <Stack.Screen name="places/[slug]" options={{ title: "" }} />
+      <Stack.Screen name="events/[slug]" options={{ title: "" }} />
+      <Stack.Screen name="notices/[slug]" options={{ title: "" }} />
       <Stack.Screen name="about" options={{ title: t("about") }} />
     </Stack>
   );
