@@ -22,6 +22,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.postgresql.PGConnection;
+import org.postgresql.copy.CopyManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -30,8 +31,8 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import com.queenstownlocal.backend.TestcontainersConfiguration;
 
 /**
- * Loads seed CSV the way backend/seed/load-places.sh does: create-staging.sql, COPY, upsert-places.sql,
- * all in one transaction. Not @Transactional: each load commits on its own, as it does from the
+ * Loads seed CSV the way backend/seed/load-seed.sh does: create-staging.sql, a COPY per file, then the
+ * upsert files, all in one transaction. Not @Transactional: each load commits on its own, as it does from the
  * script, so that updated_at (now(), the transaction's start) can move between loads.
  */
 @SpringBootTest
@@ -55,20 +56,126 @@ class SeedDataTest {
 	@Autowired
 	JdbcClient jdbc;
 
+	private static final String EVENT_HEADER = "slug,title,description,starts_at,ends_at,venue_name,address,latitude,"
+			+ "longitude,image_url,source,source_url,status\n";
+
+	private static final String MARKET = "night-market,Night Market,Food stalls.,2026-10-24T17:00:00+13:00,"
+			+ "2026-10-24T21:00:00+13:00,Earnslaw Park,,-45.0331,168.6597,,Organiser,https://market.example,public\n";
+
+	private static final String NOTICE_HEADER = "slug,title,type,summary,starts_at,ends_at,location_name,latitude,"
+			+ "longitude,source_org,source_url,is_official,status\n";
+
+	private static final String WORKS = "shotover-street-works,Shotover Street works,road-work,Expect delays.,"
+			+ "2026-10-05T18:00:00+13:00,2026-10-20T18:00:00+13:00,Shotover Street,-45.0312,168.6626,QLDC,"
+			+ "https://qldc.example/works,true,public\n";
+
+	private static final String LIBRARY = "library-hours,Library hours,public-notice,New hours.,"
+			+ "2026-10-12T09:00:00+13:00,,,,,QLDC,https://qldc.example/library,true,public\n";
+
 	@BeforeEach
 	@AfterEach
 	void clear() {
 		jdbc.sql("delete from place").update();
+		jdbc.sql("delete from event").update();
+		jdbc.sql("delete from notice").update();
 	}
 
 	@Test
-	void theSeedFileLoads() throws Exception {
-		String csv = Files.readString(SEED_DIR.resolve("places.csv"), StandardCharsets.UTF_8);
-		long dataLines = csv.lines().skip(1).filter(line -> !line.isBlank()).count();
+	void theSeedFilesLoad() throws Exception {
+		String places = Files.readString(SEED_DIR.resolve("places.csv"), StandardCharsets.UTF_8);
+		String events = Files.readString(SEED_DIR.resolve("events.csv"), StandardCharsets.UTF_8);
+		String notices = Files.readString(SEED_DIR.resolve("notices.csv"), StandardCharsets.UTF_8);
 
-		load(csv);
+		load(places, events, notices);
 
-		assertThat(placeCount()).isEqualTo(dataLines);
+		assertThat(placeCount()).isEqualTo(dataLines(places));
+		assertThat(count("event")).isEqualTo(dataLines(events));
+		assertThat(count("notice")).isEqualTo(dataLines(notices));
+	}
+
+	@Test
+	void eventsAndNoticesLoadAndLoadingTwiceChangesNothing() throws Exception {
+		load(HEADER, EVENT_HEADER + MARKET, NOTICE_HEADER + WORKS + LIBRARY);
+		Map<String, Object> before = jdbc.sql("""
+				select (select max(updated_at) from event) as events, (select max(updated_at) from notice) as notices
+				""").query().singleRow();
+
+		load(HEADER, EVENT_HEADER + MARKET, NOTICE_HEADER + WORKS + LIBRARY);
+
+		assertThat(count("event")).isEqualTo(1);
+		assertThat(count("notice")).isEqualTo(2);
+		assertThat(jdbc.sql("""
+				select (select max(updated_at) from event) as events, (select max(updated_at) from notice) as notices
+				""").query().singleRow()).isEqualTo(before);
+		assertThat(jdbc.sql("select starts_at from event").query(OffsetDateTime.class).single().toInstant())
+			.hasToString("2026-10-24T04:00:00Z");
+	}
+
+	@Test
+	void aNoticeWithoutALocationLoads() throws Exception {
+		load(HEADER, EVENT_HEADER, NOTICE_HEADER + LIBRARY);
+
+		Map<String, Object> row = jdbc.sql("select location, location_name, is_official, ends_at from notice")
+			.query()
+			.singleRow();
+		assertThat(row).containsEntry("location", null)
+			.containsEntry("location_name", null)
+			.containsEntry("is_official", true)
+			.containsEntry("ends_at", null);
+	}
+
+	@Test
+	void aChangedEventIsUpdatedInPlace() throws Exception {
+		load(HEADER, EVENT_HEADER + MARKET, NOTICE_HEADER);
+		long id = jdbc.sql("select id from event").query(Long.class).single();
+
+		load(HEADER, EVENT_HEADER + MARKET.replace("Food stalls.", "Food stalls and music."), NOTICE_HEADER);
+
+		assertThat(jdbc.sql("select id from event").query(Long.class).single()).isEqualTo(id);
+		assertThat(jdbc.sql("select description from event").query(String.class).single())
+			.isEqualTo("Food stalls and music.");
+	}
+
+	@Test
+	void aTimeWithoutAnOffsetIsRefused() {
+		String local = MARKET.replace("2026-10-24T17:00:00+13:00", "2026-10-24T17:00:00");
+
+		assertThatThrownBy(() -> load(HEADER, EVENT_HEADER + local, NOTICE_HEADER)).hasMessageContaining("night-market");
+		assertThat(count("event")).isZero();
+	}
+
+	@Test
+	void aNoticeWithHalfALocationIsRefused() {
+		String half = WORKS.replace("-45.0312,168.6626", "-45.0312,");
+
+		assertThatThrownBy(() -> load(HEADER, EVENT_HEADER, NOTICE_HEADER + half))
+			.hasMessageContaining("shotover-street-works");
+	}
+
+	@Test
+	void anEventOrNoticeOutsideTheServiceAreaIsRefused() {
+		assertThatThrownBy(() -> load(HEADER, EVENT_HEADER + MARKET.replace("-45.0331,168.6597", "-36.85,174.76"),
+				NOTICE_HEADER))
+			.hasMessageContaining("night-market");
+		assertThatThrownBy(() -> load(HEADER, EVENT_HEADER,
+				NOTICE_HEADER + WORKS.replace("-45.0312,168.6626", "-36.85,174.76")))
+			.hasMessageContaining("shotover-street-works");
+	}
+
+	@Test
+	void anUnknownNoticeTypeIsRefused() {
+		assertThatThrownBy(() -> load(HEADER, EVENT_HEADER, NOTICE_HEADER + WORKS.replace("road-work", "fire")))
+			.isInstanceOf(SQLException.class);
+	}
+
+	@Test
+	void aFailingFileChangesNoOtherFile() {
+		String badNotice = WORKS.replace("shotover-street-works", "Bad Slug");
+
+		assertThatThrownBy(() -> load(HEADER + TOILET, EVENT_HEADER + MARKET, NOTICE_HEADER + badNotice))
+			.hasMessageContaining("Bad Slug");
+		assertThat(placeCount()).isZero();
+		assertThat(count("event")).isZero();
 	}
 
 	@Test
@@ -161,16 +268,24 @@ class SeedDataTest {
 		assertThat(row.values()).containsOnlyNulls();
 	}
 
-	/** One load, as load-places.sh runs it: all of it commits, or none of it does. */
-	private void load(String csv) throws SQLException, IOException {
+	/** A load of places only, with empty event and notice files. */
+	private void load(String places) throws SQLException, IOException {
+		load(places, EVENT_HEADER, NOTICE_HEADER);
+	}
+
+	/** One load, as load-seed.sh runs it: all of it commits, or none of it does. */
+	private void load(String places, String events, String notices) throws SQLException, IOException {
 		try (Connection connection = dataSource.getConnection()) {
 			connection.setAutoCommit(false);
 			try (Statement statement = connection.createStatement()) {
 				statement.execute(Files.readString(SEED_DIR.resolve("create-staging.sql")));
-				connection.unwrap(PGConnection.class)
-					.getCopyAPI()
-					.copyIn("COPY seed_place FROM STDIN (FORMAT csv, HEADER true)", new StringReader(csv));
-				statement.execute(Files.readString(SEED_DIR.resolve("upsert-places.sql")));
+				CopyManager copy = connection.unwrap(PGConnection.class).getCopyAPI();
+				copy.copyIn("COPY seed_place FROM STDIN (FORMAT csv, HEADER true)", new StringReader(places));
+				copy.copyIn("COPY seed_event FROM STDIN (FORMAT csv, HEADER true)", new StringReader(events));
+				copy.copyIn("COPY seed_notice FROM STDIN (FORMAT csv, HEADER true)", new StringReader(notices));
+				for (String upsert : List.of("upsert-places.sql", "upsert-events.sql", "upsert-notices.sql")) {
+					statement.execute(Files.readString(SEED_DIR.resolve(upsert)));
+				}
 				connection.commit();
 			}
 			catch (SQLException | IOException | RuntimeException e) {
@@ -181,7 +296,15 @@ class SeedDataTest {
 	}
 
 	private long placeCount() {
-		return jdbc.sql("select count(*) from place").query(Long.class).single();
+		return count("place");
+	}
+
+	private long count(String table) {
+		return jdbc.sql("select count(*) from " + table).query(Long.class).single();
+	}
+
+	private static long dataLines(String csv) {
+		return csv.lines().skip(1).filter(line -> !line.isBlank()).count();
 	}
 
 	private long idOf(String slug) {
