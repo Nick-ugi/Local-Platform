@@ -1,6 +1,23 @@
-import { type MapBounds, toLngLat, toMapBounds, wrapLongitude } from "@queenstown/shared";
-import Mapbox, { Camera as MapboxCamera, LocationPuck, MapView as MapboxMapView, type MapState } from "@rnmapbox/maps";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import {
+  type MapBounds,
+  type MapMarker,
+  toFeatureCollection,
+  toLngLat,
+  toMapBounds,
+  wrapLongitude,
+} from "@queenstown/shared";
+import Mapbox, {
+  CircleLayer,
+  type CircleLayerStyle,
+  Camera as MapboxCamera,
+  LocationPuck,
+  MapView as MapboxMapView,
+  type MapState,
+  ShapeSource,
+  SymbolLayer,
+  type SymbolLayerStyle,
+} from "@rnmapbox/maps";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import type { Camera } from "./camera";
 
@@ -9,6 +26,7 @@ type Props = {
   token: string;
   /** Where the map looks when it is created. Giving a new object afterwards moves the map there. */
   camera: Camera;
+  markers: readonly MapMarker[];
   /** Draws the visitor's position, which the phone keeps up to date, once permission is granted. */
   showUserLocation: boolean;
   /** Called whenever the map comes to rest, with the visible box. */
@@ -17,8 +35,6 @@ type Props = {
   onGesture: () => void;
   /** Called when no map can be shown: the style failed to load, usually a refused token. */
   onUnavailable: () => void;
-  /** Sources and layers drawn on the map. */
-  children?: ReactNode;
 };
 
 /** The same style as the web app's map (README, "Map"). */
@@ -27,13 +43,39 @@ const STYLE = "mapbox://styles/mapbox/standard";
 /** How long a move to a new camera takes. */
 const MOVE_MS = 800;
 
+// The markers look as they do on the web (web/src/components/map/MapView.tsx): a white circle with
+// a dark ring and the category letter. Full emissive strength keeps them bright in the Standard
+// style's lighting.
+const INK = "#171717";
+const PAPER = "#ffffff";
+const RADIUS = 14;
+
+const circleStyle: CircleLayerStyle = {
+  circleRadius: RADIUS,
+  circleColor: PAPER,
+  circleStrokeColor: INK,
+  circleStrokeWidth: 2,
+  circleEmissiveStrength: 1,
+};
+
+const labelStyle: SymbolLayerStyle = {
+  textField: ["get", "label"],
+  textSize: 13,
+  textFont: ["DIN Pro Bold", "Arial Unicode MS Bold"],
+  textAllowOverlap: true,
+  textIgnorePlacement: true,
+  textColor: INK,
+  textEmissiveStrength: 1,
+};
+
 /**
  * The map itself. This is the only file that touches @rnmapbox/maps; everything that can be
  * decided without the SDK lives in @queenstown/shared and the screen.
  */
-export function MapView({ token, camera, showUserLocation, onIdle, onGesture, onUnavailable, children }: Props) {
+export function MapView({ token, camera, markers, showUserLocation, onIdle, onGesture, onUnavailable }: Props) {
   const cameraRef = useRef<MapboxCamera>(null);
   const [startCamera] = useState(camera);
+  const shape = useMemo(() => toFeatureCollection(markers), [markers]);
 
   // The token has to be in place before the first map renders.
   useState(() => Mapbox.setAccessToken(token));
@@ -75,7 +117,11 @@ export function MapView({ token, camera, showUserLocation, onIdle, onGesture, on
         defaultSettings={{ centerCoordinate: toLngLat(startCamera), zoomLevel: startCamera.zoom }}
       />
       {showUserLocation ? <LocationPuck puckBearingEnabled={false} /> : null}
-      {children}
+      {/* After the position, so the markers stay on top of it. */}
+      <ShapeSource id="markers" shape={shape}>
+        <CircleLayer id="marker-circles" style={circleStyle} />
+        <SymbolLayer id="marker-labels" style={labelStyle} />
+      </ShapeSource>
     </MapboxMapView>
   );
 }

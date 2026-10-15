@@ -1,12 +1,24 @@
+import type { MapMarker } from "@queenstown/shared";
 import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import type { ComponentProps } from "react";
 import { type LocationResult, locate } from "@/geo/location";
 import { AppIntlProvider } from "@/i18n/AppIntlProvider";
 import { MapScreen } from "../MapScreen";
 import type { MapView } from "../MapView";
+import { type MarkersState, useMarkers } from "../useMarkers";
 
 // The real map needs the native SDK. This stand-in keeps the props it was given so a test can read
 // them and call the map's callbacks.
+const kitchen: MapMarker = {
+  kind: "place",
+  slug: "lakeside-kitchen",
+  latitude: -45.0322,
+  longitude: 168.661,
+  name: "Lakeside Kitchen",
+  category: "food",
+  subtype: null,
+};
+
 const map: { props: ComponentProps<typeof MapView> | null } = { props: null };
 jest.mock("../MapView", () => ({
   MapView: (props: ComponentProps<typeof MapView>) => {
@@ -16,6 +28,11 @@ jest.mock("../MapView", () => ({
 }));
 
 jest.mock("@/geo/location", () => ({ locate: jest.fn() }));
+
+const mockMarkers: { state: MarkersState } = {
+  state: { status: "idle", markers: [], truncated: false, retry: () => {} },
+};
+jest.mock("../useMarkers", () => ({ useMarkers: jest.fn(() => mockMarkers.state) }));
 
 const locateMock = jest.mocked(locate);
 
@@ -41,6 +58,8 @@ beforeEach(() => {
   process.env.EXPO_PUBLIC_MAPBOX_TOKEN = "pk.test";
   map.props = null;
   locateMock.mockReset();
+  mockMarkers.state = { status: "idle", markers: [], truncated: false, retry: jest.fn() };
+  jest.mocked(useMarkers).mockClear();
 });
 
 test("without a token there is a notice instead of a map", async () => {
@@ -125,4 +144,63 @@ test("moving the map with a finger puts the message away", async () => {
   act(() => mapProps().onGesture());
 
   expect(screen.queryByText(/outside the Queenstown area/)).toBeNull();
+});
+
+test("asks for the places in the box the map reports", async () => {
+  await openMap({ status: "denied" });
+  expect(jest.mocked(useMarkers).mock.lastCall?.[0]).toBeNull();
+
+  const box = { west: 168.65, south: -45.04, east: 168.67, north: -45.02 };
+  act(() => mapProps().onIdle(box, { latitude: -45.03, longitude: 168.66, zoom: 14 }));
+
+  const [bounds, filter] = jest.mocked(useMarkers).mock.lastCall ?? [];
+  expect(bounds).toEqual(box);
+  // Places only this week: the six categories, no events or notices.
+  expect(filter).toEqual(["food", "cafe", "bar", "activity", "shopping", "facility"]);
+});
+
+test("gives the map the markers", async () => {
+  mockMarkers.state = { status: "ready", markers: [kitchen], truncated: false, retry: jest.fn() };
+
+  await openMap({ status: "denied" });
+
+  expect(mapProps().markers).toEqual([kitchen]);
+  expect(screen.queryByText("No places in this area.")).toBeNull();
+});
+
+test("a failed load says so and offers to try again", async () => {
+  const retry = jest.fn();
+  mockMarkers.state = { status: "error", markers: [kitchen], truncated: false, retry };
+
+  await openMap({ status: "inside", position: { latitude: -45.0322, longitude: 168.661 } });
+  fireEvent.press(screen.getByRole("button", { name: "Try again" }));
+
+  expect(screen.getByText("We couldn't load the map data.")).toBeOnTheScreen();
+  // The markers already on the map stay.
+  expect(mapProps().markers).toEqual([kitchen]);
+  expect(retry).toHaveBeenCalledTimes(1);
+});
+
+test("an empty area says so", async () => {
+  mockMarkers.state = { status: "ready", markers: [], truncated: false, retry: jest.fn() };
+
+  await openMap({ status: "inside", position: { latitude: -45.0322, longitude: 168.661 } });
+
+  expect(screen.getByText("No places in this area.")).toBeOnTheScreen();
+});
+
+test("an area is not called empty while it is loading", async () => {
+  mockMarkers.state = { status: "loading", markers: [], truncated: false, retry: jest.fn() };
+
+  await openMap({ status: "inside", position: { latitude: -45.0322, longitude: 168.661 } });
+
+  expect(screen.queryByText("No places in this area.")).toBeNull();
+});
+
+test("says when not every place is shown", async () => {
+  mockMarkers.state = { status: "ready", markers: [kitchen], truncated: true, retry: jest.fn() };
+
+  await openMap({ status: "inside", position: { latitude: -45.0322, longitude: 168.661 } });
+
+  expect(screen.getByText("Zoom in to see every place.")).toBeOnTheScreen();
 });

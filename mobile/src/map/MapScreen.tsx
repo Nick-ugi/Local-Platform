@@ -1,4 +1,4 @@
-import type { MapBounds } from "@queenstown/shared";
+import { CATEGORIES, type MapBounds } from "@queenstown/shared";
 import { useEffect, useEffectEvent, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
@@ -7,6 +7,7 @@ import { type Camera, DEFAULT_CAMERA, LOCATE_ZOOM } from "./camera";
 import { LocateButton } from "./LocateButton";
 import { MapNotice } from "./MapNotice";
 import { MapView } from "./MapView";
+import { useMarkers } from "./useMarkers";
 
 /** The message for each way of not getting a usable position (docs/03-user-flow.md, UF-01). */
 const LOCATION_PROBLEMS = {
@@ -18,8 +19,14 @@ const LOCATION_PROBLEMS = {
 type LocationProblem = keyof typeof LOCATION_PROBLEMS;
 
 /**
- * The Map tab (wireframe a-map, MAP-01, MAP-02): Queenstown on the map, the visitor's position
- * and the button that brings the map back to it.
+ * Week 9 shows places only (MAP-03); events and notices come to the app with week 10. Naming the
+ * categories leaves the other kinds out, as on the web's map with chips chosen.
+ */
+const PLACES_ONLY = [...CATEGORIES];
+
+/**
+ * The Map tab (wireframe a-map, MAP-01 ~ MAP-03): Queenstown on the map with the places in view,
+ * the visitor's position and the button that brings the map back to it.
  *
  * The app asks for the position as soon as the screen opens. With a position inside the service
  * area the map goes there; otherwise it stays on Queenstown and says why.
@@ -29,7 +36,8 @@ export function MapScreen() {
   const token = process.env.EXPO_PUBLIC_MAPBOX_TOKEN;
 
   const [camera, setCamera] = useState<Camera>(DEFAULT_CAMERA);
-  const [, setBounds] = useState<MapBounds | null>(null);
+  const [bounds, setBounds] = useState<MapBounds | null>(null);
+  const { status, markers, truncated, retry } = useMarkers(bounds, PLACES_ONLY);
   const [unavailable, setUnavailable] = useState(false);
   const [showUserLocation, setShowUserLocation] = useState(false);
   // The position is asked for as soon as the screen opens, so it starts out busy.
@@ -80,12 +88,16 @@ export function MapScreen() {
       <MapView
         token={token}
         camera={camera}
+        markers={markers}
         showUserLocation={showUserLocation}
         onIdle={(box) => setBounds(box)}
         onGesture={() => setProblem(null)}
         onUnavailable={() => setUnavailable(true)}
       />
       <View accessibilityLiveRegion="polite" pointerEvents="box-none" style={styles.notices}>
+        {status === "error" ? <MapNotice text={t("loadFailed")} action={{ label: t("retry"), onPress: retry }} /> : null}
+        {status === "ready" && markers.length === 0 ? <MapNotice text={t("empty")} /> : null}
+        {status !== "error" && truncated ? <MapNotice text={t("truncated")} /> : null}
         {problem ? <MapNotice text={t(LOCATION_PROBLEMS[problem])} /> : null}
       </View>
       {/* Bottom right, above Mapbox's attribution (wireframe a-map). */}

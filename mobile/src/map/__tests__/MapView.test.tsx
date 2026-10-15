@@ -1,3 +1,4 @@
+import { type MapMarker, toFeatureCollection } from "@queenstown/shared";
 import { render } from "@testing-library/react-native";
 import type { ComponentProps } from "react";
 import { MapView } from "../MapView";
@@ -10,6 +11,8 @@ const mockSdk = {
   setCamera: jest.fn(),
   setAccessToken: jest.fn(),
   puck: false,
+  shape: null as unknown,
+  layers: [] as string[],
 };
 
 jest.mock("@rnmapbox/maps", () => {
@@ -31,6 +34,18 @@ jest.mock("@rnmapbox/maps", () => {
       mockSdk.puck = true;
       return null;
     },
+    ShapeSource: (props: { shape: unknown; children?: unknown }) => {
+      mockSdk.shape = props.shape;
+      return <View>{props.children as never}</View>;
+    },
+    CircleLayer: (props: { id: string }) => {
+      mockSdk.layers.push(props.id);
+      return null;
+    },
+    SymbolLayer: (props: { id: string }) => {
+      mockSdk.layers.push(props.id);
+      return null;
+    },
   };
 });
 
@@ -40,6 +55,7 @@ function renderMap(overrides: Partial<Props> = {}) {
   const props: Props = {
     token: "pk.test",
     camera: { latitude: -45.0312, longitude: 168.6626, zoom: 14 },
+    markers: [],
     showUserLocation: false,
     onIdle: jest.fn(),
     onGesture: jest.fn(),
@@ -53,6 +69,8 @@ function renderMap(overrides: Partial<Props> = {}) {
 beforeEach(() => {
   mockSdk.map = null;
   mockSdk.puck = false;
+  mockSdk.shape = null;
+  mockSdk.layers = [];
   mockSdk.setCamera.mockClear();
   mockSdk.setAccessToken.mockClear();
 });
@@ -114,4 +132,23 @@ test("reports a map that failed to load", () => {
   mockSdk.map?.onDidFailLoadingMap();
 
   expect(props.onUnavailable).toHaveBeenCalledTimes(1);
+});
+
+test("draws the markers as circles with their letters", () => {
+  const kitchen: MapMarker = {
+    kind: "place",
+    slug: "lakeside-kitchen",
+    latitude: -45.0322,
+    longitude: 168.661,
+    name: "Lakeside Kitchen",
+    category: "food",
+    subtype: null,
+  };
+  const { update } = renderMap();
+  expect(mockSdk.shape).toEqual(toFeatureCollection([]));
+
+  update({ markers: [kitchen] });
+
+  expect(mockSdk.shape).toEqual(toFeatureCollection([kitchen]));
+  expect(new Set(mockSdk.layers)).toEqual(new Set(["marker-circles", "marker-labels"]));
 });
