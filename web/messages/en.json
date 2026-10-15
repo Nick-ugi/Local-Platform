@@ -58,7 +58,9 @@
     "all": "All",
     "categories": "Categories",
     "emptyAll": "No places yet.",
-    "emptyCategory": "No places in this category yet."
+    "emptyCategory": "No places in this category yet.",
+    "description": "Find places to eat, drink, shop and visit in Queenstown.",
+    "categoryDescription": "{category} in Queenstown."
   },
   "Nearby": {
     "nearestFirst": "Nearest first",
