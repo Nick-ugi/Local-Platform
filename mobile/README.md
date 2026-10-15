@@ -46,6 +46,7 @@ npm install
 |---|---|---|
 | `EXPO_PUBLIC_API_BASE_URL` | `http://10.0.2.2:8080` | Backend 주소. 에뮬레이터 안의 `localhost`는 에뮬레이터 자신이고, `10.0.2.2`가 PC다. |
 | `EXPO_PUBLIC_MAPBOX_TOKEN` | 없음 | Mapbox 공개 토큰(`pk.`). Web과 같은 것을 쓴다. 없으면 지도 자리에 "The map isn't available right now."가 나온다. |
+| `EXPO_PUBLIC_SITE_URL` | `http://localhost:3001` | Web의 주소. 상세의 Share는 App이 아니라 이 주소의 Web 페이지를 공유한다. |
 
 - 값은 JS를 묶을 때 들어간다. 바꾸면 `npm start`를 다시 띄운다.
 - `EXPO_PUBLIC_`으로 시작하는 값은 앱 안에 그대로 보인다. 비밀 값을 넣지 않는다.
@@ -86,7 +87,7 @@ npm start
 | "The map isn't available right now." | `mobile/.env.local`에 `EXPO_PUBLIC_MAPBOX_TOKEN`이 없다. 넣고 `npx expo start --dev-client --clear`. |
 | "We couldn't load the map data." | 앱이 Backend에 닿지 못했다. DB(`docker compose up -d db`)와 Backend(`gradlew.bat bootRun`)를 켠다. `bootRun`은 서버가 도는 동안 `80% EXECUTING`에 머문다. 정상이다. |
 | "No places in this area." | Backend는 응답했고 그 영역에 공개된 Place가 없다. `backend/seed`의 CSV를 채워 올린다([backend/README.md](../backend/README.md)). |
-| Marker를 눌러도 아무 일이 없다 | 9주차의 범위다. Preview와 상세는 10주차다. |
+| 공유한 주소가 `localhost:3001`이다 | `EXPO_PUBLIC_SITE_URL`이 없다. 배포 전에는 그대로 둔다. |
 
 ## 테스트와 Lint
 
@@ -104,9 +105,16 @@ npm run typecheck -w mobile
 app.config.ts             이름, package id(com.queenstownlocal.app), plugin, 개발 빌드의 http 허용
 src/app                   화면 (Expo Router: 파일이 곧 화면이다. 테스트를 여기에 두지 않는다)
 src/app/(tabs)            Map / Explore / More 탭
+src/app/search.tsx        Search (?q=), 탭 위에 쌓인다
+src/app/places, events, notices   상세 ([slug].tsx), 탭 위에 쌓인다
 src/api                   API 호출 (Backend를 바로 부른다)
-src/map                   Map 탭. MapView만 @rnmapbox/maps를 다룬다.
-src/geo                   위치 권한과 현재 위치
+src/map                   Map 탭: 칩, Marker, 요약 카드, "View on map". MapView만 @rnmapbox/maps를 다룬다.
+src/places                Explore와 Search의 가까운 순 목록 (usePlaceList)
+src/detail                Place / Event / Notice 상세와 그 상태(로딩, 다시 시도, 없음)
+src/links                 전화, 웹사이트, 길찾기, 공유 (Linking, Share)
+src/geo                   위치 권한과 현재 위치. App 전체가 VisitorPositionProvider로 같은 답을 쓴다.
+src/local                 Notice의 유형, Official, 기간
+src/ui                    칩, 검색창, 상태 안내, 이미지, 색
 src/i18n, src/messages    화면 문구
 ```
 
@@ -114,8 +122,10 @@ src/i18n, src/messages    화면 문구
 
 - **React가 두 벌이다.** App은 Expo SDK 57의 React 19.2.3, Web은 19.3.0을 쓴다. npm은 App의 것을 `mobile/node_modules`에, Web의 것을 루트에 둔다. Metro는 App의 것을 고르고 번들에는 하나만 들어간다. Jest는 Node처럼 찾으므로 `jest.config.js`에서 `react`를 App의 것으로 보낸다. React Native는 React의 버전이 정확히 맞아야 하므로 `react-test-renderer`도 `19.2.3`에 고정한다.
 - **지도 SDK 없이 정할 수 있는 것은 `shared`에 있다.** GeoJSON 변환, 영역, Marker의 key는 Web과 같은 함수(`shared/src/map`)를 쓴다. Marker 요청 훅(`src/map/useMarkers.ts`)은 Web의 것과 규칙이 같다.
-- **위치 권한은 Map 탭이 열릴 때 묻는다.** Web은 버튼을 누를 때 묻는다(docs/03-user-flow.md, "Web과 App의 차이"). 서비스 지역 밖이면 지도는 Queenstown에 남고 이유를 알린다.
-- **이번 주의 Marker는 Place뿐이다.** Event와 Notice는 10주차에 App에 들어온다.
+- **위치 권한은 App이 시작할 때 한 번 묻는다.** Web은 버튼을 누를 때 묻는다(docs/03-user-flow.md, "Web과 App의 차이"). Map과 Explore는 같은 답을 쓴다(`VisitorPositionProvider`). 서비스 지역 밖이거나 거부했으면 지도는 Queenstown에 남고, Explore는 Queenstown 중심에서 가까운 순이며 거리가 없다.
+- **Map의 상태는 URL이 아니라 화면에 있다.** Web은 필터와 선택을 URL에 두지만, App의 Map 탭은 상세가 위에 쌓여도 살아 있으므로 그대로 남는다. "View on map"만 `/?place=`(`event`, `notice`)로 Map 탭에 와서 그 Marker를 고르고 파라미터를 지운다.
+- **Local 탭은 없다(Should).** Notice와 Event는 지도의 칩과 Marker로 들어간다.
+- **날짜와 링크 규칙은 `shared`에 있다.** 일시와 기간(`formatEventWhen`, `noticePeriod`), 걸 수 있는 전화번호와 열 수 있는 URL(`telHref`, `httpUrl`), 검색어(`normalizeQuery`)는 Web과 같은 함수다.
 - **React Native의 `URLSearchParams`는 브라우저의 것과 다르다.** 일부 메서드가 없다. 쿼리는 손으로 만든다(`src/api/map.ts`).
 - **테스트는 React Native Testing Library 13이다.** Expo Router의 `renderRouter`가 13의 동기 `render`를 전제로 한다. npm이 Expo Router용으로 루트에 14를 깔지만, `jest.config.js`가 App의 13으로 보낸다.
 - **이 환경의 프록시에서는 `npx expo install`이 Expo 서버에 닿지 못할 수 있다.** 그때는 `node_modules/expo/bundledNativeModules.json`의 버전으로 `npm install -w mobile`한다.

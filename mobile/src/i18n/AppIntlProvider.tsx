@@ -1,3 +1,4 @@
+import "./polyfills";
 import type { ReactNode } from "react";
 import { IntlProvider } from "use-intl";
 import messages from "@/messages/en.json";

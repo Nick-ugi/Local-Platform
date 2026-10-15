@@ -1,6 +1,5 @@
-import type { EventDetail, NoticeDetail } from "@queenstown/shared";
+import { type EventDetail, httpUrl, type NoticeDetail } from "@queenstown/shared";
 import type { Metadata } from "next";
-import { httpUrl } from "@/lib/format";
 import { shorten } from "./text";
 
 /**

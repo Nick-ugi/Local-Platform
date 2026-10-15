@@ -1,6 +1,5 @@
-import type { PlaceDetail } from "@queenstown/shared";
+import { directionsUrl, httpUrl, type PlaceDetail, telHref } from "@queenstown/shared";
 import { useTranslations } from "next-intl";
-import { directionsUrl, httpUrl, telHref } from "@/lib/format";
 import { ShareButton } from "./ShareButton";
 
 // Four labels share a phone's width (about 80px each), so they get a smaller size and never break

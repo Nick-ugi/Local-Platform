@@ -12,7 +12,9 @@ const mockSdk = {
   setAccessToken: jest.fn(),
   puck: false,
   shape: null as unknown,
+  source: null as Record<string, unknown> | null,
   layers: [] as string[],
+  layerProps: {} as Record<string, Record<string, unknown>>,
 };
 
 jest.mock("@rnmapbox/maps", () => {
@@ -36,14 +38,17 @@ jest.mock("@rnmapbox/maps", () => {
     },
     ShapeSource: (props: { shape: unknown; children?: unknown }) => {
       mockSdk.shape = props.shape;
+      mockSdk.source = props;
       return <View>{props.children as never}</View>;
     },
     CircleLayer: (props: { id: string }) => {
       mockSdk.layers.push(props.id);
+      mockSdk.layerProps[props.id] = props;
       return null;
     },
     SymbolLayer: (props: { id: string }) => {
       mockSdk.layers.push(props.id);
+      mockSdk.layerProps[props.id] = props;
       return null;
     },
   };
@@ -56,6 +61,8 @@ function renderMap(overrides: Partial<Props> = {}) {
     token: "pk.test",
     camera: { latitude: -45.0312, longitude: 168.6626, zoom: 14 },
     markers: [],
+    selectedKey: null,
+    onSelect: jest.fn(),
     showUserLocation: false,
     onIdle: jest.fn(),
     onGesture: jest.fn(),
@@ -70,7 +77,9 @@ beforeEach(() => {
   mockSdk.map = null;
   mockSdk.puck = false;
   mockSdk.shape = null;
+  mockSdk.source = null;
   mockSdk.layers = [];
+  mockSdk.layerProps = {};
   mockSdk.setCamera.mockClear();
   mockSdk.setAccessToken.mockClear();
 });
@@ -134,21 +143,52 @@ test("reports a map that failed to load", () => {
   expect(props.onUnavailable).toHaveBeenCalledTimes(1);
 });
 
+const kitchen: MapMarker = {
+  kind: "place",
+  slug: "lakeside-kitchen",
+  latitude: -45.0322,
+  longitude: 168.661,
+  name: "Lakeside Kitchen",
+  category: "food",
+  subtype: null,
+};
+
 test("draws the markers as circles with their letters", () => {
-  const kitchen: MapMarker = {
-    kind: "place",
-    slug: "lakeside-kitchen",
-    latitude: -45.0322,
-    longitude: 168.661,
-    name: "Lakeside Kitchen",
-    category: "food",
-    subtype: null,
-  };
   const { update } = renderMap();
   expect(mockSdk.shape).toEqual(toFeatureCollection([]));
 
   update({ markers: [kitchen] });
 
   expect(mockSdk.shape).toEqual(toFeatureCollection([kitchen]));
-  expect(new Set(mockSdk.layers)).toEqual(new Set(["marker-circles", "marker-labels"]));
+  expect(new Set(mockSdk.layers)).toEqual(new Set(["marker-circles", "marker-selected", "marker-labels"]));
+});
+
+test("draws the selected marker filled, and no marker without a selection", () => {
+  const { update } = renderMap({ markers: [kitchen] });
+  expect(mockSdk.layerProps["marker-selected"].filter).toEqual(["==", ["get", "key"], ""]);
+
+  update({ markers: [kitchen], selectedKey: "place:lakeside-kitchen" });
+
+  expect(mockSdk.layerProps["marker-selected"].filter).toEqual(["==", ["get", "key"], "place:lakeside-kitchen"]);
+  const label = mockSdk.layerProps["marker-labels"].style as { textColor: unknown };
+  expect(label.textColor).toEqual(["case", ["==", ["get", "key"], "place:lakeside-kitchen"], "#ffffff", "#171717"]);
+});
+
+test("a press on a marker selects it, with a 44 pt target", () => {
+  const { props } = renderMap({ markers: [kitchen] });
+
+  expect(mockSdk.source?.hitbox).toEqual({ width: 44, height: 44 });
+  (mockSdk.source?.onPress as (event: unknown) => void)({
+    features: [{ properties: { key: "place:lakeside-kitchen", kind: "place", label: "F" } }],
+  });
+
+  expect(props.onSelect).toHaveBeenCalledWith("place:lakeside-kitchen");
+});
+
+test("a press beside every marker clears the selection", () => {
+  const { props } = renderMap({ markers: [kitchen], selectedKey: "place:lakeside-kitchen" });
+
+  mockSdk.map?.onPress();
+
+  expect(props.onSelect).toHaveBeenCalledWith(null);
 });

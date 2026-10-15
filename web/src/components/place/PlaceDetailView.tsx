@@ -1,9 +1,8 @@
-import type { PlaceDetail } from "@queenstown/shared";
+import { displayUrl, formatDate, httpUrl, type PlaceDetail, telHref } from "@queenstown/shared";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { BackLink } from "@/components/nav/BackLink";
-import { displayUrl, formatDate, httpUrl, telHref } from "@/lib/format";
 import { PlaceActions } from "./PlaceActions";
 import { PlaceImage } from "./PlaceImage";
 import { ViewOnMapLink } from "./ViewOnMapLink";

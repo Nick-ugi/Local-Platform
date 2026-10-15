@@ -17,7 +17,7 @@ import Mapbox, {
   SymbolLayer,
   type SymbolLayerStyle,
 } from "@rnmapbox/maps";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { type ComponentProps, useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import type { Camera } from "./camera";
 
@@ -27,6 +27,10 @@ type Props = {
   /** Where the map looks when it is created. Giving a new object afterwards moves the map there. */
   camera: Camera;
   markers: readonly MapMarker[];
+  /** The key of the selected marker (shared/src/map/selection.ts), or null. */
+  selectedKey: string | null;
+  /** Called with the key of the marker the visitor pressed, or null for a press beside every marker. */
+  onSelect: (key: string | null) => void;
   /** Draws the visitor's position, which the phone keeps up to date, once permission is granted. */
   showUserLocation: boolean;
   /** Called whenever the map comes to rest, with the visible box. */
@@ -58,21 +62,50 @@ const circleStyle: CircleLayerStyle = {
   circleEmissiveStrength: 1,
 };
 
-const labelStyle: SymbolLayerStyle = {
-  textField: ["get", "label"],
-  textSize: 13,
-  textFont: ["DIN Pro Bold", "Arial Unicode MS Bold"],
-  textAllowOverlap: true,
-  textIgnorePlacement: true,
-  textColor: INK,
-  textEmissiveStrength: 1,
+// The selected marker is larger and filled (wireframe a-map), with its letter in white.
+const selectedStyle: CircleLayerStyle = {
+  circleRadius: RADIUS + 6,
+  circleColor: INK,
+  circleStrokeColor: PAPER,
+  circleStrokeWidth: 2,
+  circleEmissiveStrength: 1,
 };
+
+function labelStyle(selectedKey: string | null): SymbolLayerStyle {
+  return {
+    textField: ["get", "label"],
+    textSize: 13,
+    textFont: ["DIN Pro Bold", "Arial Unicode MS Bold"],
+    textAllowOverlap: true,
+    textIgnorePlacement: true,
+    textColor: ["case", ["==", ["get", "key"], selectedKey ?? ""], PAPER, INK],
+    textEmissiveStrength: 1,
+  };
+}
+
+/** Matches the selected marker only. No marker has an empty key, so null matches none. */
+function onlyKey(key: string | null): ComponentProps<typeof CircleLayer>["filter"] {
+  return ["==", ["get", "key"], key ?? ""];
+}
+
+/** A press this close to a marker's centre counts: a 44 pt target (README, "Map"). */
+const HITBOX = { width: 44, height: 44 };
 
 /**
  * The map itself. This is the only file that touches @rnmapbox/maps; everything that can be
  * decided without the SDK lives in @queenstown/shared and the screen.
  */
-export function MapView({ token, camera, markers, showUserLocation, onIdle, onGesture, onUnavailable }: Props) {
+export function MapView({
+  token,
+  camera,
+  markers,
+  selectedKey,
+  onSelect,
+  showUserLocation,
+  onIdle,
+  onGesture,
+  onUnavailable,
+}: Props) {
   const cameraRef = useRef<MapboxCamera>(null);
   const [startCamera] = useState(camera);
   const shape = useMemo(() => toFeatureCollection(markers), [markers]);
@@ -111,6 +144,8 @@ export function MapView({ token, camera, markers, showUserLocation, onIdle, onGe
         }
       }}
       onDidFailLoadingMap={onUnavailable}
+      // A press on a marker goes to the markers' source and does not reach the map.
+      onPress={() => onSelect(null)}
     >
       <MapboxCamera
         ref={cameraRef}
@@ -118,9 +153,18 @@ export function MapView({ token, camera, markers, showUserLocation, onIdle, onGe
       />
       {showUserLocation ? <LocationPuck puckBearingEnabled={false} /> : null}
       {/* After the position, so the markers stay on top of it. */}
-      <ShapeSource id="markers" shape={shape}>
+      <ShapeSource
+        id="markers"
+        shape={shape}
+        hitbox={HITBOX}
+        onPress={(event) => {
+          const key: unknown = event.features[0]?.properties?.key;
+          onSelect(typeof key === "string" ? key : null);
+        }}
+      >
         <CircleLayer id="marker-circles" style={circleStyle} />
-        <SymbolLayer id="marker-labels" style={labelStyle} />
+        <CircleLayer id="marker-selected" style={selectedStyle} filter={onlyKey(selectedKey)} />
+        <SymbolLayer id="marker-labels" style={labelStyle(selectedKey)} />
       </ShapeSource>
     </MapboxMapView>
   );

@@ -6,25 +6,115 @@
     "more": "More",
     "back": "Back"
   },
+  "Category": {
+    "food": "Food",
+    "cafe": "Cafes",
+    "bar": "Bars",
+    "activity": "Activities",
+    "shopping": "Shopping",
+    "facility": "Facilities"
+  },
+  "Subtype": {
+    "toilet": "Public toilet",
+    "parking": "Parking",
+    "information": "Information centre",
+    "library": "Library",
+    "medical": "Medical"
+  },
+  "NoticeType": {
+    "road-work": "Road Work",
+    "road-closure": "Road Closure",
+    "public-notice": "Public Notice",
+    "emergency": "Emergency"
+  },
   "Pages": {
     "map": "Map",
     "explore": "Explore",
     "more": "More",
-    "about": "About"
+    "about": "About",
+    "events": "Events",
+    "notices": "Notices",
+    "search": "Search"
   },
-  "Explore": {
-    "comingSoon": "Places to explore are coming soon. The map shows them already."
+  "State": {
+    "loading": "Loading…",
+    "errorTitle": "Something went wrong",
+    "retry": "Try again",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "This page doesn't exist or is no longer available.",
+    "goToMap": "Go to Map",
+    "goToExplore": "Go to Explore",
+    "errorBody": "We couldn't load this screen. Please try again."
   },
   "Map": {
+    "filters": "Filters",
     "locate": "Show my location",
     "empty": "No places in this area.",
+    "clearFilters": "Clear filters",
     "loadFailed": "We couldn't load the map data.",
     "retry": "Try again",
     "outsideArea": "You're outside the Queenstown area, so the map stays on Queenstown.",
-    "notConfigured": "The map isn't available right now.",
-    "truncated": "Zoom in to see every place.",
     "locationDenied": "Location is turned off for this app. Turn it on in your phone's settings to see your position.",
-    "locationUnavailable": "We couldn't find your location."
+    "locationUnavailable": "We couldn't find your location.",
+    "notConfigured": "The map isn't available right now.",
+    "viewDetails": "View details",
+    "closePreview": "Close",
+    "truncated": "Zoom in to see every place."
+  },
+  "Explore": {
+    "all": "All",
+    "categories": "Categories",
+    "emptyAll": "No places yet.",
+    "emptyCategory": "No places in this category yet."
+  },
+  "Nearby": {
+    "nearestFirst": "Nearest first",
+    "fromYourLocation": "From your location",
+    "fromCentre": "From the centre of Queenstown",
+    "outsideArea": "You're outside the Queenstown area, so places are ordered from the centre of Queenstown.",
+    "locationDenied": "Location is turned off for this app. Turn it on in your phone's settings to see distances.",
+    "locationUnavailable": "We couldn't find your location, so places are ordered from the centre of Queenstown.",
+    "loadFailed": "We couldn't load the places.",
+    "loadMoreFailed": "We couldn't load more places.",
+    "retry": "Try again"
+  },
+  "Search": {
+    "label": "Search places",
+    "clear": "Clear search",
+    "title": "Search",
+    "hint": "Search for a place by name or keyword.",
+    "count": "{count, plural, one {# result} other {# results}}",
+    "empty": "No places match “{q}”."
+  },
+  "Place": {
+    "address": "Address",
+    "openingHours": "Opening hours",
+    "contact": "Contact",
+    "viewOnMap": "View on map",
+    "updated": "Updated {date}",
+    "actions": "Quick actions",
+    "call": "Call",
+    "website": "Website",
+    "directions": "Directions",
+    "share": "Share",
+    "source": "Source: {source}",
+    "openFailed": "Couldn't open this on your phone."
+  },
+  "Local": {
+    "official": "Official",
+    "from": "From {date}"
+  },
+  "Detail": {
+    "period": "Period",
+    "location": "Location",
+    "source": "Source",
+    "openOriginal": "Open original",
+    "when": "When",
+    "where": "Where",
+    "eventPage": "Official event page",
+    "noticeEnded": "This notice has ended.",
+    "eventEnded": "This event has ended.",
+    "updated": "Updated {date}"
   },
   "About": {
     "title": "About Queenstown Local",

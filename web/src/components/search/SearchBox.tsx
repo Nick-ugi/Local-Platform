@@ -1,9 +1,10 @@
 "use client";
 
+import { MAX_QUERY_LENGTH, normalizeQuery } from "@queenstown/shared";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { type FormEvent, Suspense, useRef, useState } from "react";
-import { MAX_QUERY_LENGTH, normalizeQuery, searchPath } from "@/lib/places/listUrl";
+import { searchPath } from "@/lib/places/listUrl";
 
 /**
  * The form itself. It is an ordinary GET form to /search, so it works before the scripts have
