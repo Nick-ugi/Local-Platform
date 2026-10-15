@@ -6,6 +6,10 @@ import MapTab from "@/app/(tabs)/index";
 import MoreTab from "@/app/(tabs)/more";
 import AboutScreen from "@/app/about";
 
+// The Map tab asks for the position when it opens. Here that question is never answered, so the
+// map's state does not change under the navigation being tested.
+jest.mock("@/geo/location", () => ({ locate: () => new Promise(() => {}) }));
+
 const routes = {
   _layout: RootLayout,
   "(tabs)/_layout": TabsLayout,

@@ -16,6 +16,7 @@ const appTestingLibrary = path.dirname(
 /** @type {import('jest').Config} */
 module.exports = {
   preset: "jest-expo",
+  setupFiles: ["@rnmapbox/maps/setup-jest", "./jest.setup.js"],
   moduleNameMapper: {
     "^react$": appReact,
     "^react/(.*)$": `${appReact}/$1`,
