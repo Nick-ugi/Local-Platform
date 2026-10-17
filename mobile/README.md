@@ -19,7 +19,7 @@ Queenstown Local Platform의 App이다. Web과 같은 Backend API를 쓴다.
 - Node 24
 - **Android Studio**: Android SDK와 에뮬레이터
   - Device Manager에서 에뮬레이터를 하나 만든다. Google Play가 있는 최근 API 이미지를 고른다.
-- **JDK 17**: Android Studio에 들어 있는 JBR을 써도 된다(`C:\Program Files\Android\Android Studio\jbr`).
+- **JDK 17 또는 21**: Android Studio에 들어 있는 JBR은 버전을 확인하고 쓴다(`"C:\Program Files\Android\Android Studio\jbr\bin\java" -version`). 25 이상이면 빌드가 실패한다(아래 "자주 나는 문제").
 - 환경 변수
   - `JAVA_HOME`: JDK 경로
   - `ANDROID_HOME`: SDK 경로(보통 `%LOCALAPPDATA%\Android\Sdk`)
@@ -84,6 +84,7 @@ npm start
 | `Missing script: "android"` | 저장소 루트에서 실행했다. `mobile`에서 실행한다. |
 | `SDK location not found`, `adb`를 찾지 못함 | `ANDROID_HOME`이 없다. 시스템 환경 변수에 `%LOCALAPPDATA%\Android\Sdk`를 넣고 터미널(VS Code는 VS Code 자체)을 다시 연다. 지금 창에서만 쓰려면 PowerShell에서 `$env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"`. |
 | PowerShell에서 `&&`가 안 된다 | Windows PowerShell 5는 `&&`를 모른다. 명령을 한 줄씩 실행한다. |
+| `configureCMakeDebug` 실패, `WARNING: A restricted method in java.lang.System has been called` | `JAVA_HOME`이 JDK 25 이상이다(Android Studio의 JBR이 25일 수 있다). 네이티브 라이브러리를 준비하는 도구가 JDK의 경고를 오류로 본다. `JAVA_HOME`을 JDK 17이나 21로 바꾸고 다시 빌드한다. 지금 창에서만: `$env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-21..."`(설치한 경로). |
 | "The map isn't available right now." | `mobile/.env.local`에 `EXPO_PUBLIC_MAPBOX_TOKEN`이 없다. 넣고 `npx expo start --dev-client --clear`. |
 | "We couldn't load the map data." | 앱이 Backend에 닿지 못했다. DB(`docker compose up -d db`)와 Backend(`gradlew.bat bootRun`)를 켠다. `bootRun`은 서버가 도는 동안 `80% EXECUTING`에 머문다. 정상이다. |
 | "No places in this area." | Backend는 응답했고 그 영역에 공개된 Place가 없다. `backend/seed`의 CSV를 채워 올린다([backend/README.md](../backend/README.md)). |
