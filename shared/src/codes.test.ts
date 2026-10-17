@@ -51,6 +51,17 @@ test('facility subtypes match the place subtype constraint', () => {
   expect(constraintValues('ck_place_subtype')).toEqual([...FACILITY_SUBTYPES])
 })
 
+test('facility subtypes match the backend list', () => {
+  const subtypeJava = readFileSync(
+    new URL('java/com/queenstownlocal/backend/place/FacilitySubtype.java', backend),
+    'utf8',
+  )
+  const listStart = subtypeJava.indexOf('List.of(')
+  const list = subtypeJava.slice(listStart, subtypeJava.indexOf(')', listStart))
+
+  expect([...list.matchAll(/"([^"]+)"/g)].map((match) => match[1])).toEqual([...FACILITY_SUBTYPES])
+})
+
 test('notice types match the notice type constraint', () => {
   expect(constraintValues('ck_notice_type')).toEqual([...NOTICE_TYPES])
 })

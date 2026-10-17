@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { AccountMenu } from "@/components/account/AccountMenu";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Pages");
@@ -9,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("more"), robots: { index: false, follow: true } };
 }
 
-/** More (wireframe m-more). About is the one item of the MVP; login and the rest come later. */
+/** More (wireframe m-more): About, then the account (Log in or Log out) and Favorites. */
 export default function MorePage() {
   const t = useTranslations("Pages");
 
@@ -26,6 +27,7 @@ export default function MorePage() {
               </span>
             </Link>
           </li>
+          <AccountMenu />
         </ul>
       </nav>
     </div>

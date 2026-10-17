@@ -19,7 +19,7 @@ Queenstown Local Platform의 App이다. Web과 같은 Backend API를 쓴다.
 - Node 24
 - **Android Studio**: Android SDK와 에뮬레이터
   - Device Manager에서 에뮬레이터를 하나 만든다. Google Play가 있는 최근 API 이미지를 고른다.
-- **JDK 17**: Android Studio에 들어 있는 JBR을 써도 된다(`C:\Program Files\Android\Android Studio\jbr`).
+- **JDK 17 또는 21**: Android Studio에 들어 있는 JBR은 버전을 확인하고 쓴다(`"C:\Program Files\Android\Android Studio\jbr\bin\java" -version`). 25 이상이면 빌드가 실패한다(아래 "자주 나는 문제").
 - 환경 변수
   - `JAVA_HOME`: JDK 경로
   - `ANDROID_HOME`: SDK 경로(보통 `%LOCALAPPDATA%\Android\Sdk`)
@@ -84,6 +84,7 @@ npm start
 | `Missing script: "android"` | 저장소 루트에서 실행했다. `mobile`에서 실행한다. |
 | `SDK location not found`, `adb`를 찾지 못함 | `ANDROID_HOME`이 없다. 시스템 환경 변수에 `%LOCALAPPDATA%\Android\Sdk`를 넣고 터미널(VS Code는 VS Code 자체)을 다시 연다. 지금 창에서만 쓰려면 PowerShell에서 `$env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"`. |
 | PowerShell에서 `&&`가 안 된다 | Windows PowerShell 5는 `&&`를 모른다. 명령을 한 줄씩 실행한다. |
+| `configureCMakeDebug` 실패, `WARNING: A restricted method in java.lang.System has been called` | `JAVA_HOME`이 JDK 25 이상이다(Android Studio의 JBR이 25일 수 있다). 네이티브 라이브러리를 준비하는 도구가 JDK의 경고를 오류로 본다. `JAVA_HOME`을 JDK 17이나 21로 바꾸고 다시 빌드한다. 지금 창에서만: `$env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-21..."`(설치한 경로). |
 | "The map isn't available right now." | `mobile/.env.local`에 `EXPO_PUBLIC_MAPBOX_TOKEN`이 없다. 넣고 `npx expo start --dev-client --clear`. |
 | "We couldn't load the map data." | 앱이 Backend에 닿지 못했다. DB(`docker compose up -d db`)와 Backend(`gradlew.bat bootRun`)를 켠다. `bootRun`은 서버가 도는 동안 `80% EXECUTING`에 머문다. 정상이다. |
 | "No places in this area." | Backend는 응답했고 그 영역에 공개된 Place가 없다. `backend/seed`의 CSV를 채워 올린다([backend/README.md](../backend/README.md)). |
@@ -113,12 +114,17 @@ src/places                Explore와 Search의 가까운 순 목록 (usePlaceLis
 src/detail                Place / Event / Notice 상세와 그 상태(로딩, 다시 시도, 없음)
 src/links                 전화, 웹사이트, 길찾기, 공유 (Linking, Share)
 src/geo                   위치 권한과 현재 위치. App 전체가 VisitorPositionProvider로 같은 답을 쓴다.
+src/auth                  로그인, 가입, Favorite. Refresh Token은 expo-secure-store에 둔다.
 src/local                 Notice의 유형, Official, 기간
 src/ui                    칩, 검색창, 상태 안내, 이미지, 색
 src/i18n, src/messages    화면 문구
 ```
 
 ## 알아 둘 것
+
+- **11주차에 네이티브 모듈(`expo-secure-store`)이 들어왔다.** 그 전의 개발 빌드에는 없으므로 `npm run android`로 한 번 다시 빌드한다. 그 뒤로는 Metro만 띄우면 된다.
+- **로그인은 기기에 남는다.** Refresh Token은 기기의 보안 저장소에, Access Token은 메모리에만 둔다. 앱을 껐다 켜도 로그인되어 있다. Log out은 서버의 Refresh Token도 무효로 만든다.
+- **하트를 누르다 로그인하러 가면** 로그인한 뒤 돌아와 저장까지 끝난다(m-login 1번).
 
 - **React가 두 벌이다.** App은 Expo SDK 57의 React 19.2.3, Web은 19.3.0을 쓴다. npm은 App의 것을 `mobile/node_modules`에, Web의 것을 루트에 둔다. Metro는 App의 것을 고르고 번들에는 하나만 들어간다. Jest는 Node처럼 찾으므로 `jest.config.js`에서 `react`를 App의 것으로 보낸다. React Native는 React의 버전이 정확히 맞아야 하므로 `react-test-renderer`도 `19.2.3`에 고정한다.
 - **지도 SDK 없이 정할 수 있는 것은 `shared`에 있다.** GeoJSON 변환, 영역, Marker의 key는 Web과 같은 함수(`shared/src/map`)를 쓴다. Marker 요청 훅(`src/map/useMarkers.ts`)은 Web의 것과 규칙이 같다.

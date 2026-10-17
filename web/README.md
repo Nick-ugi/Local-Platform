@@ -91,6 +91,9 @@ src/test/render.tsx       테스트에서 문구와 함께 렌더링하는 도�
 
 ## 알아 둘 것
 
+- **로그인 토큰은 브라우저의 JavaScript가 읽지 못한다.** `/api/auth/login`, `/signup`, `/logout`과 `/api/v1/me/**`(Route Handler)가 Backend를 부르고 토큰을 HttpOnly 쿠키(`ql_access`, `ql_refresh`)에 둔다. 만료된 Access Token은 한 번 재발급해 다시 보낸다. `ql_signed_in`은 토큰 없이 "로그인한 적이 있다"만 알려 주는 쿠키라, 로그인하지 않은 방문자에게는 계정 확인 요청을 보내지 않는다.
+- **로그인 후 돌아갈 곳은 `?next=`이고, 이 사이트의 경로만 받는다**(`src/lib/auth/next.ts`).
+
 - **브라우저는 Backend를 직접 부르지 않는다.** 서버에서 그리는 화면(Place 상세)은 `API_BASE_URL`의 Backend를 바로 부른다. 브라우저에서 부르는 API(지도의 Marker)는 이 사이트의 `/api/v1/...`를 부르고, `app/api/v1/[...path]/route.ts`가 같은 경로와 query를 Backend로 전달한다. 그래서 Backend에 CORS 설정이 없고, Backend의 주소가 브라우저에 드러나지 않는다. `apiGet`이 어느 쪽인지 알아서 고른다. 전달하는 것은 GET뿐이고 방문자의 쿠키와 `Authorization`은 넘기지 않는다. 로그인이 필요한 API가 생기면(11주차) 이 부분을 다시 정한다.
 - **`mapbox-gl`은 `components/map/MapView.tsx`만 다룬다.** 지도 SDK는 테스트 환경에서 돌지 않으므로, SDK 없이 정할 수 있는 것은 모두 `shared/src/map`의 함수와 `lib/map`의 훅에 두고 테스트한다. `shared/src/map`은 App도 쓴다. `MapView`의 테스트는 SDK를 가짜 지도로 바꿔 무엇을 요청하는지만 본다. 실제 지도는 브라우저에서 확인한다. SDK는 지도를 그릴 때 따로 내려받으므로 다른 화면의 첫 로딩에 들어가지 않는다.
 - **좌표의 순서는 `shared/src/map/geojson.ts`에서만 바꾼다.** API와 화면의 타입은 `latitude`, `longitude`이고 GeoJSON과 Mapbox는 `[longitude, latitude]`다.

@@ -9,6 +9,14 @@ spring:
     problemdetails:
       enabled: true
 
+# Tokens (docs/06-api-specification.md, section 1). JWT_SECRET signs the access tokens: at least 32
+# bytes, and never the development value below outside a developer's machine.
+app:
+  jwt:
+    secret: ${JWT_SECRET:development-only-secret-change-me-0123456789}
+    access-token-ttl: 15m
+    refresh-token-ttl: 30d
+
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   configuration:

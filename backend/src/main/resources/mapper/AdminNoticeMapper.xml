@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.queenstownlocal.backend.admin.AdminNoticeMapper">
+
+	<sql id="columns">
+		id, slug, title, type, summary, starts_at, ends_at, location_name,
+		ST_Y(location::geometry) AS latitude,
+		ST_X(location::geometry) AS longitude,
+		source_org, source_url, is_official, status, created_at, updated_at
+	</sql>
+
+	<sql id="filters">
+		FROM notice
+		<where>
+			<if test="pattern != null">title ILIKE #{pattern} ESCAPE '\'</if>
+			<if test="status != null">AND status = #{status}</if>
+			<if test="type != null">AND type = #{type}</if>
+		</where>
+	</sql>
+
+	<select id="find" resultType="com.queenstownlocal.backend.admin.AdminNotice">
+		SELECT <include refid="columns"/>
+		<include refid="filters"/>
+		ORDER BY updated_at DESC, id DESC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+	<select id="count" resultType="long">
+		SELECT count(*)
+		<include refid="filters"/>
+	</select>
+
+	<select id="findById" resultType="com.queenstownlocal.backend.admin.AdminNotice">
+		SELECT <include refid="columns"/>
+		FROM notice
+		WHERE id = #{id}
+	</select>
+
+	<select id="findSlugs" resultType="string">
+		SELECT slug FROM notice WHERE slug = #{base} OR starts_with(slug, #{base} || '-')
+	</select>
+
+	<!-- A notice without a location stores no point (docs/05-erd.md, notice). -->
+	<sql id="location">
+		<choose>
+			<when test="notice.latitude != null">
+				ST_SetSRID(ST_MakePoint(#{notice.longitude}, #{notice.latitude}), 4326)::geography
+			</when>
+			<otherwise>NULL</otherwise>
+		</choose>
+	</sql>
+
+	<select id="insert" resultType="long" flushCache="true" useCache="false">
+		INSERT INTO notice (slug, title, type, summary, starts_at, ends_at, location_name, location, source_org,
+		                    source_url, is_official, status, created_at, updated_at)
+		VALUES (#{slug}, #{notice.title}, #{notice.type}, #{notice.summary}, #{notice.startsAt}, #{notice.endsAt},
+		        #{notice.locationName}, <include refid="location"/>, #{notice.sourceOrg}, #{notice.sourceUrl},
+		        #{notice.isOfficial}, #{notice.status}, #{now}, #{now})
+		RETURNING id
+	</select>
+
+	<update id="update">
+		UPDATE notice
+		SET title = #{notice.title}, type = #{notice.type}, summary = #{notice.summary},
+		    starts_at = #{notice.startsAt}, ends_at = #{notice.endsAt}, location_name = #{notice.locationName},
+		    location = <include refid="location"/>, source_org = #{notice.sourceOrg},
+		    source_url = #{notice.sourceUrl}, is_official = #{notice.isOfficial}, status = #{notice.status},
+		    updated_at = #{now}
+		WHERE id = #{id}
+	</update>
+
+</mapper>

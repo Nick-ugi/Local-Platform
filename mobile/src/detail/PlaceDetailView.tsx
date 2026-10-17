@@ -1,5 +1,5 @@
 import { displayUrl, formatDate, httpUrl, type PlaceDetail, telHref } from "@queenstown/shared";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { call, openDirections, openWebsite, shareLink } from "@/links/actions";
@@ -12,7 +12,16 @@ import { ActionProblem, DetailRow, DetailText, detailStyles, SideButton } from "
  * actions right under them, description, address with "View on map", opening hours, contact, and
  * the source with the date it was updated. Rows the place has no value for are left out.
  */
-export function PlaceDetailView({ place, onViewOnMap }: { place: PlaceDetail; onViewOnMap: () => void }) {
+export function PlaceDetailView({
+  place,
+  onViewOnMap,
+  favorite,
+}: {
+  place: PlaceDetail;
+  onViewOnMap: () => void;
+  /** The heart beside the name (FAV-01). */
+  favorite?: ReactNode;
+}) {
   const t = useTranslations("Place");
   const tCategory = useTranslations("Category");
   const tSubtype = useTranslations("Subtype");
@@ -43,11 +52,14 @@ export function PlaceDetailView({ place, onViewOnMap }: { place: PlaceDetail; on
   return (
     <ScrollView style={detailStyles.scroll} contentContainerStyle={detailStyles.content}>
       <PlaceImage url={place.imageUrl} label={place.name} style={detailStyles.image} />
-      <View>
-        <Text accessibilityRole="header" style={detailStyles.title}>
-          {place.name}
-        </Text>
-        <Text style={detailStyles.kind}>{kind}</Text>
+      <View style={styles.header}>
+        <View style={styles.headerText}>
+          <Text accessibilityRole="header" style={detailStyles.title}>
+            {place.name}
+          </Text>
+          <Text style={detailStyles.kind}>{kind}</Text>
+        </View>
+        {favorite}
       </View>
 
       <View accessibilityLabel={t("actions")} style={styles.actions}>
@@ -107,6 +119,8 @@ function LinkText({ text, onPress }: { text: string; onPress: () => void }) {
 }
 
 const styles = StyleSheet.create({
+  header: { flexDirection: "row", alignItems: "flex-start", gap: 8 },
+  headerText: { flex: 1 },
   actions: { flexDirection: "row", gap: 8 },
   action: {
     flex: 1,

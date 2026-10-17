@@ -56,3 +56,9 @@ test('a cancelled request rejects with the abort error itself', async () => {
 
   await expect(requestJson('https://api.example/x', { signal: controller.signal })).rejects.toBe(abort)
 })
+
+test('an answer without a body (204) is undefined', async () => {
+  vi.stubGlobal('fetch', vi.fn(async () => new Response(null, { status: 204 })))
+
+  await expect(requestJson('https://api.example/x', { method: 'PUT' })).resolves.toBeUndefined()
+})

@@ -56,6 +56,22 @@ cd backend
 curl http://localhost:8080/actuator/health
 ```
 
+## 로그인과 토큰
+
+`/me`로 시작하는 API는 로그인이, `/admin`으로 시작하는 API는 `role`이 `admin`인 계정이 필요하다(Spring Security). 공개 API는 그대로 열려 있다.
+
+| 값 | 기본값 | 뜻 |
+|---|---|---|
+| `JWT_SECRET` | 개발용 값 | Access Token(JWT, HS256)의 서명 키. 32바이트 이상. 개발용 값으로 시작하면 서버가 로그에 경고를 남긴다. 배포에서는 반드시 넘긴다. |
+
+```bash
+JWT_SECRET="$(openssl rand -base64 48)" ./gradlew bootRun
+```
+
+- Access Token은 15분, Refresh Token은 30일이다. Refresh Token은 DB에 SHA-256 해시로만 두고, 재발급할 때마다 바뀌며 이전 것은 무효가 된다.
+- 비밀번호는 BCrypt로 저장한다.
+- Admin 계정은 가입한 계정의 `role`을 SQL로 바꿔 만든다([admin/README.md](../admin/README.md)).
+
 ## Seed 데이터
 
 방문자에게 보이는 Place, Event, Notice는 `seed/`의 CSV에 두고 저장소 루트에서 올린다. 열의 뜻과 지켜야 할 것은 [seed/README.md](seed/README.md)에 있다.
@@ -80,8 +96,15 @@ cd backend
 ```text
 src/main/java/com/queenstownlocal/backend
  ├── common/error    오류 코드와 Problem Details 응답
+ ├── common/slug     이름과 제목에서 slug 만들기
+ ├── security        접근 규칙, JWT 발급과 검증
+ ├── auth            가입, 로그인, 재발급, 로그아웃
+ ├── me              내 계정과 Favorite
+ ├── admin           Admin API (Place, Event, Notice 등록과 수정)
  ├── map             Map API (지도 영역의 Marker)
- └── place           Place API (목록, 검색, 상세), Category 코드
+ ├── place           Place API (목록, 검색, 상세), Category 코드
+ ├── event, notice   Event / Notice API
+ └── sitemap         Sitemap API
 
 seed                 Place, Event, Notice의 Seed 데이터와 올리는 스크립트
 

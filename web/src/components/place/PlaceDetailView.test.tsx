@@ -6,6 +6,8 @@ import { PlaceDetailView } from "./PlaceDetailView";
 
 // The back link reads the router; nothing here navigates.
 vi.mock("next/navigation", () => ({ useRouter: () => ({ back: vi.fn() }) }));
+// The heart has its own tests (components/account).
+vi.mock("@/components/account/FavoriteButton", () => ({ FavoriteButton: () => null }));
 
 const full: PlaceDetail = {
   slug: "lakeside-kitchen",
