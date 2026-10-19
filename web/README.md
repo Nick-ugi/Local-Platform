@@ -53,6 +53,25 @@ npm run build -w web
 npm run start -w web
 ```
 
+### 운영 (Docker 이미지)
+
+배포(Render, 서버 1대)는 `web/Dockerfile`로 만든 이미지를 쓴다. `shared`를 함께 넣으므로 저장소 루트에서 빌드한다. 루트의 `.dockerignore`가 `.env.local` 같은 로컬 파일을 이미지에 넣지 않는다.
+
+```bash
+docker build -f web/Dockerfile --build-arg NEXT_PUBLIC_MAPBOX_TOKEN=pk.… -t queenstown-web .
+docker run -p 3010:3000 -e API_BASE_URL=http://host.docker.internal:8080 -e SITE_URL=http://localhost:3010 queenstown-web
+```
+
+| 값 | 언제 | 뜻 |
+|---|---|---|
+| `NEXT_PUBLIC_MAPBOX_TOKEN` | 빌드 인자 | 지도 토큰. 브라우저 코드에 들어간다. |
+| `API_BASE_URL` | 실행 | Backend 주소. 서버만 쓴다(브라우저는 이 사이트의 `/api/v1`을 부른다). |
+| `SITE_URL` | 실행 | 사이트의 공개 주소(canonical, `og:url`, sitemap). |
+| `PORT` | 실행 | 기본 3000. |
+
+- `next.config.ts`의 `output: "standalone"`으로 필요한 파일만 담긴 서버를 만들고, 컨테이너는 root가 아닌 `node` 사용자로 돈다.
+- 모든 응답에 보안 헤더(`src/lib/securityHeaders.ts`: `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy`)가 붙고 `X-Powered-By`는 없다. HSTS는 HTTPS를 끝내는 앞단(Caddy, Render)이 붙인다.
+
 ## 테스트와 Lint
 
 ```bash
