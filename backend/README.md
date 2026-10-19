@@ -71,7 +71,7 @@ JWT_SECRET="$(openssl rand -base64 48)" ./gradlew bootRun
 - Access Token은 15분, Refresh Token은 30일이다. Refresh Token은 DB에 SHA-256 해시로만 두고, 재발급할 때마다 바뀌며 이전 것은 무효가 된다.
 - 비밀번호는 BCrypt로 저장한다.
 - Admin 계정은 가입한 계정의 `role`을 SQL로 바꿔 만든다([admin/README.md](../admin/README.md)).
-- 로그인과 가입은 같은 주소에서 10분에 20번까지다. 넘으면 429 `TOO_MANY_REQUESTS`와 `Retry-After`(초). 횟수는 서버의 메모리에 있어서 서버를 다시 켜면 처음부터 센다.
+- 로그인과 가입은 10분에 20번까지다. 로그인은 주소와 이메일마다(웹 서버처럼 여러 방문자가 한 주소로 와도 서로 막지 않게), 가입은 주소마다 센다. Web은 앞단 프록시가 붙인 방문자 주소(`X-Forwarded-For`의 마지막 값)를 Backend에 넘긴다. 넘으면 429 `TOO_MANY_REQUESTS`와 `Retry-After`(초). 횟수는 서버의 메모리에 있어서 서버를 다시 켜면 처음부터 센다.
 
 ## 운영 (Docker 이미지)
 

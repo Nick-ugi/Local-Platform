@@ -46,9 +46,13 @@ class AuthRateLimitTest {
 	}
 
 	private ResultActions wrongLogin(String address) throws Exception {
+		return wrongLogin(address, "nobody@example.com");
+	}
+
+	private ResultActions wrongLogin(String address, String email) throws Exception {
 		return mvc.perform(post("/api/v1/auth/login").with(Auth.fromAddress(address))
 			.contentType(MediaType.APPLICATION_JSON)
-			.content("{\"email\":\"nobody@example.com\",\"password\":\"not the password\"}"));
+			.content("{\"email\":\"" + email + "\",\"password\":\"not the password\"}"));
 	}
 
 	private ResultActions signup(String address, int n) throws Exception {
@@ -88,6 +92,20 @@ class AuthRateLimitTest {
 		}
 
 		wrongLogin("198.51.100.4").andExpect(status().isUnauthorized());
+	}
+
+	/**
+	 * Visitors behind one address (the web server calling for them, a shared network) are not locked
+	 * out by someone guessing another account's password.
+	 */
+	@Test
+	void logInIsCountedPerAccountBehindOneAddress() throws Exception {
+		for (int i = 0; i < 21; i++) {
+			wrongLogin("198.51.100.6", "target@example.com");
+		}
+		wrongLogin("198.51.100.6", "TARGET@example.com").andExpect(status().isTooManyRequests());
+
+		wrongLogin("198.51.100.6", "someone.else@example.com").andExpect(status().isUnauthorized());
 	}
 
 	@Test

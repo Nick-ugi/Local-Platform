@@ -26,13 +26,13 @@ public class AuthController {
 	@PostMapping("/signup")
 	@ResponseStatus(HttpStatus.CREATED)
 	TokenResponse signup(@Valid @RequestBody AuthRequests.Signup request, HttpServletRequest http) {
-		this.rateLimiter.acquire(http.getRemoteAddr());
+		this.rateLimiter.acquire(http.getRemoteAddr(), null);
 		return this.authService.signup(request);
 	}
 
 	@PostMapping("/login")
 	TokenResponse login(@Valid @RequestBody AuthRequests.Login request, HttpServletRequest http) {
-		this.rateLimiter.acquire(http.getRemoteAddr());
+		this.rateLimiter.acquire(http.getRemoteAddr(), request.email());
 		return this.authService.login(request);
 	}
 
