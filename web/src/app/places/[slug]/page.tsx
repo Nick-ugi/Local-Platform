@@ -4,7 +4,9 @@ import { getTranslations } from "next-intl/server";
 import { cache } from "react";
 import { PlaceDetailView } from "@/components/place/PlaceDetailView";
 import { getPlace } from "@/lib/api/places";
+import { contactEmail, mailtoHref } from "@/lib/contact";
 import { placeMetadata } from "@/lib/seo/placeMetadata";
+import { siteUrl } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -27,5 +29,12 @@ export default async function PlacePage({ params }: Props) {
   if (!place) {
     notFound();
   }
-  return <PlaceDetailView place={place} />;
+  const t = await getTranslations("Place");
+  const url = new URL(`/places/${encodeURIComponent(place.slug)}`, siteUrl()).toString();
+  const suggestEditHref = mailtoHref(
+    contactEmail(),
+    t("suggestEditSubject", { name: place.name }),
+    t("suggestEditBody", { url }),
+  );
+  return <PlaceDetailView place={place} suggestEditHref={suggestEditHref} />;
 }

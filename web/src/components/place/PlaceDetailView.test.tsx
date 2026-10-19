@@ -59,6 +59,21 @@ test("shows every part of a complete place", () => {
   expect(screen.getByText("Updated 2 Oct 2026")).toBeInTheDocument();
 });
 
+test("offers Suggest an edit when the site has a contact address", () => {
+  renderWithMessages(<PlaceDetailView place={full} suggestEditHref="mailto:hello@queenstownlocal.example?subject=x" />);
+
+  expect(screen.getByRole("link", { name: "Suggest an edit" })).toHaveAttribute(
+    "href",
+    "mailto:hello@queenstownlocal.example?subject=x",
+  );
+});
+
+test("has no Suggest an edit without a contact address", () => {
+  renderWithMessages(<PlaceDetailView place={full} suggestEditHref={null} />);
+
+  expect(screen.queryByRole("link", { name: "Suggest an edit" })).not.toBeInTheDocument();
+});
+
 test("offers a way back to Explore", () => {
   renderWithMessages(<PlaceDetailView place={full} />);
 

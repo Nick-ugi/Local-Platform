@@ -4,8 +4,8 @@ import { explorePath } from "@/lib/places/listUrl";
 
 /**
  * The pages marked "노출" in docs/02-information-architecture.md section 3 that need no data:
- * Map, Explore and its categories, the Local lists and About. Search, More and filtered lists are
- * left out.
+ * Map, Explore and its categories, the Local lists, About, Privacy Policy and Terms. Search, More
+ * and filtered lists are left out.
  */
 export const FIXED_PATHS: readonly string[] = [
   "/",
@@ -14,6 +14,8 @@ export const FIXED_PATHS: readonly string[] = [
   "/notices",
   "/events",
   "/about",
+  "/privacy",
+  "/terms",
 ];
 
 /**

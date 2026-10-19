@@ -18,8 +18,17 @@ const externalLinkClass = "text-blue-700 underline underline-offset-2";
  * description on the left, everything the visitor acts on in a 360px column on the right. On a
  * phone the two column wrappers are `display: contents`, so their children join one column and
  * `order` puts the quick actions right under the name.
+ *
+ * "Suggest an edit" (MORE-02) is a mailto: link to the operator, given by the page when the site has
+ * a contact address.
  */
-export function PlaceDetailView({ place }: { place: PlaceDetail }) {
+export function PlaceDetailView({
+  place,
+  suggestEditHref = null,
+}: {
+  place: PlaceDetail;
+  suggestEditHref?: string | null;
+}) {
   const t = useTranslations("Place");
   const tNav = useTranslations("Nav");
   const tCategory = useTranslations("Category");
@@ -116,6 +125,13 @@ export function PlaceDetailView({ place }: { place: PlaceDetail }) {
             })}
           </p>
           <p>{t("updated", { date: formatDate(place.updatedAt) })}</p>
+          {suggestEditHref ? (
+            <p>
+              <a href={suggestEditHref} className={externalLinkClass}>
+                {t("suggestEdit")}
+              </a>
+            </p>
+          ) : null}
         </footer>
       </div>
     </article>

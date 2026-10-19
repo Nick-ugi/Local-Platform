@@ -39,7 +39,9 @@
     "about": "About",
     "login": "Log in",
     "signup": "Sign up",
-    "favorites": "Favorites"
+    "favorites": "Favorites",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
   },
   "State": {
     "loading": "Loading…",
@@ -114,7 +116,10 @@
     "directions": "Directions",
     "share": "Share",
     "linkCopied": "Link copied",
-    "shareFailed": "Couldn't share this page. Copy the address from your browser instead."
+    "shareFailed": "Couldn't share this page. Copy the address from your browser instead.",
+    "suggestEdit": "Suggest an edit",
+    "suggestEditSubject": "Suggest an edit: {name}",
+    "suggestEditBody": "Place: {url}\n\nWhat should change?\n"
   },
   "Local": {
     "sections": "Local",
@@ -189,5 +194,41 @@
     "remove": "Remove {name} from favorites",
     "loadFailed": "We couldn't load your favorites.",
     "retry": "Try again"
+  },
+  "Legal": {
+    "lastUpdated": "Last updated {date}",
+    "contactEmail": "Contact us at <link>{email}</link>.",
+    "contactIssues": "Contact us through the project's <link>GitHub Issues</link>."
+  },
+  "Privacy": {
+    "description": "What Queenstown Local collects, why, and how to have it removed.",
+    "intro": "This policy explains what Queenstown Local collects when you use the website and what it is used for. You can use the map, lists and details without an account.",
+    "collectTitle": "What we collect",
+    "account": "If you create an account: your email address, your password stored only as a one-way hash, and the places you save as favourites.",
+    "tokens": "While you are signed in: sign-in tokens. The long-lived one is stored only as a hash and stops working after 30 days or when you log out.",
+    "logs": "Request logs kept by our servers and hosting providers, which include your IP address. They are used to keep the service secure, for example to slow down repeated sign-in attempts, and to fix problems.",
+    "locationTitle": "Your location",
+    "location": "Only if you press the location button, your browser shares your position with the page. It is used to show where you are and to sort places by distance, and it is sent with those requests. It is not stored.",
+    "cookiesTitle": "Cookies and storage",
+    "cookies": "Cookies are used only to keep you signed in, and the page's scripts cannot read them. Your browser also keeps the map position for the current tab. There are no advertising or tracking cookies.",
+    "providersTitle": "Who else is involved",
+    "providers": "The website and its database run with hosting providers (currently Render and Neon). Maps come from Mapbox, which receives the map requests from your browser, including your IP address. Each provider has its own privacy policy.",
+    "keepTitle": "How long we keep it",
+    "keep": "Your account and favourites are kept until you ask us to delete them. You can remove a favourite at any time with its heart.",
+    "choicesTitle": "Deleting your account",
+    "choices": "To delete your account or to get a copy of what we hold about you, contact us. We will reply within 30 days."
+  },
+  "Terms": {
+    "description": "The terms for using Queenstown Local.",
+    "intro": "By using Queenstown Local you agree to these terms.",
+    "informationTitle": "The information",
+    "information": "Queenstown Local brings together information from businesses, organisers and public bodies. We try to keep it accurate, but we cannot promise it is complete or up to date. Check the original source before you rely on it, especially notices about roads and safety.",
+    "official": "A notice marked Official summarises a notice from a public authority. Each notice links to its original, and the original is right.",
+    "accountTitle": "Your account",
+    "account": "Keep your password to yourself. You are responsible for what happens under your account. Accounts that are misused may be closed.",
+    "linksTitle": "Other websites",
+    "links": "Places, events and notices link to other websites. We are not responsible for their content.",
+    "changesTitle": "Changes",
+    "changes": "These terms may change. The date at the top shows the latest version."
   }
 }

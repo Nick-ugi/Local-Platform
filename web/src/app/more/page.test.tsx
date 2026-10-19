@@ -13,6 +13,17 @@ test("More leads to About", () => {
   expect(screen.getByRole("link", { name: "About" })).toHaveAttribute("href", "/about");
 });
 
+test("More ends with Privacy Policy and Terms, after the account rows", () => {
+  renderWithMessages(<MorePage />);
+
+  // docs/02-information-architecture.md: About → Log in or the account → Favorites → Privacy Policy, Terms.
+  const names = screen.getAllByRole("link").map((link) => link.textContent?.replace("›", "").trim());
+  expect(names[0]).toBe("About");
+  expect(names.slice(-2)).toEqual(["Privacy Policy", "Terms of Use"]);
+  expect(screen.getByRole("link", { name: "Privacy Policy" })).toHaveAttribute("href", "/privacy");
+  expect(screen.getByRole("link", { name: "Terms of Use" })).toHaveAttribute("href", "/terms");
+});
+
 test("About says what the service is and where its information comes from", () => {
   renderWithMessages(<AboutPage />);
 
