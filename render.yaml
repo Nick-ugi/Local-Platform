@@ -1,0 +1,78 @@
+# The free deployment on Render (docs/07-deployment.md). Render reads this file when a Blueprint is
+# created from the repository. The API and the web app run from the same Dockerfiles as the server
+# stack in deploy/; the admin is a static site. The database is Neon, outside Render.
+# Values marked sync: false are typed in when the Blueprint is created; none of them is in git.
+
+services:
+  - type: web
+    name: queenstown-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JWT_SECRET
+        generateValue: true
+      # jdbc:postgresql://<Neon host>/<database>?sslmode=require (the direct connection, not the pooler)
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+
+  - type: web
+    name: queenstown-web
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./web/Dockerfile
+    dockerContext: .
+    healthCheckPath: /robots.txt
+    envVars:
+      # https://queenstown-api.onrender.com, the API's address as Render shows it
+      - key: API_BASE_URL
+        sync: false
+      # https://queenstown-web.onrender.com, this service's own address
+      - key: SITE_URL
+        sync: false
+      - key: CONTACT_EMAIL
+        sync: false
+      # The Mapbox public token. Render passes it to the Docker build as a build argument.
+      - key: NEXT_PUBLIC_MAPBOX_TOKEN
+        sync: false
+
+  - type: web
+    name: queenstown-admin
+    runtime: static
+    buildCommand: npm ci --workspace admin --workspace shared --include-workspace-root && npm run build --workspace admin
+    staticPublishPath: ./admin/dist
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: VITE_MAPBOX_TOKEN
+        sync: false
+    routes:
+      # The admin calls /api on its own address; Render passes it to the API. If Render gave the API
+      # another address (a name already taken), change it here.
+      - type: rewrite
+        source: /api/*
+        destination: https://queenstown-api.onrender.com/api/*
+      # The admin's own routes (/places/12 opened directly).
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin

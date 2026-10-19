@@ -80,5 +80,8 @@ function messageFor(error: unknown): string {
   if (error instanceof ApiError && error.code === "INVALID_CREDENTIALS") {
     return "The email or password is wrong.";
   }
+  if (error instanceof ApiError && error.code === "TOO_MANY_REQUESTS") {
+    return "Too many tries. Wait a few minutes and try again.";
+  }
   return "We couldn't sign you in. Check that the backend is running and try again.";
 }

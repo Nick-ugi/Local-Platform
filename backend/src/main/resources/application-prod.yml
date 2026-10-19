@@ -1,0 +1,17 @@
+# Production (SPRING_PROFILES_ACTIVE=prod): the API runs behind a proxy that ends HTTPS, Caddy on a
+# server or Render's load balancer. ProductionSecretCheck refuses to start without a real JWT_SECRET.
+# The database is set with SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME and
+# SPRING_DATASOURCE_PASSWORD (docs/07-deployment.md).
+
+server:
+  # Tomcat takes the client address and scheme from X-Forwarded-For and X-Forwarded-Proto, but only
+  # from proxies on private and loopback addresses (its default internal-proxies), so a visitor cannot
+  # pick their own address for the log in limit.
+  forward-headers-strategy: native
+  shutdown: graceful
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true

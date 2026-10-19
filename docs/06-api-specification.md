@@ -102,6 +102,7 @@ App은 토큰을 기기의 보안 저장소에 둔다. Web은 브라우저의 Ja
 | NOT_FOUND | 404 | 대상이 없거나 `private`이다. 없는 경로도 여기에 해당한다. |
 | METHOD_NOT_ALLOWED | 405 | 지원하지 않는 Method다. |
 | EMAIL_ALREADY_USED | 409 | 이미 가입한 이메일이다. |
+| TOO_MANY_REQUESTS | 429 | 로그인이나 가입 시도가 너무 많다. 10분에 20번까지이고, 로그인은 주소와 이메일마다, 가입은 주소마다 센다. `Retry-After`(초) 뒤에 다시 시도한다. |
 | INTERNAL_ERROR | 500 | 서버 오류. `detail`에 내부 메시지를 담지 않는다. |
 
 표에 없는 오류도 같은 형식으로 응답한다. `code`는 4xx이면 `VALIDATION_FAILED`, 5xx이면 `INTERNAL_ERROR`다.

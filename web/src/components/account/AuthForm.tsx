@@ -44,6 +44,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
     if (cause instanceof ApiError) {
       if (cause.code === "INVALID_CREDENTIALS") return { field: null, text: t("wrongCredentials") };
       if (cause.code === "EMAIL_ALREADY_USED") return { field: "email", text: t("emailUsed") };
+      if (cause.code === "TOO_MANY_REQUESTS") return { field: null, text: t("tooMany") };
       if (cause.code === "VALIDATION_FAILED") {
         const field = cause.errors[0]?.field;
         return field === "password"

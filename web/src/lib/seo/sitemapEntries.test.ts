@@ -16,6 +16,8 @@ test("lists the fixed pages as full addresses", () => {
     "https://queenstownlocal.example/notices",
     "https://queenstownlocal.example/events",
     "https://queenstownlocal.example/about",
+    "https://queenstownlocal.example/privacy",
+    "https://queenstownlocal.example/terms",
   ]);
 });
 

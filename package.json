@@ -5,7 +5,8 @@
     "shared",
     "web",
     "admin",
-    "mobile"
+    "mobile",
+    "e2e"
   ],
   "scripts": {
     "test": "npm run test --workspaces --if-present",

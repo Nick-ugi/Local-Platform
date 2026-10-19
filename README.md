@@ -528,8 +528,9 @@ Web과 App에서 같은 지도 스타일을 사용한다.
 
 ### Infrastructure
 
-- Docker (Docker Compose)
-- Nginx
+- Docker: Backend와 Web은 Dockerfile 하나씩으로 이미지를 만들고, 어느 구성이든 같은 이미지와 환경 변수 이름을 쓴다.
+- 무료 구성(지금): Render(`render.yaml`: API와 Web은 Docker, Admin은 정적 사이트) + Neon(PostgreSQL + PostGIS). [배포 v1](docs/07-deployment.md)
+- 서버 1대 구성(유료로 옮길 때): Docker Compose + Caddy(HTTPS 인증서를 스스로 받고 갱신, Admin 정적 파일, 프록시). [deploy/README.md](deploy/README.md)
 
 ### API
 

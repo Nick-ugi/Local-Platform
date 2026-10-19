@@ -49,7 +49,7 @@ class AuthApiTest {
 	}
 
 	private ResultActions postJson(String path, String body) throws Exception {
-		return mvc.perform(post(path).contentType(MediaType.APPLICATION_JSON).content(body));
+		return mvc.perform(post(path).with(Auth.fromNewAddress()).contentType(MediaType.APPLICATION_JSON).content(body));
 	}
 
 	private static String body(ResultActions result) throws Exception {

@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import type { ReactNode } from "react";
 import { BackLink } from "@/components/nav/BackLink";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [tPages, t] = await Promise.all([getTranslations("Pages"), getTranslations("About")]);
   return { title: tPages("about"), description: t("description"), alternates: { canonical: "/about" } };
+}
+
+function CreditLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="underline">
+      {children}
+    </a>
+  );
 }
 
 /** About (MORE-01): what the service is and where its information comes from. */
@@ -27,6 +36,13 @@ export default function AboutPage() {
         <li>{t("notices")}</li>
       </ul>
       <p className="rounded-lg bg-neutral-100 px-4 py-3">{t("original")}</p>
+      {/* The ODbL asks for this credit wherever the data is used (backend/seed/osm/README.md). */}
+      <p className="text-sm text-neutral-500">
+        {t.rich("osm", {
+          osm: (chunks) => <CreditLink href="https://www.openstreetmap.org/copyright">{chunks}</CreditLink>,
+          odbl: (chunks) => <CreditLink href="https://opendatacommons.org/licenses/odbl/">{chunks}</CreditLink>,
+        })}
+      </p>
     </article>
   );
 }

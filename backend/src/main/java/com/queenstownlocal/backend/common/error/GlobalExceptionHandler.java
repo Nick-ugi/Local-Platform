@@ -40,7 +40,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		if (!ex.errors().isEmpty()) {
 			body.setProperty(ERRORS, ex.errors());
 		}
-		return handleExceptionInternal(ex, body, new HttpHeaders(), code.status(), request);
+		HttpHeaders headers = new HttpHeaders();
+		if (ex instanceof TooManyRequestsException tooMany) {
+			// Whole seconds, rounded up, so a client that waits that long is let in.
+			long seconds = Math.max(1, (tooMany.retryAfter().toMillis() + 999) / 1000);
+			headers.set(HttpHeaders.RETRY_AFTER, Long.toString(seconds));
+		}
+		return handleExceptionInternal(ex, body, headers, code.status(), request);
 	}
 
 	@ExceptionHandler(Exception.class)

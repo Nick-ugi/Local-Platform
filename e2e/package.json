@@ -1,0 +1,14 @@
+{
+  "name": "@queenstown/e2e",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "make-admin": "node scripts/make-admin.mjs",
+    "test:local": "playwright test --project=local",
+    "test:smoke": "playwright test --project=smoke"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1"
+  }
+}

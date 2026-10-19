@@ -62,7 +62,7 @@ curl http://localhost:8080/actuator/health
 
 | 값 | 기본값 | 뜻 |
 |---|---|---|
-| `JWT_SECRET` | 개발용 값 | Access Token(JWT, HS256)의 서명 키. 32바이트 이상. 개발용 값으로 시작하면 서버가 로그에 경고를 남긴다. 배포에서는 반드시 넘긴다. |
+| `JWT_SECRET` | 개발용 값 | Access Token(JWT, HS256)의 서명 키. 32바이트 이상. 개발용 값으로 시작하면 서버가 로그에 경고를 남긴다. 운영 프로필(`prod`)에서는 개발용 값이면 서버가 시작하지 않는다. |
 
 ```bash
 JWT_SECRET="$(openssl rand -base64 48)" ./gradlew bootRun
@@ -71,6 +71,30 @@ JWT_SECRET="$(openssl rand -base64 48)" ./gradlew bootRun
 - Access Token은 15분, Refresh Token은 30일이다. Refresh Token은 DB에 SHA-256 해시로만 두고, 재발급할 때마다 바뀌며 이전 것은 무효가 된다.
 - 비밀번호는 BCrypt로 저장한다.
 - Admin 계정은 가입한 계정의 `role`을 SQL로 바꿔 만든다([admin/README.md](../admin/README.md)).
+- 로그인과 가입은 10분에 20번까지다. 로그인은 주소와 이메일마다(웹 서버처럼 여러 방문자가 한 주소로 와도 서로 막지 않게), 가입은 주소마다 센다. Web은 앞단 프록시가 붙인 방문자 주소(`X-Forwarded-For`의 마지막 값)를 Backend에 넘긴다. 넘으면 429 `TOO_MANY_REQUESTS`와 `Retry-After`(초). 횟수는 서버의 메모리에 있어서 서버를 다시 켜면 처음부터 센다.
+
+## 운영 (Docker 이미지)
+
+배포(Render, 서버 1대)는 모두 이 폴더의 `Dockerfile`로 만든 이미지를 쓴다. 이미지는 운영 프로필(`prod`)로 뜬다.
+
+```bash
+docker build -t queenstown-api backend
+docker run -p 8080:8080 \
+  -e JWT_SECRET="$(openssl rand -base64 48)" \
+  -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5433/queenstown \
+  -e SPRING_DATASOURCE_USERNAME=queenstown -e SPRING_DATASOURCE_PASSWORD=queenstown \
+  queenstown-api
+```
+
+| 값 | 뜻 |
+|---|---|
+| `JWT_SECRET` | 필수. 없거나 개발용 값이면 시작하지 않는다. |
+| `SPRING_DATASOURCE_URL` | JDBC 주소. Neon처럼 SSL이 필요한 DB는 끝에 `?sslmode=require`. |
+| `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD` | DB 계정 |
+| `PORT` | 서버 포트. 없으면 8080. Render는 스스로 넣는다. |
+
+- 운영 프로필은 앞의 프록시(Caddy, Render)가 붙인 `X-Forwarded-For`, `X-Forwarded-Proto`를 믿는다. 믿는 프록시는 사설 대역과 loopback 주소뿐이라, 방문자가 헤더로 주소를 바꿀 수 없다.
+- 컨테이너는 root가 아닌 사용자로 돌고, 힙은 컨테이너 메모리의 75%다.
 
 ## Seed 데이터
 

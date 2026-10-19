@@ -4,10 +4,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import com.jayway.jsonpath.JsonPath;
 
@@ -16,13 +18,32 @@ public final class Auth {
 
 	public static final String PASSWORD = "correct horse battery";
 
+	private static final AtomicInteger NEXT_ADDRESS = new AtomicInteger();
+
 	private Auth() {
+	}
+
+	/** A request from the given client address. */
+	public static RequestPostProcessor fromAddress(String address) {
+		return request -> {
+			request.setRemoteAddr(address);
+			return request;
+		};
+	}
+
+	/**
+	 * A request from an address no other request used, so the log in and sign up limit (20 per address
+	 * in 10 minutes) never counts the accounts tests make for themselves.
+	 */
+	public static RequestPostProcessor fromNewAddress() {
+		int n = NEXT_ADDRESS.incrementAndGet();
+		return fromAddress("10." + (n >> 16 & 255) + "." + (n >> 8 & 255) + "." + (n & 255));
 	}
 
 	/** Signs up and returns the token response as JSON. */
 	public static String signup(MockMvc mvc, String email) throws Exception {
 		return mvc
-			.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON)
+			.perform(post("/api/v1/auth/signup").with(fromNewAddress()).contentType(MediaType.APPLICATION_JSON)
 				.content("{\"email\":\"" + email + "\",\"password\":\"" + PASSWORD + "\"}"))
 			.andExpect(status().isCreated())
 			.andReturn()
@@ -40,7 +61,7 @@ public final class Auth {
 		signup(mvc, email);
 		jdbc.sql("update app_user set role = 'admin' where email = :email").param("email", email).update();
 		String json = mvc
-			.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON)
+			.perform(post("/api/v1/auth/login").with(fromNewAddress()).contentType(MediaType.APPLICATION_JSON)
 				.content("{\"email\":\"" + email + "\",\"password\":\"" + PASSWORD + "\"}"))
 			.andExpect(status().isOk())
 			.andReturn()

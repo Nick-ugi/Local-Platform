@@ -6,7 +6,7 @@ import { POST as logout } from "@/app/api/auth/logout/route";
 import { DELETE as removeFavorite, GET as getMe } from "@/app/api/v1/me/[[...path]]/route";
 import { loginPath, safeNext } from "./next";
 
-type Call = { url: string; method: string; auth: string | null; body: string | null };
+type Call = { url: string; method: string; auth: string | null; body: string | null; forwardedFor: string | null };
 
 /** The backend: each call goes to `answer`; the calls are kept. */
 function backend(answer: (call: Call) => Response) {
@@ -19,6 +19,7 @@ function backend(answer: (call: Call) => Response) {
         method: init.method ?? "GET",
         auth: new Headers(init.headers).get("Authorization"),
         body: typeof init.body === "string" ? init.body : null,
+        forwardedFor: new Headers(init.headers).get("X-Forwarded-For"),
       };
       calls.push(call);
       return answer(call);
@@ -34,8 +35,14 @@ const tokens = (n: number) => ({
   user: { email: "kiri@example.com", role: "user" },
 });
 
-function request(path: string, init: { method?: string; body?: string; cookies?: Record<string, string> } = {}) {
+function request(
+  path: string,
+  init: { method?: string; body?: string; cookies?: Record<string, string>; forwardedFor?: string } = {},
+) {
   const headers = new Headers();
+  if (init.forwardedFor) {
+    headers.set("X-Forwarded-For", init.forwardedFor);
+  }
   if (init.cookies) {
     headers.set(
       "Cookie",
@@ -55,6 +62,29 @@ function setCookies(response: Response): Record<string, string> {
 }
 
 afterEach(() => vi.unstubAllGlobals());
+
+test("login tells the backend the visitor's address, as the proxy in front of this site gave it", async () => {
+  const calls = backend(() => Response.json(tokens(1)));
+
+  await login(
+    request("/api/auth/login", {
+      method: "POST",
+      body: '{"email":"kiri@example.com","password":"x"}',
+      // A visitor may send their own X-Forwarded-For; the proxy adds the real address last.
+      forwardedFor: "198.51.100.9, 203.0.113.5",
+    }),
+  );
+
+  expect(calls[0].forwardedFor).toBe("203.0.113.5");
+});
+
+test("login sends no address when there is no proxy in front", async () => {
+  const calls = backend(() => Response.json(tokens(1)));
+
+  await login(request("/api/auth/login", { method: "POST", body: '{"email":"kiri@example.com","password":"x"}' }));
+
+  expect(calls[0].forwardedFor).toBeNull();
+});
 
 test("login keeps the tokens in HttpOnly cookies and gives the browser only the account", async () => {
   const calls = backend(() => Response.json(tokens(1)));
@@ -93,7 +123,9 @@ test("/me goes to the backend with the access token from the cookie", async () =
   const response = await getMe(request("/api/v1/me", { cookies: { ql_access: "access-1", ql_refresh: "refresh-1" } }));
 
   expect(response.status).toBe(200);
-  expect(calls).toEqual([{ url: "http://localhost:8080/api/v1/me", method: "GET", auth: "Bearer access-1", body: null }]);
+  expect(calls).toEqual([
+    { url: "http://localhost:8080/api/v1/me", method: "GET", auth: "Bearer access-1", body: null, forwardedFor: null },
+  ]);
 });
 
 test("a token that ran out is renewed once, the call sent again and the cookies replaced", async () => {

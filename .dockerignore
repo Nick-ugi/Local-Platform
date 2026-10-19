@@ -1,0 +1,25 @@
+# Build context of the images built from the repository root: web/Dockerfile and
+# deploy/caddy/Dockerfile (the admin). The API image uses backend/ as its context instead.
+
+# Never send local secrets (Mapbox tokens in .env.local) into an image.
+**/.env
+**/.env.*
+!**/.env.example
+
+**/node_modules
+**/.next
+**/dist
+**/build
+.git
+.superpowers
+.claude
+docs
+backend
+*.xlsx
+
+# npm needs every workspace's package.json to read the lockfile, but no image needs the app or the
+# end-to-end tests themselves.
+mobile/*
+!mobile/package.json
+e2e/*
+!e2e/package.json

@@ -9,6 +9,10 @@ spring:
     problemdetails:
       enabled: true
 
+# PORT is set by hosts such as Render; 8080 everywhere else.
+server:
+  port: ${PORT:8080}
+
 # Tokens (docs/06-api-specification.md, section 1). JWT_SECRET signs the access tokens: at least 32
 # bytes, and never the development value below outside a developer's machine.
 app:
