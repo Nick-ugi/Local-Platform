@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -15,18 +16,23 @@ public class AuthController {
 
 	private final AuthService authService;
 
-	public AuthController(AuthService authService) {
+	private final AuthRateLimiter rateLimiter;
+
+	public AuthController(AuthService authService, AuthRateLimiter rateLimiter) {
 		this.authService = authService;
+		this.rateLimiter = rateLimiter;
 	}
 
 	@PostMapping("/signup")
 	@ResponseStatus(HttpStatus.CREATED)
-	TokenResponse signup(@Valid @RequestBody AuthRequests.Signup request) {
+	TokenResponse signup(@Valid @RequestBody AuthRequests.Signup request, HttpServletRequest http) {
+		this.rateLimiter.acquire(http.getRemoteAddr());
 		return this.authService.signup(request);
 	}
 
 	@PostMapping("/login")
-	TokenResponse login(@Valid @RequestBody AuthRequests.Login request) {
+	TokenResponse login(@Valid @RequestBody AuthRequests.Login request, HttpServletRequest http) {
+		this.rateLimiter.acquire(http.getRemoteAddr());
 		return this.authService.login(request);
 	}
 
