@@ -87,17 +87,18 @@ docker compose -f deploy/compose.yaml --env-file deploy/.env exec -T db \
 
 ## 로컬에서 확인하기
 
-같은 구성을 PC에서 HTTPS로 띄운다(`*.localhost`는 자기 PC를 가리킨다). Caddy의 자체 인증서라 브라우저와 curl은 경고를 낸다(`curl -k`).
+같은 구성을 PC에서 HTTPS로 띄운다. `*.lvh.me`는 공개 DNS가 127.0.0.1(자기 PC)을 가리키는 이름이다(`*.localhost`는 Windows의 Node가 찾지 못해 통합 테스트에 쓰지 않는다. 안 되면 `*.127.0.0.1.nip.io`). Caddy의 자체 인증서라 브라우저와 curl은 경고를 낸다(`curl -k`).
 
 ```text
-WEB_HOST=web.localhost
-ADMIN_HOST=admin.localhost
-API_HOST=api.localhost
+WEB_HOST=web.lvh.me
+ADMIN_HOST=admin.lvh.me
+API_HOST=api.lvh.me
 TLS_MODE=internal
 ```
 
 ```bash
 docker compose -f deploy/compose.yaml --env-file deploy/.env up -d --build
-curl -k https://api.localhost/actuator/health
+curl -k https://api.lvh.me/actuator/health
+npm run make-admin -w e2e && npm run test:local -w e2e   # 통합 테스트(e2e/README.md)
 docker compose -f deploy/compose.yaml --env-file deploy/.env down        # 끄기 (-v를 붙이면 데이터도 지운다)
 ```
