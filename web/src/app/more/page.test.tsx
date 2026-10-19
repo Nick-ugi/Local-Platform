@@ -32,3 +32,16 @@ test("About says what the service is and where its information comes from", () =
   expect(screen.getAllByRole("listitem")).toHaveLength(3);
   expect(screen.getByText(/the original is right/)).toBeInTheDocument();
 });
+
+test("About credits OpenStreetMap and its licence for the place data", () => {
+  renderWithMessages(<AboutPage />);
+
+  expect(screen.getByRole("link", { name: "OpenStreetMap contributors" })).toHaveAttribute(
+    "href",
+    "https://www.openstreetmap.org/copyright",
+  );
+  expect(screen.getByRole("link", { name: "Open Database License" })).toHaveAttribute(
+    "href",
+    "https://opendatacommons.org/licenses/odbl/",
+  );
+});

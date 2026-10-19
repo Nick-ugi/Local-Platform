@@ -3,6 +3,8 @@
 방문자에게 보이는 Place, Event, Notice는 `places.csv`, `events.csv`, `notices.csv`로 관리하고, 이 폴더의 스크립트로 DB에 올린다.
 Admin(11주차)이 생기기 전까지는 이 파일들이 원본이다.
 
+`places.csv`의 첫 데이터는 OpenStreetMap에서 가져왔고 ODbL을 따른다. 다시 가져오는 방법과 라이선스는 [osm/README.md](osm/README.md)에 있다.
+
 ## 파일
 
 | 파일 | 하는 일 |
@@ -75,6 +77,12 @@ UTF-8, 첫 줄은 머리줄이다. 쉼표, 큰따옴표, 줄바꿈이 든 값은
 ```bash
 bash backend/seed/load-seed.sh
 ```
+
+- 배포한 DB(Neon 등)에 올릴 때는 `DATABASE_URL`에 그 DB의 `postgresql://` 주소를 넣는다. 로컬에 psql이 없어도 postgres 컨테이너로 보낸다.
+
+  ```bash
+  DATABASE_URL='postgresql://user:password@host/db?sslmode=require' bash backend/seed/load-seed.sh
+  ```
 
 - 어느 파일이든 한 줄이라도 거부되면 아무것도 바뀌지 않는다. 오류에 거부된 slug가 나온다.
 - 같은 파일을 다시 올리면 아무것도 바뀌지 않는다. 값이 바뀐 줄만 고치고, 그 줄의 수정일(`updated_at`)만 바뀐다.
