@@ -1,0 +1,51 @@
+# Three addresses on one server (deploy/README.md). Caddy gets and renews the HTTPS certificates
+# itself. TLS_MODE is the email address for Let's Encrypt on a real server, or "internal" for a local
+# check with Caddy's own certificates (https://web.localhost and so on).
+#
+# Caddy sets X-Forwarded-For to the visitor's address and ignores what a visitor sends in it, so the
+# API (application-prod.yml) and the web app can trust it.
+
+(secure) {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}
+
+# The web app (Next.js). It sends its own security headers too.
+{$WEB_HOST} {
+	tls {$TLS_MODE}
+	import secure
+	encode zstd gzip
+	reverse_proxy web:3000
+}
+
+# The admin: its files, and /api passed to the API on the same address, so no CORS is needed.
+{$ADMIN_HOST} {
+	tls {$TLS_MODE}
+	import secure
+	header {
+		X-Frame-Options "DENY"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+	}
+	encode zstd gzip
+	handle /api/* {
+		reverse_proxy api:8080
+	}
+	handle {
+		root * /srv/admin
+		# A page such as /places/12 opened directly is the admin's own route.
+		try_files {path} /index.html
+		file_server
+	}
+}
+
+# The API itself, for the app.
+{$API_HOST} {
+	tls {$TLS_MODE}
+	import secure
+	encode zstd gzip
+	reverse_proxy api:8080
+}
