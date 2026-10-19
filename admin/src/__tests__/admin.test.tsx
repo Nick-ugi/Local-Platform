@@ -52,6 +52,21 @@ test("without a session the admin goes to Log in, and an ordinary account is ref
   expect(router.state.location.pathname).toBe("/login");
 });
 
+test("too many tries at Log in says to wait", async () => {
+  fakeApi(({ path }) =>
+    path === "/api/v1/auth/login"
+      ? { status: 429, body: { code: "TOO_MANY_REQUESTS", status: 429, detail: "x" } }
+      : { status: 204 },
+  );
+  renderAdmin("/login");
+
+  await userEvent.type(await screen.findByLabelText("Email"), "admin@example.com");
+  await userEvent.type(screen.getByLabelText("Password"), "secret password");
+  await userEvent.click(screen.getByRole("button", { name: "Log in" }));
+
+  expect(await screen.findByRole("alert")).toHaveTextContent("Too many tries. Wait a few minutes and try again.");
+});
+
 test("an admin who logs in comes back to the screen that asked", async () => {
   fakeApi(({ path }) =>
     path === "/api/v1/auth/login" ? { status: 200, body: tokens("admin") } : { status: 200, body: page([]) },

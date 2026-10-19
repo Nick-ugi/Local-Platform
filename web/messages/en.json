@@ -184,7 +184,8 @@
     "invalidEmail": "Enter an email address like name@example.com.",
     "shortPassword": "Use at least 8 characters.",
     "failed": "We couldn't sign you in. Please try again.",
-    "favorites": "Favorites"
+    "favorites": "Favorites",
+    "tooMany": "Too many tries. Wait a few minutes and try again."
   },
   "Favorites": {
     "save": "Save to favorites",

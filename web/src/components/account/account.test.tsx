@@ -93,6 +93,17 @@ test("a wrong password says so and stays", async () => {
   expect(router.replace).not.toHaveBeenCalled();
 });
 
+test("too many tries says to wait", async () => {
+  site(() => ({ status: 429, body: { code: "TOO_MANY_REQUESTS", status: 429, detail: "x" } }));
+  renderWithMessages(<AuthForm mode="login" />);
+
+  await userEvent.type(screen.getByLabelText("Email"), "kiri@example.com");
+  await userEvent.type(screen.getByLabelText("Password"), "wrong");
+  await userEvent.click(screen.getByRole("button", { name: "Log in" }));
+
+  expect(await screen.findByRole("alert")).toHaveTextContent("Too many tries. Wait a few minutes and try again.");
+});
+
 test("sign up explains a used email and a short password", async () => {
   let answer: { status: number; body?: unknown } = {
     status: 409,
