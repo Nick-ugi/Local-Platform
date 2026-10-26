@@ -867,6 +867,8 @@ Citizen / Resident / Tourist
 - [x] 9주차 App Prototype (Expo SDK 57, Map / Explore / More 탭, Queenstown 지도와 현재 위치, 영역의 Place Marker, Android 에뮬레이터에서 확인)
 - [x] 10주차 App Core (지도의 칩과 Place · Event · Notice Marker, 요약 카드, Explore와 검색, Place · Event · Notice 상세와 빠른 행동, 공유, "View on map", Android 에뮬레이터에서 확인)
 - [x] 11주차 User / Favorite / Admin (가입과 로그인, Favorite(Web · App), Admin Web의 Place · Event · Notice 등록과 수정, Android 에뮬레이터에서 확인)
+- [ ] 12주차 Integration / Release (운영 이미지와 보안 설정, 로그인 시도 제한, Privacy Policy · Terms · 정보 수정 요청, OpenStreetMap의 첫 Place 498곳, 서버 1대 구성, 무료 배포 설정, 통합 테스트 S1 ~ S5) — 코드와 테스트, 로컬 서버 구성 확인 완료, 무료 배포(Render + Neon) 전
+  - Privacy Policy와 Terms는 법률 검토를 받지 않은 문안이다. 운영 전에 검토한다.
 
 ### Next
 

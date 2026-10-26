@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.queenstownlocal.backend.common.error.TooManyRequestsException;
@@ -35,8 +36,15 @@ public class AuthRateLimiter {
 
 	static final Duration WINDOW = Duration.ofMinutes(10);
 
-	/** Above this many addresses, the windows that are over are dropped. */
-	private static final int TIDY_ABOVE = 10_000;
+	/**
+	 * The most counts kept at once. Log in keeps one per address and email, so requests that make up a
+	 * new email each time would otherwise grow the memory without end. A new count beyond this is
+	 * refused until windows that are over make room.
+	 */
+	static final int MAX_COUNTS = 100_000;
+
+	/** How often, at most, the windows that are over are dropped. Dropping them reads every count. */
+	private static final Duration TIDY_EVERY = Duration.ofMinutes(1);
 
 	private static final Logger log = LoggerFactory.getLogger(AuthRateLimiter.class);
 
@@ -44,8 +52,18 @@ public class AuthRateLimiter {
 
 	private final ConcurrentMap<String, Window> windows = new ConcurrentHashMap<>();
 
+	private final int maxCounts;
+
+	private volatile Instant nextTidy = Instant.MIN;
+
+	@Autowired
 	public AuthRateLimiter(Clock clock) {
+		this(clock, MAX_COUNTS);
+	}
+
+	AuthRateLimiter(Clock clock, int maxCounts) {
 		this.clock = clock;
+		this.maxCounts = maxCounts;
 	}
 
 	/**
@@ -54,10 +72,15 @@ public class AuthRateLimiter {
 	 */
 	public void acquire(String clientAddress, String account) {
 		Instant now = this.clock.instant();
-		if (this.windows.size() > TIDY_ABOVE) {
+		if (this.windows.size() >= this.maxCounts / 2 && !now.isBefore(this.nextTidy)) {
+			this.nextTidy = now.plus(TIDY_EVERY);
 			this.windows.values().removeIf(window -> window.isOver(now));
 		}
 		String key = account == null ? clientAddress : clientAddress + " " + account.trim().toLowerCase(Locale.ROOT);
+		if (this.windows.size() >= this.maxCounts && !this.windows.containsKey(key)) {
+			log.warn("Log in and sign up limit is full ({} counts); refusing new ones for now", this.maxCounts);
+			throw new TooManyRequestsException(TIDY_EVERY);
+		}
 		Window window = this.windows.compute(key,
 				(address, current) -> current == null || current.isOver(now) ? new Window(now, 1) : current.next());
 		if (window.attempts() > MAX_ATTEMPTS) {

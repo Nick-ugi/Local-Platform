@@ -24,6 +24,16 @@ test("Privacy Policy says what is collected and how to reach the operator", () =
   );
 });
 
+test("Privacy Policy describes the cookies as they are: the sign-in ones are hidden from scripts, the marker is not", () => {
+  renderWithMessages(<PrivacyPage />);
+
+  expect(screen.getByRole("heading", { name: "Cookies and storage" }).nextElementSibling).toHaveTextContent(
+    "Cookies keep you signed in. The ones that hold your sign-in cannot be read by the page's scripts; " +
+      "one more, which holds nothing but the fact that you are signed in, can be. Your browser also keeps the map " +
+      "position for the current tab. There are no advertising or tracking cookies.",
+  );
+});
+
 test("without a contact address the pages point to the project's issues", () => {
   renderWithMessages(<PrivacyPage />);
   expect(screen.getByRole("link", { name: "GitHub Issues" })).toHaveAttribute(
