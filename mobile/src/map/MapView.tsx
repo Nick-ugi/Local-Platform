@@ -1,4 +1,5 @@
 import {
+  keyOf,
   type MapBounds,
   type MapMarker,
   toFeatureCollection,
@@ -47,46 +48,60 @@ const STYLE = "mapbox://styles/mapbox/standard";
 /** How long a move to a new camera takes. */
 const MOVE_MS = 800;
 
-// The markers look as they do on the web (web/src/components/map/MapView.tsx): a white circle with
-// a dark ring and the category letter. Full emissive strength keeps them bright in the Standard
-// style's lighting.
+// The markers look as they do on the web (web/src/components/map/MapView.tsx): a circle in their
+// kind's colour (shared/src/categoryStyle.ts) with a white ring and a white letter. Markers close
+// together become a numbered dark cluster up to zoom 15 (MAP-09). Full emissive strength keeps them
+// bright in the Standard style's lighting.
 const INK = "#171717";
 const PAPER = "#ffffff";
 const RADIUS = 14;
+const CLUSTER_RADIUS = 44;
+const CLUSTER_MAX_ZOOM = 15;
 
-const circleStyle: CircleLayerStyle = {
-  circleRadius: RADIUS,
-  circleColor: PAPER,
-  circleStrokeColor: INK,
-  circleStrokeWidth: 2,
-  circleEmissiveStrength: 1,
-};
+type Filter = ComponentProps<typeof CircleLayer>["filter"];
+const CLUSTERED: Filter = ["has", "point_count"];
+const NOT_CLUSTERED: Filter = ["!", ["has", "point_count"]];
 
-// The selected marker is larger and filled (wireframe a-map), with its letter in white.
-const selectedStyle: CircleLayerStyle = {
-  circleRadius: RADIUS + 6,
+const clusterStyle: CircleLayerStyle = {
+  // 18, 22 or 26 pt as the count grows.
+  circleRadius: ["step", ["get", "point_count"], 18, 10, 22, 50, 26],
   circleColor: INK,
   circleStrokeColor: PAPER,
   circleStrokeWidth: 2,
   circleEmissiveStrength: 1,
 };
 
-function labelStyle(selectedKey: string | null): SymbolLayerStyle {
+const circleStyle: CircleLayerStyle = {
+  circleRadius: RADIUS,
+  circleColor: ["get", "color"],
+  circleStrokeColor: PAPER,
+  circleStrokeWidth: 2,
+  circleEmissiveStrength: 1,
+};
+
+// The selected marker is larger with a dark ring (wireframe a-map).
+const selectedStyle: CircleLayerStyle = {
+  circleRadius: RADIUS + 6,
+  circleColor: ["get", "color"],
+  circleStrokeColor: INK,
+  circleStrokeWidth: 3,
+  circleEmissiveStrength: 1,
+};
+
+function textStyle(field: SymbolLayerStyle["textField"]): SymbolLayerStyle {
   return {
-    textField: ["get", "label"],
+    textField: field,
     textSize: 13,
     textFont: ["DIN Pro Bold", "Arial Unicode MS Bold"],
     textAllowOverlap: true,
     textIgnorePlacement: true,
-    textColor: ["case", ["==", ["get", "key"], selectedKey ?? ""], PAPER, INK],
+    textColor: PAPER,
     textEmissiveStrength: 1,
   };
 }
 
-/** Matches the selected marker only. No marker has an empty key, so null matches none. */
-function onlyKey(key: string | null): ComponentProps<typeof CircleLayer>["filter"] {
-  return ["==", ["get", "key"], key ?? ""];
-}
+const labelStyle = textStyle(["get", "label"]);
+const countStyle = textStyle(["get", "point_count_abbreviated"]);
 
 /** A press this close to a marker's centre counts: a 44 pt target (README, "Map"). */
 const HITBOX = { width: 44, height: 44 };
@@ -107,8 +122,37 @@ export function MapView({
   onUnavailable,
 }: Props) {
   const cameraRef = useRef<MapboxCamera>(null);
+  const markersRef = useRef<ShapeSource>(null);
   const [startCamera] = useState(camera);
-  const shape = useMemo(() => toFeatureCollection(markers), [markers]);
+  // The selected marker is kept out of the clusters, so a linked place shows even where its
+  // neighbours are clustered: the map keeps the visitor's view rather than jumping to it.
+  const shapes = useMemo(() => {
+    const isSelected = (marker: MapMarker) => keyOf(marker) === selectedKey;
+    return {
+      others: toFeatureCollection(markers.filter((marker) => !isSelected(marker))),
+      selected: toFeatureCollection(markers.filter(isSelected)),
+    };
+  }, [markers, selectedKey]);
+
+  /** A press on a cluster moves in to where it comes apart; a press on a marker selects it. */
+  async function press(feature: GeoJSON.Feature | undefined) {
+    if (feature?.properties?.cluster) {
+      if (feature.geometry.type !== "Point") {
+        return;
+      }
+      const zoom = await markersRef.current?.getClusterExpansionZoom(feature);
+      if (typeof zoom === "number") {
+        cameraRef.current?.setCamera({
+          centerCoordinate: feature.geometry.coordinates,
+          zoomLevel: zoom,
+          animationDuration: MOVE_MS,
+        });
+      }
+      return;
+    }
+    const key: unknown = feature?.properties?.key;
+    onSelect(typeof key === "string" ? key : null);
+  }
 
   // The token has to be in place before the first map renders.
   useState(() => Mapbox.setAccessToken(token));
@@ -154,17 +198,29 @@ export function MapView({
       {showUserLocation ? <LocationPuck puckBearingEnabled={false} /> : null}
       {/* After the position, so the markers stay on top of it. */}
       <ShapeSource
+        ref={markersRef}
         id="markers"
-        shape={shape}
+        shape={shapes.others}
+        cluster
+        clusterRadius={CLUSTER_RADIUS}
+        clusterMaxZoomLevel={CLUSTER_MAX_ZOOM}
         hitbox={HITBOX}
-        onPress={(event) => {
-          const key: unknown = event.features[0]?.properties?.key;
-          onSelect(typeof key === "string" ? key : null);
-        }}
+        onPress={(event) => press(event.features[0])}
       >
-        <CircleLayer id="marker-circles" style={circleStyle} />
-        <CircleLayer id="marker-selected" style={selectedStyle} filter={onlyKey(selectedKey)} />
-        <SymbolLayer id="marker-labels" style={labelStyle(selectedKey)} />
+        <CircleLayer id="marker-clusters" style={clusterStyle} filter={CLUSTERED} />
+        <SymbolLayer id="marker-cluster-counts" style={countStyle} filter={CLUSTERED} />
+        <CircleLayer id="marker-circles" style={circleStyle} filter={NOT_CLUSTERED} />
+        <SymbolLayer id="marker-labels" style={labelStyle} filter={NOT_CLUSTERED} />
+      </ShapeSource>
+      {/* Last, so the selected marker is drawn above everything else. */}
+      <ShapeSource
+        id="selected-marker"
+        shape={shapes.selected}
+        hitbox={HITBOX}
+        onPress={(event) => press(event.features[0])}
+      >
+        <CircleLayer id="marker-selected" style={selectedStyle} />
+        <SymbolLayer id="marker-selected-label" style={labelStyle} />
       </ShapeSource>
     </MapboxMapView>
   );

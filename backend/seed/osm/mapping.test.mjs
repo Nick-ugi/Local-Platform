@@ -1,7 +1,17 @@
 // node --test backend/seed/osm
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { assignSlugs, slugBase, toCsv, toPlaceRow } from "./mapping.mjs";
+import { readFileSync } from "node:fs";
+import {
+  addressFromReverse,
+  assignSlugs,
+  fillAddresses,
+  fromCsv,
+  pickReverse,
+  slugBase,
+  toCsv,
+  toPlaceRow,
+} from "./mapping.mjs";
 
 const node = (tags, extra = {}) => ({ type: "node", id: 101, lat: -45.0322, lon: 168.661, tags, ...extra });
 
@@ -137,4 +147,77 @@ test("writes the CSV of backend/seed/places.csv", () => {
     "slug,name,category,subtype,description,address,latitude,longitude,opening_hours,phone,website,image_url,source,source_url,status\n" +
       'fish-chips,"Fish, ""Chips""",food,,,Queenstown,-45.0322,168.661,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1,public\n',
   );
+});
+
+// A place by the lake, and what Nominatim's reverse lookup says is there.
+const place = { latitude: -45.0322, longitude: 168.661, address: "Queenstown" };
+const reverse = (address, lat = "-45.0322", lon = "168.661") => ({ lat, lon, address });
+
+test("an address from Nominatim: number and road, then the town, or the suburb where there is no town", () => {
+  assert.equal(
+    addressFromReverse(reverse({ house_number: "12", road: "Beach Street", town: "Queenstown" }), place),
+    "12 Beach Street, Queenstown",
+  );
+  // Nominatim calls central Queenstown "Boydtown", which visitors would not know.
+  assert.equal(
+    addressFromReverse(reverse({ road: "Athol Street", suburb: "Boydtown", town: "Queenstown" }), place),
+    "Athol Street, Queenstown",
+  );
+  assert.equal(addressFromReverse(reverse({ road: "Grant Road", suburb: "Frankton" }), place), "Grant Road, Frankton");
+  assert.equal(addressFromReverse(reverse({ road: "Arthurs Point Road", village: "Arthurs Point" }), place), "Arthurs Point Road, Arthurs Point");
+  assert.equal(addressFromReverse(reverse({ road: "Malaghans Road" }), place), "Malaghans Road");
+});
+
+test("no address without a road, or from a result more than 50 m from the place", () => {
+  assert.equal(addressFromReverse(reverse({ town: "Queenstown" }), place), null);
+  assert.equal(addressFromReverse(null, place), null);
+  // About 60 m north, and about 40 m north.
+  const road = { road: "Beach Street", town: "Queenstown" };
+  assert.equal(addressFromReverse(reverse(road, "-45.03166", "168.661"), place), null);
+  assert.equal(addressFromReverse(reverse(road, "-45.03184", "168.661"), place), "Beach Street, Queenstown");
+});
+
+test("keeps only the parts of a Nominatim answer the address needs, and nothing when it found nothing", () => {
+  const answer = {
+    place_id: 1,
+    lat: "-45.0322",
+    lon: "168.661",
+    display_name: "Lakeside, 12, Beach Street, Queenstown, Otago, 9300, New Zealand",
+    address: { amenity: "Lakeside", house_number: "12", road: "Beach Street", town: "Queenstown", postcode: "9300" },
+  };
+
+  assert.deepEqual(pickReverse(answer), {
+    lat: "-45.0322",
+    lon: "168.661",
+    address: { house_number: "12", road: "Beach Street", town: "Queenstown" },
+  });
+  assert.equal(pickReverse({ error: "Unable to geocode" }), null);
+});
+
+test("fills in only the addresses that say Queenstown, from the cache by source address", () => {
+  const rows = [
+    { ...place, sourceUrl: "https://www.openstreetmap.org/node/1" },
+    { ...place, sourceUrl: "https://www.openstreetmap.org/node/2" },
+    { ...place, sourceUrl: "https://www.openstreetmap.org/node/3", address: "5 Athol Street" },
+    { ...place, sourceUrl: "https://www.openstreetmap.org/node/4" },
+  ];
+  const cache = {
+    "https://www.openstreetmap.org/node/1": reverse({ road: "Beach Street", town: "Queenstown" }),
+    "https://www.openstreetmap.org/node/2": null,
+    "https://www.openstreetmap.org/node/3": reverse({ road: "Beach Street", town: "Queenstown" }),
+  };
+
+  assert.deepEqual(
+    fillAddresses(rows, cache).map((row) => row.address),
+    ["Beach Street, Queenstown", "Queenstown", "5 Athol Street", "Queenstown"],
+  );
+});
+
+test("reads places.csv back exactly as it was written", () => {
+  const text = readFileSync(new URL("../places.csv", import.meta.url), "utf8");
+  const rows = fromCsv(text);
+
+  assert.equal(rows.length, text.trim().split("\n").length - 1);
+  assert.equal(rows[0].source, "OpenStreetMap");
+  assert.equal(toCsv(rows), text);
 });

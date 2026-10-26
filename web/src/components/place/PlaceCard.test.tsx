@@ -1,5 +1,5 @@
-import { screen } from "@testing-library/react";
-import { expect, test } from "vitest";
+import { act, screen } from "@testing-library/react";
+import { expect, test, vi } from "vitest";
 import { placeSummary } from "@/test/places";
 import { renderWithMessages } from "@/test/render";
 import { PlaceCard } from "./PlaceCard";
@@ -51,4 +51,42 @@ test("keeps the image's place when there is no image", () => {
 
   expect(container.querySelector("img")).toBeNull();
   expect(container.querySelector('[data-slot="image-placeholder"]')).not.toBeNull();
+});
+
+test("says whether the place is open now", async () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(new Date("2026-10-20T10:00:00+13:00"));
+  try {
+    renderWithMessages(<PlaceCard place={placeSummary({ openingHours: "Mo-Su 09:00-17:00" })} />);
+    await act(async () => {
+      vi.advanceTimersByTime(0);
+    });
+
+    expect(screen.getByRole("link")).toHaveTextContent("Open now · until 5:00 pm");
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
+test("says nothing about opening without hours", () => {
+  renderWithMessages(<PlaceCard place={placeSummary({ openingHours: null })} />);
+
+  expect(screen.getByRole("link")).not.toHaveTextContent(/Open|Closed/);
+});
+
+test("stands in for a missing photo with the category's colour and picture", () => {
+  const { container } = renderWithMessages(<PlaceCard place={placeSummary({ category: "cafe", imageUrl: null })} />);
+
+  const placeholder = container.querySelector('[data-slot="image-placeholder"]') as HTMLElement;
+  expect(placeholder).toHaveTextContent("☕");
+  expect(placeholder).toHaveAttribute("aria-hidden", "true");
+  expect(placeholder.style.backgroundColor).not.toBe("");
+});
+
+test("a facility's picture follows its kind", () => {
+  const { container } = renderWithMessages(
+    <PlaceCard place={placeSummary({ category: "facility", subtype: "toilet", imageUrl: null })} />,
+  );
+
+  expect(container.querySelector('[data-slot="image-placeholder"]')).toHaveTextContent("🚻");
 });

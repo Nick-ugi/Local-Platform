@@ -15,8 +15,17 @@ const { FakeMap } = vi.hoisted(() => {
 
     options: Record<string, unknown>;
     handlers: Record<string, Handler[]> = {};
-    sources: Record<string, { data: unknown; setData: (data: unknown) => void }> = {};
-    layers: { id: string; source?: string }[] = [];
+    sources: Record<
+      string,
+      {
+        data: unknown;
+        options: Record<string, unknown>;
+        setData: (data: unknown) => void;
+        getClusterExpansionZoom: (id: number, callback: (error: Error | null, zoom: number) => void) => void;
+      }
+    > = {};
+    layers: { id: string; source?: string; paint?: Record<string, unknown> }[] = [];
+    easings: unknown[] = [];
     filters: Record<string, unknown> = {};
     canvas = { style: { cursor: "" } };
     flights: unknown[] = [];
@@ -50,8 +59,13 @@ const { FakeMap } = vi.hoisted(() => {
     addSource(id: string, source: { data: unknown }) {
       const entry = {
         data: source.data,
+        options: source as Record<string, unknown>,
         setData: (data: unknown) => {
           entry.data = data;
+        },
+        /** Every cluster comes apart at zoom 16 here. */
+        getClusterExpansionZoom: (_id: number, callback: (error: Error | null, zoom: number) => void) => {
+          callback(null, 16);
         },
       };
       this.sources[id] = entry;
@@ -69,7 +83,7 @@ const { FakeMap } = vi.hoisted(() => {
       return this.sources[id];
     }
 
-    addLayer(layer: { id: string; source?: string; filter?: unknown }) {
+    addLayer(layer: { id: string; source?: string; filter?: unknown; paint?: Record<string, unknown> }) {
       this.layers.push(layer);
       this.filters[layer.id] = layer.filter;
     }
@@ -106,6 +120,11 @@ const { FakeMap } = vi.hoisted(() => {
 
     getCanvas() {
       return this.canvas;
+    }
+
+    easeTo(options: unknown) {
+      this.mustBeAlive();
+      this.easings.push(options);
     }
 
     flyTo(options: unknown) {
@@ -165,7 +184,7 @@ async function loadedMap() {
 }
 
 /** The GeoJSON currently in one of the map's two sources. */
-function dataOf(map: InstanceType<typeof FakeMap>, source: "markers" | "visitor") {
+function dataOf(map: InstanceType<typeof FakeMap>, source: "markers" | "selected-marker" | "visitor") {
   return map.sources[source].data;
 }
 
@@ -194,7 +213,14 @@ test("draws the markers once the map has loaded", async () => {
   act(() => map.fire("load"));
 
   expect(dataOf(map, "markers")).toEqual(toFeatureCollection([kitchen, bakery]));
-  expect(map.layers.filter((layer) => layer.source === "markers")).toHaveLength(3);
+  // Clusters and their counts, then each marker and its letter (MAP-09). The selected marker has a
+  // source of its own.
+  expect(map.layers.filter((layer) => layer.source === "markers").map((layer) => layer.id)).toEqual([
+    "marker-clusters",
+    "marker-cluster-counts",
+    "marker-circles",
+    "marker-labels",
+  ]);
 });
 
 test("updates the data when the markers change", async () => {
@@ -348,16 +374,23 @@ test("clears the selection on a click elsewhere", async () => {
   expect(props.onSelect).toHaveBeenCalledWith(null);
 });
 
-test("draws the selected marker apart from the others", async () => {
-  const { update } = renderMap({ selectedKey: "place:lakeside-kitchen" });
+test("draws the selected marker on its own, above and outside the clusters", async () => {
+  const { update } = renderMap({ markers: [kitchen, bakery], selectedKey: "place:lakeside-kitchen" });
   const map = await loadedMap();
-  const selectedOnly = ["==", ["get", "key"], "place:lakeside-kitchen"];
-  expect(Object.values(map.filters)).toContainEqual(selectedOnly);
+  const keys = (source: "markers" | "selected-marker") =>
+    (dataOf(map, source) as ReturnType<typeof toFeatureCollection>).features.map((feature) => feature.properties.key);
+
+  expect(keys("markers")).toEqual(["place:beach-street-bakery"]);
+  expect(keys("selected-marker")).toEqual(["place:lakeside-kitchen"]);
+  expect(map.sources["selected-marker"].options).not.toHaveProperty("cluster");
 
   update({ selectedKey: "place:beach-street-bakery" });
+  expect(keys("markers")).toEqual(["place:lakeside-kitchen"]);
+  expect(keys("selected-marker")).toEqual(["place:beach-street-bakery"]);
 
-  expect(Object.values(map.filters)).toContainEqual(["==", ["get", "key"], "place:beach-street-bakery"]);
-  expect(Object.values(map.filters)).not.toContainEqual(selectedOnly);
+  update({ selectedKey: null });
+  expect(keys("markers")).toEqual(["place:lakeside-kitchen", "place:beach-street-bakery"]);
+  expect(keys("selected-marker")).toEqual([]);
 });
 
 test("shows a pointer over a marker", async () => {
@@ -438,4 +471,33 @@ test("keeps the map when a single tile fails", async () => {
   act(() => map.fire("error", { error: new Error("tile failed") }));
 
   expect(props.onUnavailable).not.toHaveBeenCalled();
+});
+
+test("draws each marker in its kind's colour", async () => {
+  renderMap();
+  const map = await loadedMap();
+
+  const circles = map.layers.find((layer) => layer.id === "marker-circles");
+  expect(circles?.paint?.["circle-color"]).toEqual(["get", "color"]);
+});
+
+test("groups markers that are close together into numbered clusters until zoom 15", async () => {
+  renderMap({ markers: [kitchen, bakery] });
+  const map = await loadedMap();
+
+  expect(map.sources.markers.options).toMatchObject({ cluster: true, clusterMaxZoom: 15, clusterRadius: 44 });
+  expect(map.layers.map((layer) => layer.id)).toEqual(expect.arrayContaining(["marker-clusters", "marker-cluster-counts"]));
+});
+
+test("zooms in to where a clicked cluster comes apart, without selecting anything", async () => {
+  const { props } = renderMap({ markers: [kitchen, bakery] });
+  const map = await loadedMap();
+
+  map.featuresUnderPointer = [
+    { properties: { cluster: true, cluster_id: 7 }, geometry: { type: "Point", coordinates: [168.66, -45.032] } },
+  ];
+  act(() => map.fire("click", { point: { x: 120, y: 80 } }));
+
+  expect(map.easings).toEqual([{ center: [168.66, -45.032], zoom: 16 }]);
+  expect(props.onSelect).not.toHaveBeenCalled();
 });

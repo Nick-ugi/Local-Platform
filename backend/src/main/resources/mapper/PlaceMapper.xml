@@ -35,13 +35,13 @@
 		their ids, so a place cannot appear on two pages. ST_MakePoint takes (longitude, latitude).
 	-->
 	<select id="findPublicPlaces" resultType="com.queenstownlocal.backend.place.PlaceSummary">
-		SELECT slug, name, category, subtype, address, image_url, latitude, longitude,
+		SELECT slug, name, category, subtype, address, image_url, latitude, longitude, opening_hours,
 		       <choose>
 		         <when test="withDistance">round(distance)::int</when>
 		         <otherwise>NULL::int</otherwise>
 		       </choose> AS distance_m
 		FROM (
-		    SELECT id, slug, name, category, subtype, address, image_url,
+		    SELECT id, slug, name, category, subtype, address, image_url, opening_hours,
 		           ST_Y(location::geometry) AS latitude,
 		           ST_X(location::geometry) AS longitude,
 		           ST_Distance(location, ST_SetSRID(ST_MakePoint(#{lng}, #{lat}), 4326)::geography) AS distance

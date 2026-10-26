@@ -1,7 +1,13 @@
 "use client";
 
-import { FILTER_KEYS, type FilterKey } from "@queenstown/shared";
+import { categoryStyle, FILTER_KEYS, type FilterKey } from "@queenstown/shared";
 import { useTranslations } from "next-intl";
+import { KindDot } from "@/components/place/KindArt";
+
+/** The colour of a chip's markers. */
+function colorOf(key: FilterKey): string {
+  return categoryStyle(key === "event" || key === "notice" ? key : { category: key, subtype: null }).color;
+}
 
 type Props = {
   selected: readonly FilterKey[];
@@ -36,8 +42,9 @@ export function FilterChips({ selected, onToggle }: Props) {
           type="button"
           aria-pressed={selected.includes(key)}
           onClick={() => onToggle(key)}
-          className="h-11 shrink-0 whitespace-nowrap rounded-full border border-neutral-400 px-4 text-sm font-medium aria-pressed:border-neutral-950 aria-pressed:bg-neutral-950 aria-pressed:text-white"
+          className="flex h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-neutral-400 px-4 text-sm font-medium aria-pressed:border-neutral-950 aria-pressed:bg-neutral-950 aria-pressed:text-white"
         >
+          <KindDot color={colorOf(key)} />
           {label(key)}
         </button>
       ))}

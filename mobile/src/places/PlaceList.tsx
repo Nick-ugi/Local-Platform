@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { useVisitorPosition } from "@/geo/VisitorPosition";
+import { LoadingMessage } from "@/ui/LoadingMessage";
 import { StateMessage } from "@/ui/StateMessage";
 import { colors, TOUCH } from "@/ui/theme";
 import { PlaceRow } from "./PlaceRow";
@@ -53,7 +54,7 @@ export function PlaceList({ query, header, countText, empty, onOpen }: Props) {
 
   let content: ReactNode = null;
   if (list.status === "loading") {
-    content = <StateMessage loading />;
+    content = <LoadingMessage />;
   } else if (list.status === "error") {
     content = <StateMessage text={t("loadFailed")} actions={[{ label: t("retry"), onPress: list.retry }]} />;
   } else if (list.items.length === 0) {

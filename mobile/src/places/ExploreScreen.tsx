@@ -1,4 +1,4 @@
-import { CATEGORIES, type Category, type PlaceSummary } from "@queenstown/shared";
+import { CATEGORIES, type Category, categoryStyle, type PlaceSummary } from "@queenstown/shared";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
@@ -21,7 +21,12 @@ export function ExploreScreen({ onOpen, onSearch }: { onOpen: (place: PlaceSumma
 
   const items = [
     { key: "all" as ChipKey, label: t("all"), selected: category === null },
-    ...CATEGORIES.map((key) => ({ key: key as ChipKey, label: tCategory(key), selected: category === key })),
+    ...CATEGORIES.map((key) => ({
+      key: key as ChipKey,
+      label: tCategory(key),
+      selected: category === key,
+      color: categoryStyle({ category: key, subtype: null }).color,
+    })),
   ];
 
   return (

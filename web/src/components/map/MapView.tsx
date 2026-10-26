@@ -3,6 +3,7 @@
 import {
   type LatLng,
   type MapBounds,
+  keyOf,
   type MapMarker,
   toFeatureCollection,
   toLngLat,
@@ -16,6 +17,7 @@ import type {
   GeoJSONSource,
   Map as MapboxMap,
   MapMouseEvent,
+  SymbolLayerSpecification,
 } from "mapbox-gl";
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -42,9 +44,18 @@ type Props = {
 const STYLE = "mapbox://styles/mapbox/standard";
 
 const SOURCE = "markers";
+const CLUSTERS = "marker-clusters";
+const CLUSTER_COUNTS = "marker-cluster-counts";
 const CIRCLES = "marker-circles";
-const SELECTED = "marker-selected";
 const LABELS = "marker-labels";
+const SELECTED_SOURCE = "selected-marker";
+const SELECTED = "marker-selected";
+const SELECTED_LABEL = "marker-selected-label";
+
+// Markers closer than this on screen are drawn as one numbered cluster (MAP-09), up to this zoom.
+const CLUSTER_RADIUS_PX = 44;
+const CLUSTER_MAX_ZOOM = 15;
+const NOT_A_CLUSTER: FilterSpecification = ["!", ["has", "point_count"]];
 
 const VISITOR = "visitor";
 const VISITOR_HALO = "visitor-halo";
@@ -57,14 +68,8 @@ const RADIUS_PX = 14;
 /** A click this far outside a marker still counts, which makes the marker a 44 px target. */
 const REACH_PX = 22 - RADIUS_PX;
 
-/** Matches the selected marker only. No marker has an empty key, so null matches none. */
-function onlyKey(key: string | null): FilterSpecification {
-  return ["==", ["get", "key"], key ?? ""];
-}
-
-function labelColor(selectedKey: string | null): ExpressionSpecification {
-  return ["case", ["==", ["get", "key"], selectedKey ?? ""], PAPER, INK];
-}
+/** A cluster grows a little with its count: 18, 22 or 26 px. */
+const CLUSTER_RADIUS: ExpressionSpecification = ["step", ["get", "point_count"], 18, 10, 22, 50, 26];
 
 /** The visitor's position: a blue dot with a halo (wireframe m-map-place). */
 function addVisitorLayers(map: MapboxMap) {
@@ -90,30 +95,25 @@ function addVisitorLayers(map: MapboxMap) {
 }
 
 /**
- * One source and three layers: a circle per marker, a larger filled circle for the selected one
- * (wireframe m-map-place) and the category letter on top.
+ * One clustered source and five layers (MAP-09): a numbered dark circle for each cluster, then for
+ * single markers a circle in their kind's colour (shared/src/categoryStyle.ts), a larger one with a
+ * dark ring for the selected marker (wireframe m-map-place), and the category letter in white.
  */
 function addMarkerLayers(map: MapboxMap) {
-  map.addSource(SOURCE, { type: "geojson", data: toFeatureCollection([]) });
-  map.addLayer({
-    id: CIRCLES,
-    type: "circle",
-    source: SOURCE,
-    paint: {
-      "circle-radius": RADIUS_PX,
-      "circle-color": PAPER,
-      "circle-stroke-color": INK,
-      "circle-stroke-width": 2,
-      "circle-emissive-strength": 1,
-    },
+  map.addSource(SOURCE, {
+    type: "geojson",
+    data: toFeatureCollection([]),
+    cluster: true,
+    clusterRadius: CLUSTER_RADIUS_PX,
+    clusterMaxZoom: CLUSTER_MAX_ZOOM,
   });
   map.addLayer({
-    id: SELECTED,
+    id: CLUSTERS,
     type: "circle",
     source: SOURCE,
-    filter: onlyKey(null),
+    filter: ["has", "point_count"],
     paint: {
-      "circle-radius": RADIUS_PX + 6,
+      "circle-radius": CLUSTER_RADIUS,
       "circle-color": INK,
       "circle-stroke-color": PAPER,
       "circle-stroke-width": 2,
@@ -121,17 +121,81 @@ function addMarkerLayers(map: MapboxMap) {
     },
   });
   map.addLayer({
-    id: LABELS,
+    id: CLUSTER_COUNTS,
     type: "symbol",
     source: SOURCE,
+    filter: ["has", "point_count"],
     layout: {
-      "text-field": ["get", "label"],
+      "text-field": ["get", "point_count_abbreviated"],
       "text-size": 13,
       "text-font": ["DIN Pro Bold", "Arial Unicode MS Bold"],
       "text-allow-overlap": true,
       "text-ignore-placement": true,
     },
-    paint: { "text-color": labelColor(null), "text-emissive-strength": 1 },
+    paint: { "text-color": PAPER, "text-emissive-strength": 1 },
+  });
+  map.addLayer({
+    id: CIRCLES,
+    type: "circle",
+    source: SOURCE,
+    filter: NOT_A_CLUSTER,
+    paint: {
+      "circle-radius": RADIUS_PX,
+      "circle-color": ["get", "color"],
+      "circle-stroke-color": PAPER,
+      "circle-stroke-width": 2,
+      "circle-emissive-strength": 1,
+    },
+  });
+  map.addLayer({ id: LABELS, type: "symbol", source: SOURCE, filter: NOT_A_CLUSTER, layout: LETTER, paint: WHITE_TEXT });
+
+  // The selected marker is kept out of the clusters and drawn last, on its own source, so a linked
+  // place shows even where its neighbours are clustered (the map keeps the visitor's view).
+  map.addSource(SELECTED_SOURCE, { type: "geojson", data: toFeatureCollection([]) });
+  map.addLayer({
+    id: SELECTED,
+    type: "circle",
+    source: SELECTED_SOURCE,
+    paint: {
+      "circle-radius": RADIUS_PX + 6,
+      "circle-color": ["get", "color"],
+      "circle-stroke-color": INK,
+      "circle-stroke-width": 3,
+      "circle-emissive-strength": 1,
+    },
+  });
+  map.addLayer({ id: SELECTED_LABEL, type: "symbol", source: SELECTED_SOURCE, layout: LETTER, paint: WHITE_TEXT });
+}
+
+/** The category letter drawn in the middle of a marker. */
+const LETTER = {
+  "text-field": ["get", "label"],
+  "text-size": 13,
+  "text-font": ["DIN Pro Bold", "Arial Unicode MS Bold"],
+  "text-allow-overlap": true,
+  "text-ignore-placement": true,
+} satisfies SymbolLayerSpecification["layout"];
+
+const WHITE_TEXT = { "text-color": PAPER, "text-emissive-strength": 1 } satisfies SymbolLayerSpecification["paint"];
+
+/** The cluster at the pointer, with its id and centre, or null. */
+function clusterAt(map: MapboxMap, event: MapMouseEvent): { id: number; center: [number, number] } | null {
+  const [found] = map.queryRenderedFeatures(event.point, { layers: [CLUSTERS] });
+  const id: unknown = found?.properties?.cluster_id;
+  const geometry = found?.geometry;
+  if (typeof id !== "number" || geometry?.type !== "Point") {
+    return null;
+  }
+  const [longitude, latitude] = geometry.coordinates;
+  return { id, center: [longitude, latitude] };
+}
+
+/** Moves in to the zoom at which the cluster comes apart into its markers. */
+function openCluster(map: MapboxMap, cluster: { id: number; center: [number, number] }) {
+  map.getSource<GeoJSONSource>(SOURCE)?.getClusterExpansionZoom(cluster.id, (error, zoom) => {
+    if (!error && typeof zoom === "number") {
+      map.easeTo({ center: cluster.center, zoom });
+    }
   });
 }
 
@@ -143,7 +207,7 @@ function keyAt(map: MapboxMap, event: MapMouseEvent): string | null {
       [x - REACH_PX, y - REACH_PX],
       [x + REACH_PX, y + REACH_PX],
     ],
-    { layers: [CIRCLES] },
+    { layers: [SELECTED, CIRCLES] },
   );
   const key: unknown = found[0]?.properties?.key;
   return typeof key === "string" ? key : null;
@@ -219,9 +283,18 @@ export function MapView({
         // The markers go on last, so they stay on top of the visitor's dot.
         addVisitorLayers(target);
         addMarkerLayers(target);
-        target.on("click", (event) => reportSelect(keyAt(target, event)));
+        target.on("click", (event) => {
+          // A cluster opens up; it is not a selection.
+          const cluster = clusterAt(target, event);
+          if (cluster) {
+            openCluster(target, cluster);
+            return;
+          }
+          reportSelect(keyAt(target, event));
+        });
         target.on("mousemove", (event) => {
-          target.getCanvas().style.cursor = keyAt(target, event) === null ? "" : "pointer";
+          const over = clusterAt(target, event) !== null || keyAt(target, event) !== null;
+          target.getCanvas().style.cursor = over ? "pointer" : "";
         });
         setMap(target);
         reportMove(target);
@@ -247,16 +320,13 @@ export function MapView({
   }, [token, startCamera]);
 
   useEffect(() => {
-    map?.getSource<GeoJSONSource>(SOURCE)?.setData(toFeatureCollection(markers));
-  }, [map, markers]);
-
-  useEffect(() => {
     if (!map) {
       return;
     }
-    map.setFilter(SELECTED, onlyKey(selectedKey));
-    map.setPaintProperty(LABELS, "text-color", labelColor(selectedKey));
-  }, [map, selectedKey]);
+    const isSelected = (marker: MapMarker) => keyOf(marker) === selectedKey;
+    map.getSource<GeoJSONSource>(SOURCE)?.setData(toFeatureCollection(markers.filter((marker) => !isSelected(marker))));
+    map.getSource<GeoJSONSource>(SELECTED_SOURCE)?.setData(toFeatureCollection(markers.filter(isSelected)));
+  }, [map, markers, selectedKey]);
 
   useEffect(() => {
     map?.getSource<GeoJSONSource>(VISITOR)?.setData(toPositionCollection(userLocation));

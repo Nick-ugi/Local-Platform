@@ -1,4 +1,5 @@
 import {
+  categoryStyle,
   distanceMeters,
   FILTER_KEYS,
   type FilterKey,
@@ -18,6 +19,7 @@ import { type LocationProblem, useVisitorPosition } from "@/geo/VisitorPosition"
 import { Chips } from "@/ui/Chips";
 import { SearchBar } from "@/ui/SearchBar";
 import { colors } from "@/ui/theme";
+import { useSlow } from "@/ui/useSlow";
 import { type Camera, DEFAULT_CAMERA, LOCATE_ZOOM, PLACE_ZOOM } from "./camera";
 import { LocateButton } from "./LocateButton";
 import { lookUp } from "./lookUp";
@@ -58,12 +60,15 @@ export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch }: Prop
   const t = useTranslations("Map");
   const tCategory = useTranslations("Category");
   const tPages = useTranslations("Pages");
+  const tState = useTranslations("State");
   const token = process.env.EXPO_PUBLIC_MAPBOX_TOKEN;
 
   const [camera, setCamera] = useState<Camera>(DEFAULT_CAMERA);
   const [bounds, setBounds] = useState<MapBounds | null>(null);
   const [filter, setFilter] = useState<FilterKey[]>([]);
   const { status, markers, truncated, retry } = useMarkers(bounds, filter);
+  // A sleeping backend takes up to a minute to answer its first request (docs/07-deployment.md).
+  const slow = useSlow(status === "loading");
   const [selected, setSelected] = useState<MapMarker | null>(null);
   const [unavailable, setUnavailable] = useState(false);
   const { result, position, locating, request } = useVisitorPosition();
@@ -148,7 +153,12 @@ export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch }: Prop
         <SearchBar onPress={onSearch} />
         <Chips
           label={t("filters")}
-          items={FILTER_KEYS.map((key) => ({ key, label: label(key), selected: filter.includes(key) }))}
+          items={FILTER_KEYS.map((key) => ({
+            key,
+            label: label(key),
+            selected: filter.includes(key),
+            color: categoryStyle(key === "event" || key === "notice" ? key : { category: key, subtype: null }).color,
+          }))}
           onPress={toggle}
         />
       </View>
@@ -168,6 +178,7 @@ export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch }: Prop
           {status === "error" ? (
             <MapNotice text={t("loadFailed")} action={{ label: t("retry"), onPress: retry }} />
           ) : null}
+          {slow ? <MapNotice text={tState("waking")} /> : null}
           {status === "ready" && markers.length === 0 ? (
             <MapNotice text={t("empty")} action={filter.length > 0 ? clearFilters : undefined} />
           ) : null}

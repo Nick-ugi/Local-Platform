@@ -12,6 +12,7 @@ export function placeSummary(overrides: Partial<PlaceSummary> = {}): PlaceSummar
     latitude: -45.0322,
     longitude: 168.661,
     distanceM: null,
+    openingHours: null,
     ...overrides,
   };
 }

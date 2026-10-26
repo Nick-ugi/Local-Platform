@@ -1,13 +1,15 @@
-import { formatDistance, type PlaceSummary } from "@queenstown/shared";
+import { categoryStyle, formatDistance, type PlaceSummary } from "@queenstown/shared";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { KindPlaceholder } from "@/ui/KindArt";
+import { OpenBadge } from "@/ui/OpenBadge";
 import { PlaceImage } from "@/ui/PlaceImage";
 import { colors } from "@/ui/theme";
 
 /**
- * A place in a list (wireframe a-explore): picture, name, category with the distance, address. The
- * whole row opens the detail screen. The distance is there only when the list was ordered from the
- * visitor's position.
+ * A place in a list (wireframe a-explore): picture, name, category with the distance, address and
+ * whether it is open now. The whole row opens the detail screen. The distance is there only when the
+ * list was ordered from the visitor's position. Without a photo the kind's colour and picture stand in.
  */
 export function PlaceRow({ place, onPress }: { place: PlaceSummary; onPress: () => void }) {
   const tCategory = useTranslations("Category");
@@ -19,11 +21,17 @@ export function PlaceRow({ place, onPress }: { place: PlaceSummary; onPress: () 
   return (
     <Pressable accessibilityRole="link" onPress={onPress} style={styles.row}>
       {/* The name is right beside the picture, so the picture itself says nothing more. */}
-      <PlaceImage url={place.imageUrl} label="" style={styles.image} placeholderStyle={styles.image} />
+      <PlaceImage
+        url={place.imageUrl}
+        label=""
+        style={styles.image}
+        fallback={<KindPlaceholder look={categoryStyle(place)} style={styles.image} />}
+      />
       <View style={styles.text}>
         <Text style={styles.name}>{place.name}</Text>
         <Text style={styles.line}>{kind}</Text>
         <Text style={styles.line}>{place.address}</Text>
+        <OpenBadge openingHours={place.openingHours} />
       </View>
     </Pressable>
   );

@@ -187,6 +187,24 @@ test("a failed load says so and offers to try again", async () => {
   expect(retry).toHaveBeenCalledTimes(1);
 });
 
+test("markers that take over five seconds say the server is waking up", async () => {
+  jest.useFakeTimers();
+  try {
+    mockMarkers.state = { status: "loading", markers: [], truncated: false, retry: jest.fn() };
+    const view = await openMap({ status: "denied" });
+    expect(screen.queryByText(/Waking up the server/)).toBeNull();
+
+    act(() => jest.advanceTimersByTime(5000));
+    expect(screen.getByText("Waking up the server… This can take up to a minute.")).toBeOnTheScreen();
+
+    mockMarkers.state = { status: "ready", markers: [kitchen], truncated: false, retry: jest.fn() };
+    view.rerender(screenWith());
+    expect(screen.queryByText(/Waking up the server/)).toBeNull();
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
 test("an empty area says so", async () => {
   mockMarkers.state = { status: "ready", markers: [], truncated: false, retry: jest.fn() };
 
@@ -254,6 +272,8 @@ test("the chips are the six categories, then Events and Notices, none on", async
   for (const name of ["Food", "Cafes", "Bars", "Activities", "Shopping", "Facilities", "Events", "Notices"]) {
     expect(chip(name)).not.toBeSelected();
   }
+  // Each with a dot of its markers' colour.
+  expect(screen.getAllByTestId("kind-dot", { includeHiddenElements: true })).toHaveLength(8);
 });
 
 test("a chip narrows the markers, and pressing it again shows everything", async () => {

@@ -1,4 +1,5 @@
 import { act, fireEvent, renderRouter, screen, waitFor, within } from "expo-router/testing-library";
+import { Linking } from "react-native";
 import { getPlace } from "@/api/places";
 import RootLayout from "@/app/_layout";
 import TabsLayout from "@/app/(tabs)/_layout";
@@ -122,6 +123,31 @@ test("More leads to About", async () => {
   expect(screen).toHavePathname("/about");
   expect(screen.getByText("About Queenstown Local")).toBeOnTheScreen();
   expect(screen.getByText("Where the information comes from")).toBeOnTheScreen();
+});
+
+test("More lists About, Log in, Favorites, then Privacy Policy and Terms of Use, which open the web pages", async () => {
+  process.env.EXPO_PUBLIC_SITE_URL = "https://queenstown.example";
+  const openURL = jest.spyOn(Linking, "openURL").mockResolvedValue(true);
+  try {
+    renderRouter(routes, { initialUrl: "/more" });
+    await act(async () => {});
+
+    const links = screen.getAllByRole("link");
+    const order = ["About", "Log in", "Favorites", "Privacy Policy", "Terms of Use"].map((name) =>
+      links.indexOf(screen.getByRole("link", { name: new RegExp(`^${name}`) })),
+    );
+    expect(order).toEqual([0, 1, 2, 3, 4]);
+
+    await act(async () => fireEvent.press(screen.getByRole("link", { name: /^Privacy Policy/ })));
+    expect(openURL).toHaveBeenLastCalledWith("https://queenstown.example/privacy");
+    await act(async () => fireEvent.press(screen.getByRole("link", { name: /^Terms of Use/ })));
+    expect(openURL).toHaveBeenLastCalledWith("https://queenstown.example/terms");
+    // Both stay in More: the pages open in the browser.
+    expect(screen).toHavePathname("/more");
+  } finally {
+    openURL.mockRestore();
+    delete process.env.EXPO_PUBLIC_SITE_URL;
+  }
 });
 
 test("the search box on the Map leads to Search, and a search names its words", async () => {

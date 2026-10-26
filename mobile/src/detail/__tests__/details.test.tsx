@@ -71,6 +71,7 @@ beforeEach(() => {
   share.mockReset();
   share.mockResolvedValue({ action: Share.sharedAction });
   delete process.env.EXPO_PUBLIC_SITE_URL;
+  delete process.env.EXPO_PUBLIC_CONTACT_EMAIL;
   // The app is checked on Android (docs/plans/2026-10-15-week10-app-core.md).
   Platform.OS = "android";
 });
@@ -87,6 +88,58 @@ describe("Place", () => {
     expect(screen.getByText("harbourcoffee.example")).toBeOnTheScreen();
     expect(screen.getByText("Source: Harbour Coffee website")).toBeOnTheScreen();
     expect(screen.getByText("Updated 2 Oct 2026")).toBeOnTheScreen();
+  });
+
+  test("OpenStreetMap hours read a line per run of days, with whether it is open now in New Zealand", async () => {
+    jest.useFakeTimers();
+    try {
+      // Saturday 10 am in Queenstown.
+      jest.setSystemTime(new Date("2026-10-24T10:00:00+13:00"));
+      show(<PlaceDetailView place={{ ...coffee, openingHours: "Mo-Fr 07:00-16:00; Sa 08:00-14:00" }} onViewOnMap={jest.fn()} />);
+      await act(async () => {
+        jest.advanceTimersByTime(0);
+      });
+
+      expect(screen.getByText("Open now · until 2:00 pm")).toBeOnTheScreen();
+      expect(screen.getByText("Mon - Fri · 7:00 am - 4:00 pm")).toBeOnTheScreen();
+      expect(screen.getByText("Sat · 8:00 am - 2:00 pm")).toBeOnTheScreen();
+      expect(screen.getByText("Sun · Closed")).toBeOnTheScreen();
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  test("Suggest an edit starts an email to the operator about the place, as on the web", async () => {
+    process.env.EXPO_PUBLIC_CONTACT_EMAIL = "hello@queenstown.example";
+    process.env.EXPO_PUBLIC_SITE_URL = "https://queenstown.example";
+    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+
+    await act(async () => fireEvent.press(screen.getByRole("link", { name: "Suggest an edit" })));
+
+    expect(openURL).toHaveBeenCalledWith(
+      "mailto:hello@queenstown.example" +
+        "?subject=Suggest%20an%20edit%3A%20Harbour%20Coffee" +
+        "&body=Place%3A%20https%3A%2F%2Fqueenstown.example%2Fplaces%2Fharbour-coffee%0A%0AWhat%20should%20change%3F%0A",
+    );
+  });
+
+  test("without a usable contact address there is no Suggest an edit", () => {
+    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+    expect(screen.queryByText("Suggest an edit")).toBeNull();
+
+    process.env.EXPO_PUBLIC_CONTACT_EMAIL = "not an address";
+    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+    expect(screen.queryByText("Suggest an edit")).toBeNull();
+  });
+
+  test("a phone without a mail app says so", async () => {
+    process.env.EXPO_PUBLIC_CONTACT_EMAIL = "hello@queenstown.example";
+    openURL.mockRejectedValue(new Error("No Activity found"));
+    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+
+    await act(async () => fireEvent.press(screen.getByRole("link", { name: "Suggest an edit" })));
+
+    expect(screen.getByText("Couldn't open this on your phone.")).toBeOnTheScreen();
   });
 
   test("the quick actions call, open the website, give directions and share the web address", async () => {

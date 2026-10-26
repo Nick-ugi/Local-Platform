@@ -250,8 +250,9 @@ MVP에서 만들지 않는다.
 | 10 | App Core | MAP-04 ~ MAP-08, PLACE-01 ~ PLACE-06, SEARCH-01 ~ SEARCH-02, EVENT-03 ~ EVENT-05, NOTICE-02 ~ NOTICE-05, COMMON-01 ~ COMMON-02, COMMON-04 ~ COMMON-05, MORE-01 (App) |
 | 11 | User / Favorite / Admin | USER-01 ~ USER-02, FAV-01 ~ FAV-02, ADMIN-01 ~ ADMIN-04 |
 | 12 | Integration / Release | 통합 테스트, 남은 Should |
+| 13 | UX Polish | PLACE-07, MAP-09 (Web · App), MORE-02 ~ MORE-03 (App) |
 
-10주차의 작업량이 가장 많다.
+10주차의 작업량이 가장 많다. 13주차는 12주 MVP 뒤에 남은 Should를 Web과 App에 마저 넣고 사용성을 다듬는 주다([계획](plans/2026-10-27-week13-ux-polish.md)).
 
 ---
 

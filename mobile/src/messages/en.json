@@ -37,10 +37,14 @@
     "search": "Search",
     "login": "Log in",
     "signup": "Sign up",
-    "favorites": "Favorites"
+    "favorites": "Favorites",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "opensInBrowser": "Opens in your browser"
   },
   "State": {
     "loading": "Loading…",
+    "waking": "Waking up the server… This can take up to a minute.",
     "errorTitle": "Something went wrong",
     "retry": "Try again",
     "notFoundTitle": "Page not found",
@@ -101,7 +105,10 @@
     "directions": "Directions",
     "share": "Share",
     "source": "Source: {source}",
-    "openFailed": "Couldn't open this on your phone."
+    "openFailed": "Couldn't open this on your phone.",
+    "suggestEdit": "Suggest an edit",
+    "suggestEditSubject": "Suggest an edit: {name}",
+    "suggestEditBody": "Place: {url}\n\nWhat should change?\n"
   },
   "Local": {
     "official": "Official",
@@ -157,5 +164,13 @@
     "remove": "Remove {name} from favorites",
     "loadFailed": "We couldn't load your favorites.",
     "retry": "Try again"
+  },
+  "Hours": {
+    "openUntil": "Open now · until {time}",
+    "closesSoon": "Closes soon · {time}",
+    "opensAt": "Closed · opens {time}",
+    "opensOn": "Closed · opens {day} {time}",
+    "closed": "Closed",
+    "always": "Open 24 hours"
   }
 }

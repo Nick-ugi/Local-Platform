@@ -1,10 +1,11 @@
-import { CATEGORIES, type Category } from "@queenstown/shared";
+import { CATEGORIES, type Category, categoryStyle } from "@queenstown/shared";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { explorePath } from "@/lib/places/listUrl";
+import { KindDot } from "./KindArt";
 
 const linkClass =
-  "flex h-11 shrink-0 items-center whitespace-nowrap rounded-full border border-neutral-400 px-4 text-sm font-medium aria-[current=page]:border-neutral-950 aria-[current=page]:bg-neutral-950 aria-[current=page]:text-white";
+  "flex h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-neutral-400 px-4 text-sm font-medium aria-[current=page]:border-neutral-950 aria-[current=page]:bg-neutral-950 aria-[current=page]:text-white";
 
 /**
  * The categories of Explore (wireframes m-explore and d-explore). One is chosen at a time and
@@ -27,6 +28,7 @@ export function CategoryNav({ active }: { active: Category | null }) {
           aria-current={category === active ? "page" : undefined}
           className={linkClass}
         >
+          <KindDot color={categoryStyle({ category, subtype: null }).color} />
           {tCategory(category)}
         </Link>
       ))}

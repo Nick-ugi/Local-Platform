@@ -20,6 +20,7 @@ const coffee: PlaceSummary = {
   latitude: -45.0335,
   longitude: 168.659,
   distanceM: null,
+  openingHours: null,
 };
 
 function onePage(items: PlaceSummary[]): Page<PlaceSummary> {
@@ -78,6 +79,9 @@ test("a category chip narrows the list; All is on at first", async () => {
   await openExplore({ status: "denied" });
   expect(screen.getByRole("button", { name: "All" })).toBeSelected();
 
+  // Each category has a dot of its colour; All has none.
+  expect(screen.getAllByTestId("kind-dot", { includeHiddenElements: true })).toHaveLength(6);
+
   fireEvent.press(screen.getByRole("button", { name: "Cafes" }));
   await act(async () => {});
 
@@ -113,6 +117,21 @@ test("a failed list offers to try again", async () => {
   await act(async () => {});
 
   expect(screen.getByText("Harbour Coffee")).toBeOnTheScreen();
+});
+
+test("a list that takes over five seconds says the server is waking up", async () => {
+  jest.useFakeTimers();
+  try {
+    getPlacesMock.mockReturnValue(new Promise(() => {}));
+    await openExplore({ status: "denied" });
+    expect(screen.queryByText(/Waking up the server/)).toBeNull();
+
+    act(() => jest.advanceTimersByTime(5000));
+
+    expect(screen.getByText("Waking up the server… This can take up to a minute.")).toBeOnTheScreen();
+  } finally {
+    jest.useRealTimers();
+  }
 });
 
 test("the search box opens Search", async () => {

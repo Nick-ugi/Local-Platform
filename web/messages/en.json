@@ -45,6 +45,7 @@
   },
   "State": {
     "loading": "Loading…",
+    "waking": "Waking up the server… This can take up to a minute.",
     "errorTitle": "Something went wrong",
     "errorBody": "We couldn't load this page. Please try again.",
     "retry": "Try again",
@@ -232,5 +233,13 @@
     "links": "Places, events and notices link to other websites. We are not responsible for their content.",
     "changesTitle": "Changes",
     "changes": "These terms may change. The date at the top shows the latest version."
+  },
+  "Hours": {
+    "openUntil": "Open now · until {time}",
+    "closesSoon": "Closes soon · {time}",
+    "opensAt": "Closed · opens {time}",
+    "opensOn": "Closed · opens {day} {time}",
+    "closed": "Closed",
+    "always": "Open 24 hours"
   }
 }

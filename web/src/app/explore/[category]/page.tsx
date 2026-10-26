@@ -2,9 +2,10 @@ import { isCategory } from "@queenstown/shared";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { ExploreScreen } from "@/components/place/ExploreScreen";
+import { Suspense } from "react";
+import { ExploreList } from "@/components/place/ExploreList";
+import { LoadingState } from "@/components/state/LoadingState";
 import { explorePath, parsePage, withPage } from "@/lib/places/listUrl";
-import { loadPlaceList } from "@/lib/places/loadPlaceList";
 
 type Props = {
   params: Promise<{ category: string }>;
@@ -24,14 +25,17 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   };
 }
 
+/**
+ * A category of Explore. Everything that makes a 404 without the backend is checked first, while the
+ * status can still be set. The first page then streams a loading screen, since a sleeping backend
+ * takes up to a minute (it can never be past the end); a later page waits, so past the end is a 404.
+ */
 export default async function ExploreCategoryPage({ params, searchParams }: Props) {
   const [{ category }, { page }] = await Promise.all([params, searchParams]);
-  if (!isCategory(category)) {
+  const pageNumber = parsePage(page);
+  if (!isCategory(category) || pageNumber === null) {
     notFound();
   }
-  const list = await loadPlaceList({ category, q: null }, page);
-  if (!list) {
-    notFound();
-  }
-  return <ExploreScreen query={list.query} result={list.result} />;
+  const list = <ExploreList category={category} page={page} />;
+  return pageNumber === 1 ? <Suspense fallback={<LoadingState />}>{list}</Suspense> : list;
 }

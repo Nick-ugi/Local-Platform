@@ -18,6 +18,7 @@ const coffee: PlaceSummary = {
   latitude: -45.0335,
   longitude: 168.659,
   distanceM: null,
+  openingHours: null,
 };
 
 const handlers = { onSubmit: jest.fn(), onOpen: jest.fn(), onExplore: jest.fn() };

@@ -1,11 +1,13 @@
 // Fetches named places within 15 km of Queenstown from OpenStreetMap (Overpass API) and writes
-// backend/seed/places.csv. Places already in the file keep their slugs. Run from the repository root:
+// backend/seed/places.csv. Places already in the file keep their slugs, and addresses that only say
+// "Queenstown" are filled in from reverse-cache.json (reverse.mjs). Run from the repository root:
 //   node backend/seed/osm/fetch-places.mjs
 // The data is © OpenStreetMap contributors under the ODbL (README.md in this folder).
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { assignSlugs, existingSlugs, toCsv, toPlaceRow } from "./mapping.mjs";
+import { assignSlugs, existingSlugs, fillAddresses, toCsv, toPlaceRow } from "./mapping.mjs";
+import { readReverseCache } from "./reverse-cache.mjs";
 
 const CENTER = { lat: -45.0312, lon: 168.6626 };
 const RADIUS_M = 15000;
@@ -59,7 +61,7 @@ try {
 } catch {
   // No file yet: every place is new.
 }
-const withSlugs = assignSlugs(rows, existingSlugs(current));
+const withSlugs = assignSlugs(fillAddresses(rows, readReverseCache()), existingSlugs(current));
 writeFileSync(CSV, toCsv(withSlugs));
 
 const counts = {};

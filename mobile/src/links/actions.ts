@@ -11,6 +11,27 @@ export function webUrl(path: string): string {
   return `${site}${path}`;
 }
 
+// Something that looks like one email address: no spaces, one @, a dot in the domain.
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/**
+ * The operator's address from EXPO_PUBLIC_CONTACT_EMAIL, for "Suggest an edit" (MORE-02). Without
+ * a usable value there is none, and the app does not offer it. The web app's rule
+ * (web/src/lib/contact.ts).
+ */
+export function contactEmail(): string | null {
+  const value = process.env.EXPO_PUBLIC_CONTACT_EMAIL?.trim();
+  return value && EMAIL.test(value) ? value : null;
+}
+
+/** Starts an email to the operator in the phone's mail app. False without an address or a mail app. */
+export function emailOperator(subject: string, body: string): Promise<boolean> {
+  const email = contactEmail();
+  return email
+    ? open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`)
+    : Promise.resolve(false);
+}
+
 /** Opens a URL in the app that handles it. False when the phone has none or refused. */
 async function open(url: string): Promise<boolean> {
   try {

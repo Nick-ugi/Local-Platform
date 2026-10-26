@@ -1,499 +1,499 @@
 slug,name,category,subtype,description,address,latitude,longitude,opening_hours,phone,website,image_url,source,source_url,status
-fleur-elizabeth-hall,„Fleur“ Elizabeth Hall,activity,,,Queenstown,-45.0368968,168.6610845,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6791739285,public
-above-paragliding-spot,above paragliding spot,activity,,,Queenstown,-45.0228845,168.6443336,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6431935685,public
-ahi-ka-haka-hangi,Ahi Kā Haka & Hāngī,activity,,,Queenstown,-45.0120869,168.741894,,,https://www.ahikahakaandhangi.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13851389727,public
-belfast-terrace-reserve,Belfast Terrace Reserve,activity,,,Queenstown,-45.0296136,168.6677254,,,,,OpenStreetMap,https://www.openstreetmap.org/way/733839695,public
-ben-lomond,Ben Lomond,activity,,,Queenstown,-45.0070352,168.6155605,,,,,OpenStreetMap,https://www.openstreetmap.org/node/496009090,public
-best-viewpoint-in-qt,BEST viewpoint in QT,activity,,,Queenstown,-45.0317968,168.6776682,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8026686490,public
-brian-smith-park,Brian Smith Park,activity,,,Queenstown,-45.0317862,168.6587733,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1290396136,public
-brisbane-street-reserve,Brisbane Street Reserve,activity,,,Queenstown,-45.0360548,168.6648391,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1433220071,public
-carin-stacks,Carin Stacks,activity,,,Queenstown,-45.0268066,168.6733405,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4365384190,public
-cecil-road-reserve,Cecil Road Reserve,activity,,,Queenstown,-45.0351029,168.6760769,,,,,OpenStreetMap,https://www.openstreetmap.org/way/810276051,public
-derelict-hut,Derelict hut,activity,,,Queenstown,-45.0741271,168.5231429,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1225307331,public
-derelict-hut-2,Derelict hut,activity,,,Queenstown,-45.0539179,168.5293854,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1225327976,public
-dr-william-anderson-park,Dr William Anderson Park,activity,,,Queenstown,-45.0303703,168.6740147,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1433220074,public
-dr-william-anderson-park-2,Dr. William Anderson Park,activity,,,Queenstown,-45.0308057,168.6742283,,,,,OpenStreetMap,https://www.openstreetmap.org/way/793136000,public
-dublin-street-reserve,Dublin Street Reserve,activity,,,Queenstown,-45.0323337,168.6701979,,,,,OpenStreetMap,https://www.openstreetmap.org/way/794724016,public
-earnslaw-park,Earnslaw Park,activity,,,Queenstown,-45.0327652,168.6586159,,,,,OpenStreetMap,https://www.openstreetmap.org/way/211230100,public
-earnslaw-reserve,Earnslaw Reserve,activity,,,Queenstown,-45.0331924,168.6772815,,,,,OpenStreetMap,https://www.openstreetmap.org/way/794724046,public
+fleur-elizabeth-hall,„Fleur“ Elizabeth Hall,activity,,,"Park Shared Path, Queenstown",-45.0368968,168.6610845,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6791739285,public
+above-paragliding-spot,above paragliding spot,activity,,,"Ben Lomond Track, Queenstown",-45.0228845,168.6443336,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6431935685,public
+ahi-ka-haka-hangi,Ahi Kā Haka & Hāngī,activity,,,"Te Kirikiri Frankton Link, Frankton",-45.0120869,168.741894,,,https://www.ahikahakaandhangi.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13851389727,public
+belfast-terrace-reserve,Belfast Terrace Reserve,activity,,,"Kerry Drive, Queenstown",-45.0296136,168.6677254,,,,,OpenStreetMap,https://www.openstreetmap.org/way/733839695,public
+ben-lomond,Ben Lomond,activity,,,"Ben Lomond Track, Queenstown",-45.0070352,168.6155605,,,,,OpenStreetMap,https://www.openstreetmap.org/node/496009090,public
+best-viewpoint-in-qt,BEST viewpoint in QT,activity,,,"Hensman Road, Queenstown",-45.0317968,168.6776682,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8026686490,public
+brian-smith-park,Brian Smith Park,activity,,,"Shotover Street, Queenstown",-45.0317862,168.6587733,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1290396136,public
+brisbane-street-reserve,Brisbane Street Reserve,activity,,,"27 Brisbane Street, Queenstown",-45.0360548,168.6648391,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1433220071,public
+carin-stacks,Carin Stacks,activity,,,"Queenstown Hill Walkway, Queenstown",-45.0268066,168.6733405,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4365384190,public
+cecil-road-reserve,Cecil Road Reserve,activity,,,"Cecil Road, Queenstown",-45.0351029,168.6760769,,,,,OpenStreetMap,https://www.openstreetmap.org/way/810276051,public
+derelict-hut,Derelict hut,activity,,,Tui Drive,-45.0741271,168.5231429,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1225307331,public
+derelict-hut-2,Derelict hut,activity,,,Mt Crichton Loop Track,-45.0539179,168.5293854,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1225327976,public
+dr-william-anderson-park,Dr William Anderson Park,activity,,,"9 Vancouver Drive, Queenstown",-45.0303703,168.6740147,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1433220074,public
+dr-william-anderson-park-2,Dr. William Anderson Park,activity,,,"Windsor Place, Queenstown",-45.0308057,168.6742283,,,,,OpenStreetMap,https://www.openstreetmap.org/way/793136000,public
+dublin-street-reserve,Dublin Street Reserve,activity,,,"Dublin Street, Queenstown",-45.0323337,168.6701979,,,,,OpenStreetMap,https://www.openstreetmap.org/way/794724016,public
+earnslaw-park,Earnslaw Park,activity,,,"69 Beach Street, Queenstown",-45.0327652,168.6586159,,,,,OpenStreetMap,https://www.openstreetmap.org/way/211230100,public
+earnslaw-reserve,Earnslaw Reserve,activity,,,"26 Earnslaw Terrace, Queenstown",-45.0331924,168.6772815,,,,,OpenStreetMap,https://www.openstreetmap.org/way/794724046,public
 escape-quest-queenstown,Escape Quest Queenstown,activity,,,32 Rees Street,-45.0319936,168.65921,Mo-Su 10:00-20:30,+64 3 442 4948,https://www.escapequest.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/6294683397,public
-falcon-nest,falcon nest,activity,,,Queenstown,-45.0389456,168.5850323,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5394459321,public
+falcon-nest,falcon nest,activity,,,Moke Lake Road,-45.0389456,168.5850323,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5394459321,public
 fear-factory,Fear Factory,activity,,,54 Shotover Street,-45.0322201,168.6585832,Mo-Su 11:00-23:00,+64 3 442 8666,https://fearfactory.co.nz/queenstown/,,OpenStreetMap,https://www.openstreetmap.org/node/4790799323,public
-fernhill-reserve,Fernhill Reserve,activity,,,Queenstown,-45.0376351,168.6372769,,,,,OpenStreetMap,https://www.openstreetmap.org/way/596106252,public
-frankton-road-reserve,Frankton Road Reserve,activity,,,Queenstown,-45.0334756,168.6791903,,,,,OpenStreetMap,https://www.openstreetmap.org/way/793738866,public
-gilly-s-point,Gilly's Point,activity,,,Queenstown,-45.0424262,168.6357558,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6787759785,public
-goldfields-reserve,Goldfields Reserve,activity,,,Queenstown,-45.0245881,168.6944141,,,,,OpenStreetMap,https://www.openstreetmap.org/way/386748059,public
-halfway-remarkables,Halfway Remarkables,activity,,,Queenstown,-45.025714,168.7775044,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5664763223,public
-hells-gate,Hells Gate,activity,,,Queenstown,-44.9315235,168.6970724,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8940590626,public
-hobart-street-reserve,Hobart Street Reserve,activity,,,Queenstown,-45.035753,168.6663486,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1433220070,public
-ifly-indoor-skydiving,IFly Indoor Skydiving,activity,,,Queenstown,-45.0299015,168.6577527,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10206750486,public
-ithilien-lookout,Ithilien Lookout,activity,,,Queenstown,-45.0694723,168.5411483,,,,,OpenStreetMap,https://www.openstreetmap.org/node/13687785970,public
-jacks-point,Jacks Point,activity,,,Queenstown,-45.0770716,168.7253113,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6456663288,public
+fernhill-reserve,Fernhill Reserve,activity,,,"122 Fernhill Road, Queenstown",-45.0376351,168.6372769,,,,,OpenStreetMap,https://www.openstreetmap.org/way/596106252,public
+frankton-road-reserve,Frankton Road Reserve,activity,,,"11 Maxwell Place, Queenstown",-45.0334756,168.6791903,,,,,OpenStreetMap,https://www.openstreetmap.org/way/793738866,public
+gilly-s-point,Gilly's Point,activity,,,"Glenorchy Queenstown Road, Queenstown",-45.0424262,168.6357558,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6787759785,public
+goldfields-reserve,Goldfields Reserve,activity,,,"Goldfield Heights, Queenstown",-45.0245881,168.6944141,,,,,OpenStreetMap,https://www.openstreetmap.org/way/386748059,public
+halfway-remarkables,Halfway Remarkables,activity,,,Remarkables Ski Field Access Road,-45.025714,168.7775044,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5664763223,public
+hells-gate,Hells Gate,activity,,,Skippers Road,-44.9315235,168.6970724,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8940590626,public
+hobart-street-reserve,Hobart Street Reserve,activity,,,"70 Park Street, Queenstown",-45.035753,168.6663486,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1433220070,public
+ifly-indoor-skydiving,IFly Indoor Skydiving,activity,,,"Brecon Street, Queenstown",-45.0299015,168.6577527,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10206750486,public
+ithilien-lookout,Ithilien Lookout,activity,,,Glenorchy Queenstown Road,-45.0694723,168.5411483,,,,,OpenStreetMap,https://www.openstreetmap.org/node/13687785970,public
+jacks-point,Jacks Point,activity,,,"Jacks Point Track, Queenstown",-45.0770716,168.7253113,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6456663288,public
 jardine-park,Jardine Park,activity,,,Queenstown,-45.0461954,168.6926613,,,,,OpenStreetMap,https://www.openstreetmap.org/way/30490708,public
 jubilee-park,Jubilee Park,activity,,,Queenstown,-45.0362645,168.6714845,,,,,OpenStreetMap,https://www.openstreetmap.org/way/386748069,public
-kiln-ruins,Kiln ruins,activity,,,Queenstown,-45.0745903,168.5250494,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1225257618,public
-lookout-viewpoint,Lookout Viewpoint,activity,,,Queenstown,-45.0578571,168.8006837,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6295277685,public
-marine-parade-reserve,Marine Parade Reserve,activity,,,Queenstown,-45.0339126,168.6617768,,,,,OpenStreetMap,https://www.openstreetmap.org/way/246150748,public
+kiln-ruins,Kiln ruins,activity,,,Haast Eagle Road,-45.0745903,168.5250494,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1225257618,public
+lookout-viewpoint,Lookout Viewpoint,activity,,,Remarkables Ski Field Access Road,-45.0578571,168.8006837,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6295277685,public
+marine-parade-reserve,Marine Parade Reserve,activity,,,"Earl Street, Queenstown",-45.0339126,168.6617768,,,,,OpenStreetMap,https://www.openstreetmap.org/way/246150748,public
 matakauri-park,Matakauri Park,activity,,,Queenstown,-45.0154938,168.6681995,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1433220538,public
-o-regans-park,O'Regans Park,activity,,,Queenstown,-45.0338011,168.6566125,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1289605193,public
-old-power-house,Old power house,activity,,,Queenstown,-45.0363599,168.644546,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5367488943,public
-onsen-hot-pools,Onsen Hot Pools,activity,,,Queenstown,-44.9809952,168.6854275,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4529883996,public
-oxenbridge-tunnel-lookout,Oxenbridge Tunnel lookout,activity,,,Queenstown,-44.9810813,168.6645067,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11572176436,public
-paddy-burton-memorial-park,Paddy Burton Memorial Park,activity,,,Queenstown,-45.0342337,168.6688358,,,,,OpenStreetMap,https://www.openstreetmap.org/way/340308237,public
-paragliding-spot,Paragliding Spot,activity,,,Queenstown,-45.0238764,168.6440883,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6431939885,public
-park-street-reserve,Park Street Reserve,activity,,,Queenstown,-45.0365715,168.6643959,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1433220072,public
-park-street-reserve-2,Park Street Reserve,activity,,,Queenstown,-45.0363263,168.6701282,,,,,OpenStreetMap,https://www.openstreetmap.org/way/792425894,public
-queenstown-hill-viewpoint,Queenstown Hill Viewpoint,activity,,,Queenstown,-45.0190663,168.676815,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4599077689,public
-queenstown-hill-viewpoint-2,Queenstown Hill Viewpoint,activity,,,Queenstown,-45.0232716,168.6751918,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4599086491,public
+o-regans-park,O'Regans Park,activity,,,"105A Beach Street, Queenstown",-45.0338011,168.6566125,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1289605193,public
+old-power-house,Old power house,activity,,,"Thompson Street, Queenstown",-45.0363599,168.644546,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5367488943,public
+onsen-hot-pools,Onsen Hot Pools,activity,,,"Powder Terrace, Arthurs Point",-44.9809952,168.6854275,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4529883996,public
+oxenbridge-tunnel-lookout,Oxenbridge Tunnel lookout,activity,,,"Oxenbridge Tunnel Track, Arthurs Point",-44.9810813,168.6645067,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11572176436,public
+paddy-burton-memorial-park,Paddy Burton Memorial Park,activity,,,"57 Frankton Road, Queenstown",-45.0342337,168.6688358,,,,,OpenStreetMap,https://www.openstreetmap.org/way/340308237,public
+paragliding-spot,Paragliding Spot,activity,,,"Skyline Loop Track, Queenstown",-45.0238764,168.6440883,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6431939885,public
+park-street-reserve,Park Street Reserve,activity,,,"50 Park Street, Queenstown",-45.0365715,168.6643959,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1433220072,public
+park-street-reserve-2,Park Street Reserve,activity,,,"106 Park Street, Queenstown",-45.0363263,168.6701282,,,,,OpenStreetMap,https://www.openstreetmap.org/way/792425894,public
+queenstown-hill-viewpoint,Queenstown Hill Viewpoint,activity,,,"Queenstown Hill Walkway, Queenstown",-45.0190663,168.676815,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4599077689,public
+queenstown-hill-viewpoint-2,Queenstown Hill Viewpoint,activity,,,"Queenstown Hill Walkway, Queenstown",-45.0232716,168.6751918,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4599086491,public
 queenstown-ice-arena,Queenstown Ice Arena,activity,,,29 Park Street,-45.037524,168.6616613,Su-Th 10:00-17:00; Fr-Sa 10:00-21:30,+64 3 441 8000,https://queenstownicearena.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4782025022,public
-queenstown-recreation-ground,Queenstown Recreation Ground,activity,,,Queenstown,-45.0289022,168.6603143,,,,,OpenStreetMap,https://www.openstreetmap.org/way/96555732,public
+queenstown-recreation-ground,Queenstown Recreation Ground,activity,,,"Templeton Way, Queenstown",-45.0289022,168.6603143,,,,,OpenStreetMap,https://www.openstreetmap.org/way/96555732,public
 queenstown-skyline-gondola,Queenstown Skyline Gondola,activity,,,"53 Brecon Street, Queenstown",-45.0283189,168.6561289,,+64 3 441 0101,https://www.skyline.co.nz/en/queenstown/things-to-do/skyline-gondola-queenstown/,,OpenStreetMap,https://www.openstreetmap.org/way/30471675,public
-richmond-park,Richmond Park,activity,,,Queenstown,-45.0063969,168.7794874,,,,,OpenStreetMap,https://www.openstreetmap.org/way/846377565,public
-rolands-rock,Rolands Rock,activity,,,Queenstown,-45.0209455,168.6772411,,,,,OpenStreetMap,https://www.openstreetmap.org/node/7441275059,public
-rosarium,Rosarium,activity,,,Queenstown,-45.03849,168.6587881,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5476764621,public
+richmond-park,Richmond Park,activity,,,"14 Jones Avenue, Queenstown",-45.0063969,168.7794874,,,,,OpenStreetMap,https://www.openstreetmap.org/way/846377565,public
+rolands-rock,Rolands Rock,activity,,,"Queenstown Hill Walkway, Queenstown",-45.0209455,168.6772411,,,,,OpenStreetMap,https://www.openstreetmap.org/node/7441275059,public
+rosarium,Rosarium,activity,,,"Park Shared Path, Queenstown",-45.03849,168.6587881,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5476764621,public
 saint-omer-park,Saint Omer Park,activity,,,Queenstown,-45.0363309,168.6511815,,,,,OpenStreetMap,https://www.openstreetmap.org/way/192565788,public
-seven-mile-point,Seven Mile Point,activity,,,Queenstown,-45.0572796,168.5908186,,,,,OpenStreetMap,https://www.openstreetmap.org/node/270071264,public
-shotover-jet,Shotover Jet,activity,,,Queenstown,-44.9871269,168.671366,,,https://www.shotoverjet.com/,,OpenStreetMap,https://www.openstreetmap.org/way/95842445,public
-site-of-old-chinese-camp,Site of old chinese camp,activity,,,Queenstown,-45.0466859,168.5295169,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1225271356,public
-skyline-luge-queenstown,Skyline Luge Queenstown,activity,,,Queenstown,-45.0264279,168.64924,,,,,OpenStreetMap,https://www.openstreetmap.org/way/30471680,public
-sluiced-canyon,Sluiced Canyon,activity,,,Queenstown,-45.0507962,168.531775,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839305176,public
-stone-ruins,Stone ruins,activity,,,Queenstown,-44.9660982,168.641748,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1225215925,public
-sugar-loaf,Sugar Loaf,activity,,,Queenstown,-44.9968054,168.701812,,,,,OpenStreetMap,https://www.openstreetmap.org/node/3008564150,public
-sunshine-bay,Sunshine bay,activity,,,Queenstown,-45.048111,168.6226091,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4930971222,public
-sunshine-bay-track,Sunshine Bay Track,activity,,,Queenstown,-45.0474356,168.6233568,,,,,OpenStreetMap,https://www.openstreetmap.org/node/7802340085,public
-the-ledge-bungy-swing,The Ledge Bungy & Swing,activity,,,Queenstown,-45.0269795,168.6497584,,,https://www.bungy.co.nz/queenstown/ledge/,,OpenStreetMap,https://www.openstreetmap.org/node/4731524323,public
-thompson-s-hill,Thompson's Hill,activity,,,Queenstown,-45.00123,168.8454464,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6460441086,public
-tyne-s-lookout,Tyne’s Lookout,activity,,,Queenstown,-45.0193255,168.6448979,,,,,OpenStreetMap,https://www.openstreetmap.org/node/7123380185,public
-village-green,Village Green,activity,,,Queenstown,-45.0314068,168.6617936,,,,,OpenStreetMap,https://www.openstreetmap.org/way/211230099,public
-warg-attack-lotr,Warg Attack (LotR),activity,,,Queenstown,-45.0409137,168.7276817,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11762883271,public
+seven-mile-point,Seven Mile Point,activity,,,"Glenorchy Queenstown Road, Queenstown",-45.0572796,168.5908186,,,,,OpenStreetMap,https://www.openstreetmap.org/node/270071264,public
+shotover-jet,Shotover Jet,activity,,,"Oxenbridge Tunnel Road, Arthurs Point",-44.9871269,168.671366,,,https://www.shotoverjet.com/,,OpenStreetMap,https://www.openstreetmap.org/way/95842445,public
+site-of-old-chinese-camp,Site of old chinese camp,activity,,,Mt Crichton Loop Track,-45.0466859,168.5295169,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1225271356,public
+skyline-luge-queenstown,Skyline Luge Queenstown,activity,,,"Skyline Road, Queenstown",-45.0264279,168.64924,,,,,OpenStreetMap,https://www.openstreetmap.org/way/30471680,public
+sluiced-canyon,Sluiced Canyon,activity,,,Mt Crichton Loop Track,-45.0507962,168.531775,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839305176,public
+stone-ruins,Stone ruins,activity,,,"Moonlight Track, Arthurs Point",-44.9660982,168.641748,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1225215925,public
+sugar-loaf,Sugar Loaf,activity,,,"Shotover Gorge Trail, Arthurs Point",-44.9968054,168.701812,,,,,OpenStreetMap,https://www.openstreetmap.org/node/3008564150,public
+sunshine-bay,Sunshine bay,activity,,,"Glenorchy Queenstown Road, Queenstown",-45.048111,168.6226091,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4930971222,public
+sunshine-bay-track,Sunshine Bay Track,activity,,,"Glenorchy Queenstown Road, Queenstown",-45.0474356,168.6233568,,,,,OpenStreetMap,https://www.openstreetmap.org/node/7802340085,public
+the-ledge-bungy-swing,The Ledge Bungy & Swing,activity,,,"Skyline Road, Queenstown",-45.0269795,168.6497584,,,https://www.bungy.co.nz/queenstown/ledge/,,OpenStreetMap,https://www.openstreetmap.org/node/4731524323,public
+thompson-s-hill,Thompson's Hill,activity,,,Twin Rivers Trail,-45.00123,168.8454464,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6460441086,public
+tyne-s-lookout,Tyne’s Lookout,activity,,,"Pandemic, Queenstown",-45.0193255,168.6448979,,,,,OpenStreetMap,https://www.openstreetmap.org/node/7123380185,public
+village-green,Village Green,activity,,,"Ballarat Street, Queenstown",-45.0314068,168.6617936,,,,,OpenStreetMap,https://www.openstreetmap.org/way/211230099,public
+warg-attack-lotr,Warg Attack (LotR),activity,,,"Deer Park Road, Queenstown",-45.0409137,168.7276817,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11762883271,public
 warren-park,Warren Park,activity,,,Queenstown,-45.0239142,168.6604721,,,,,OpenStreetMap,https://www.openstreetmap.org/way/30471838,public
-windy-point,Windy Point,activity,,,Queenstown,-45.0254272,168.7699168,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4803620121,public
-1876,1876,bar,,,Queenstown,-45.0314702,168.6626163,,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476856,public
-atlas-beer-cafe,Atlas Beer Cafe,bar,,,Queenstown,-45.0334297,168.6573215,,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476834,public
+windy-point,Windy Point,activity,,,Remarkables Ski Field Access Road,-45.0254272,168.7699168,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4803620121,public
+1876,1876,bar,,,"Ballarat Street, Queenstown",-45.0314702,168.6626163,,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476856,public
+atlas-beer-cafe,Atlas Beer Cafe,bar,,,"Beach Street, Queenstown",-45.0334297,168.6573215,,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476834,public
 bardeaux,Bardeaux,bar,,,"Eureka Arcade off The Mall, Queenstown",-45.032602,168.6609886,"Mo-Th 17:00-00:00; Fr,Sa 16:00-00:00",,https://www.remarkablehospo.co.nz/bardeaux,,OpenStreetMap,https://www.openstreetmap.org/node/4780375725,public
-barmuda,Barmuda,bar,,,Queenstown,-45.0323348,168.6613509,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780356224,public
-beech-tree-craft-beer-and-wings,Beech Tree - craft beer and wings,bar,,,Queenstown,-45.0314567,168.660159,,,,,OpenStreetMap,https://www.openstreetmap.org/node/7252056185,public
-below-zero-ice-bar,Below Zero Ice Bar,bar,,,Queenstown,-45.0325199,168.6614006,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780375922,public
+barmuda,Barmuda,bar,,,"Searle Lane, Queenstown",-45.0323348,168.6613509,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780356224,public
+beech-tree-craft-beer-and-wings,Beech Tree - craft beer and wings,bar,,,"Beach Street, Queenstown",-45.0314567,168.660159,,,,,OpenStreetMap,https://www.openstreetmap.org/node/7252056185,public
+below-zero-ice-bar,Below Zero Ice Bar,bar,,,"Searle Lane, Queenstown",-45.0325199,168.6614006,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780375922,public
 bungalow,Bungalow,bar,,,"26 Camp Street, Queenstown",-45.031607,168.6612462,Mo-Su 17:00-04:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/5616392287,public
-cowboy-s-queenstown,Cowboy's Queenstown,bar,,,Queenstown,-45.0324258,168.6615286,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780357527,public
-frankton-alehouse,Frankton Alehouse,bar,,,Queenstown,-45.0161226,168.7313233,,,,,OpenStreetMap,https://www.openstreetmap.org/node/776024836,public
+cowboy-s-queenstown,Cowboy's Queenstown,bar,,,"Searle Lane, Queenstown",-45.0324258,168.6615286,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780357527,public
+frankton-alehouse,Frankton Alehouse,bar,,,"Kawarau Road, Frankton",-45.0161226,168.7313233,,,,,OpenStreetMap,https://www.openstreetmap.org/node/776024836,public
 frankton-arm-tavern,Frankton Arm Tavern,bar,,,"14 Yewlette Crescent, Frankton",-45.0176424,168.7274076,Mo-Su 10:00-23:00,+64 3 422 2099,,,OpenStreetMap,https://www.openstreetmap.org/node/4704311991,public
-gantley-s-tavern,Gantley's Tavern,bar,,,Queenstown,-44.9798974,168.6868852,,,https://gantleystavern.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/way/982909702,public
-habana,Habana,bar,,,Queenstown,-45.0324633,168.6612794,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780376023,public
-ice-bar,Ice Bar,bar,,,Queenstown,-45.0616804,168.8215008,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11118425345,public
-little-mez,Little Mez,bar,,,Queenstown,-45.0320434,168.6607678,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10610387205,public
-loco,Loco,bar,,,Queenstown,-45.0318911,168.6585658,,,,,OpenStreetMap,https://www.openstreetmap.org/node/3475246413,public
+gantley-s-tavern,Gantley's Tavern,bar,,,"172 Arthurs Point Road, Queenstown",-44.9798974,168.6868852,,,https://gantleystavern.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/way/982909702,public
+habana,Habana,bar,,,"Searle Lane, Queenstown",-45.0324633,168.6612794,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780376023,public
+ice-bar,Ice Bar,bar,,,Lake Alta Track,-45.0616804,168.8215008,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11118425345,public
+little-mez,Little Mez,bar,,,"Cow Lane, Queenstown",-45.0320434,168.6607678,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10610387205,public
+loco,Loco,bar,,,"Shotover Street, Queenstown",-45.0318911,168.6585658,,,,,OpenStreetMap,https://www.openstreetmap.org/node/3475246413,public
 minus-5-ice-bar,Minus 5 ICE BAR,bar,,,Beach Street,-45.0333771,168.6578301,Mo-Su 14:00-23:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/7011901485,public
 perky-s-floating-bar,Perky's Floating Bar,bar,,,Lake Wakatipu,-45.0329379,168.6593119,Mo-Su 12:00-23:00,,https://www.perkys.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/6107946386,public
-pig-and-whistle,Pig and Whistle,bar,,,Queenstown,-45.0315646,168.6624194,,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476859,public
-pog-mahones,Pog Mahones,bar,,,Queenstown,-45.0325094,168.6597239,Mo-Su 11:30-02:30,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476830,public
-pub-on-the-wharf,Pub on the Wharf,bar,,,Queenstown,-45.0330389,168.658017,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4213666392,public
-queenstown-ice-bar,Queenstown Ice Bar,bar,,,Queenstown,-45.0296263,168.6570548,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11964041823,public
-rodd-gunn-the-lodge,Rodd & Gunn The Lodge,bar,,,Queenstown,-45.0325804,168.6599084,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6051483382,public
+pig-and-whistle,Pig and Whistle,bar,,,"Ballarat Street, Queenstown",-45.0315646,168.6624194,,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476859,public
+pog-mahones,Pog Mahones,bar,,,"Rees Street, Queenstown",-45.0325094,168.6597239,Mo-Su 11:30-02:30,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476830,public
+pub-on-the-wharf,Pub on the Wharf,bar,,,"Beach Street, Queenstown",-45.0330389,168.658017,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4213666392,public
+queenstown-ice-bar,Queenstown Ice Bar,bar,,,"Brecon Street, Queenstown",-45.0296263,168.6570548,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11964041823,public
+rodd-gunn-the-lodge,Rodd & Gunn The Lodge,bar,,,"Rees Street, Queenstown",-45.0325804,168.6599084,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6051483382,public
 searchlight-brewery,Searchlight Brewery,bar,,,12 Industrial Place,-45.0179643,168.6623348,,,https://www.searchlightbrewery.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/11966238878,public
-smiths-craft-beer-pub,Smiths Craft Beer Pub,bar,,,Queenstown,-45.0320789,168.6581874,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11111046658,public
-speights-ale-house,Speights Ale House,bar,,,Queenstown,-45.0310598,168.6623415,,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476107,public
-the-ballarat-trading-co,The Ballarat Trading Co,bar,,,Queenstown,-45.0326327,168.6608302,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780375923,public
-the-bunker,The Bunker,bar,,,Queenstown,-45.0321761,168.6605125,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963847278,public
+smiths-craft-beer-pub,Smiths Craft Beer Pub,bar,,,"57 Shotover Street, Queenstown",-45.0320789,168.6581874,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11111046658,public
+speights-ale-house,Speights Ale House,bar,,,"Ballarat Street, Queenstown",-45.0310598,168.6623415,,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476107,public
+the-ballarat-trading-co,The Ballarat Trading Co,bar,,,"Queenstown Mall, Queenstown",-45.0326327,168.6608302,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780375923,public
+the-bunker,The Bunker,bar,,,"Cow Lane, Queenstown",-45.0321761,168.6605125,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963847278,public
 the-crown-pub-and-beer-garden,The Crown Pub and Beer Garden,bar,,,"3 Murchison Road, Frankton",-45.0142668,168.7435451,,,,,OpenStreetMap,https://www.openstreetmap.org/way/963209061,public
-the-dirty-nugget,The Dirty Nugget,bar,,,Queenstown,-44.9773022,168.61153,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1069162780,public
-the-locker-room-sports-bar,The Locker Room Sports Bar,bar,,,Queenstown,-45.0314371,168.658569,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11962203472,public
-the-london,The London,bar,,,Queenstown,-45.0315388,168.6598126,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4950161521,public
-the-sundeck-rooftop-bar,The Sundeck Rooftop Bar,bar,,,Queenstown,-45.0324931,168.6604495,Mo-Su 15:00-00:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/10610387105,public
-whakatipu-brewing-co,Whakatipu Brewing Co.,bar,,,Queenstown,-45.0319081,168.6600816,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10600420405,public
-zaphyr,Zaphyr,bar,,,Queenstown,-45.0328007,168.6609932,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6781923086,public
-airspresso,Airspresso,cafe,,,Queenstown,-45.0214421,168.739509,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12018616295,public
+the-dirty-nugget,The Dirty Nugget,bar,,,Moke Lake Road,-44.9773022,168.61153,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1069162780,public
+the-locker-room-sports-bar,The Locker Room Sports Bar,bar,,,"Brecon Street, Queenstown",-45.0314371,168.658569,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11962203472,public
+the-london,The London,bar,,,"Shotover Street, Queenstown",-45.0315388,168.6598126,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4950161521,public
+the-sundeck-rooftop-bar,The Sundeck Rooftop Bar,bar,,,"Queenstown Mall, Queenstown",-45.0324931,168.6604495,Mo-Su 15:00-00:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/10610387105,public
+whakatipu-brewing-co,Whakatipu Brewing Co.,bar,,,"Cow Lane, Queenstown",-45.0319081,168.6600816,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10600420405,public
+zaphyr,Zaphyr,bar,,,"Searle Lane, Queenstown",-45.0328007,168.6609932,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6781923086,public
+airspresso,Airspresso,cafe,,,"Sir Henry Wigley Drive, Frankton",-45.0214421,168.739509,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12018616295,public
 anita-gelato,ANITA GELATO,cafe,,,"35 Brecon Street, Queenstown",-45.0297022,168.6570866,Mo-Su 10:00-22:00,+64 3 441 3260,https://www.anita-gelato.com/nz/our-locations/queenstown-brecon-street/,,OpenStreetMap,https://www.openstreetmap.org/node/5616389858,public
-ayrburn-diary,Ayrburn Diary,cafe,,,Queenstown,-44.9569693,168.8121474,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1393511379,public
+ayrburn-diary,Ayrburn Diary,cafe,,,"2 William Paterson Close, Millbrook",-44.9569693,168.8121474,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1393511379,public
 balls-and-bangles,Balls and Bangles,cafe,,,"62 Shotover Street, Queenstown",-45.0323883,168.6582,Mo-Su 07:30-18:00,+6434427999,https://www.ballsandbangles.com,,OpenStreetMap,https://www.openstreetmap.org/node/4782055322,public
-bean-around-the-world,Bean Around the World,cafe,,,Queenstown,-45.0309211,168.6617811,Mo-Fr 07:00-15:30,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476118,public
-cafe-coffee,cafe / coffee,cafe,,,Queenstown,-45.0159437,168.7310643,,,,,OpenStreetMap,https://www.openstreetmap.org/node/776026075,public
-cafe-society-5milequeenstown,Cafe Society 5MileQueenstown,cafe,,,Queenstown,-45.0130942,168.7424867,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4582151896,public
-cauello,Cauello,cafe,,,Queenstown,-44.9875462,168.6721615,,,,,OpenStreetMap,https://www.openstreetmap.org/way/95842444,public
-cookie-bar,Cookie Bar,cafe,,,Queenstown,-45.031973,168.6618416,Mo-Fr 08:00-22:30; Sa-Su 09:00-22:30,+64 3 442 4891,https://cookiebar.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/10501381262,public
+bean-around-the-world,Bean Around the World,cafe,,,"Athol Street, Queenstown",-45.0309211,168.6617811,Mo-Fr 07:00-15:30,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476118,public
+cafe-coffee,cafe / coffee,cafe,,,"Frankton Road, Frankton",-45.0159437,168.7310643,,,,,OpenStreetMap,https://www.openstreetmap.org/node/776026075,public
+cafe-society-5milequeenstown,Cafe Society 5MileQueenstown,cafe,,,"Grant Road, Frankton",-45.0130942,168.7424867,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4582151896,public
+cauello,Cauello,cafe,,,"Arthurs Point Road, Arthurs Point",-44.9875462,168.6721615,,,,,OpenStreetMap,https://www.openstreetmap.org/way/95842444,public
+cookie-bar,Cookie Bar,cafe,,,"Camp Street, Queenstown",-45.031973,168.6618416,Mo-Fr 08:00-22:30; Sa-Su 09:00-22:30,+64 3 442 4891,https://cookiebar.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/10501381262,public
 drop-cafe,Drop Cafe,cafe,,,"41 Shotover Street, Queenstown",-45.0313093,168.6601077,Mo-Su 07:30-15:00,,https://ilabb.com/pages/icafe,,OpenStreetMap,https://www.openstreetmap.org/node/595476827,public
-eatery-by-frank-s,Eatery by Frank’s,cafe,,,Queenstown,-45.0251528,168.7464959,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145131016,public
-flight-park-cafe,Flight park café,cafe,,,Queenstown,-44.9445261,168.7793112,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6117219216,public
-fuel-to-fly,Fuel to Fly,cafe,,,Queenstown,-45.021851,168.7396664,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12018616300,public
-gong-cha,Gong Cha,cafe,,,Queenstown,-45.031125,168.6606378,12:00-20:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/12336017917,public
-gypsy-oven,Gypsy Oven,cafe,,,Queenstown,-45.0305266,168.6605741,,,,,OpenStreetMap,https://www.openstreetmap.org/way/385509837,public
+eatery-by-frank-s,Eatery by Frank’s,cafe,,,"24 Hawthorne Drive, Queenstown",-45.0251528,168.7464959,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145131016,public
+flight-park-cafe,Flight park café,cafe,,,"Malaghans Road, Millbrook",-44.9445261,168.7793112,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6117219216,public
+fuel-to-fly,Fuel to Fly,cafe,,,"Sir Henry Wigley Drive, Frankton",-45.021851,168.7396664,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12018616300,public
+gong-cha,Gong Cha,cafe,,,"Camp Street, Queenstown",-45.031125,168.6606378,12:00-20:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/12336017917,public
+gypsy-oven,Gypsy Oven,cafe,,,"19 Shotover Street, Queenstown",-45.0305266,168.6605741,,,,,OpenStreetMap,https://www.openstreetmap.org/way/385509837,public
 ivy-lola-kitchen-and-bar,Ivy & Lola Kitchen and Bar,cafe,,,Beach Street,-45.033136,168.6580054,Mo-Su 08:00-21:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/6188631085,public
-life-s-a-grind-espresso,Life's a Grind Espresso,cafe,,,Queenstown,-45.0306711,168.6619081,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963975526,public
-mackenzie-coffee-co,Mackenzie Coffee Co,cafe,,,Queenstown,-45.0321032,168.6600607,,,,,OpenStreetMap,https://www.openstreetmap.org/node/336402470,public
-marmolada-cafe,Marmolada Cafe,cafe,,,Queenstown,-45.0306478,168.6599324,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11964017167,public
+life-s-a-grind-espresso,Life's a Grind Espresso,cafe,,,"Stanley Street, Queenstown",-45.0306711,168.6619081,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963975526,public
+mackenzie-coffee-co,Mackenzie Coffee Co,cafe,,,"Cow Lane, Queenstown",-45.0321032,168.6600607,,,,,OpenStreetMap,https://www.openstreetmap.org/node/336402470,public
+marmolada-cafe,Marmolada Cafe,cafe,,,"Camp Street, Queenstown",-45.0306478,168.6599324,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11964017167,public
 mountain-club,Mountain Club,cafe,,,85 Beach Street,-45.0328423,168.6579036,,,https://mountainclub.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13625630702,public
 mountain-club-2,Mountain Club,cafe,,,85 Beach Street,-45.0328423,168.6579036,Mo-Fr 08:00-18:30,,https://mountainclub.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13625636602,public
-mrs-ferg,Mrs Ferg,cafe,,,Queenstown,-45.0316998,168.6595083,,,https://mrsferg.com/,,OpenStreetMap,https://www.openstreetmap.org/node/4595323090,public
-mrs-ferg-69-beach-st,Mrs Ferg 69 Beach St,cafe,,,Queenstown,-45.0325575,168.6584335,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782003322,public
-odd-saint,odd saint,cafe,,,Queenstown,-45.0326826,168.6627848,,,https://oddsaint.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/3019943056,public
-odelay-cafe,Odelay Cafe,cafe,,,Queenstown,-45.0245775,168.7432915,,,,,OpenStreetMap,https://www.openstreetmap.org/node/7278258985,public
+mrs-ferg,Mrs Ferg,cafe,,,"Shotover Street, Queenstown",-45.0316998,168.6595083,,,https://mrsferg.com/,,OpenStreetMap,https://www.openstreetmap.org/node/4595323090,public
+mrs-ferg-69-beach-st,Mrs Ferg 69 Beach St,cafe,,,"Beach Street, Queenstown",-45.0325575,168.6584335,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782003322,public
+odd-saint,odd saint,cafe,,,"Camp Street, Queenstown",-45.0326826,168.6627848,,,https://oddsaint.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/3019943056,public
+odelay-cafe,Odelay Cafe,cafe,,,"Hawthorne Drive, Frankton",-45.0245775,168.7432915,,,,,OpenStreetMap,https://www.openstreetmap.org/node/7278258985,public
 pantry-by-frank-s,Pantry by Frank's,cafe,,,"Frankton, Queenstown",-45.0262003,168.7466437,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8909669613,public
-patagonia,Patagonia,cafe,,,Queenstown,-45.0217471,168.7397323,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12018616297,public
-patagonia-chocolates-ice-creamery-chocolaterie,Patagonia Chocolates - Ice Creamery & Chocolaterie,cafe,,,Queenstown,-45.0327078,168.6601383,,,https://www.patagoniachocolates.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/5100432821,public
+patagonia,Patagonia,cafe,,,"Sir Henry Wigley Drive, Frankton",-45.0217471,168.7397323,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12018616297,public
+patagonia-chocolates-ice-creamery-chocolaterie,Patagonia Chocolates - Ice Creamery & Chocolaterie,cafe,,,"Rees Street, Queenstown",-45.0327078,168.6601383,,,https://www.patagoniachocolates.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/5100432821,public
 queenstown-cafe,Queenstown Cafe,cafe,,,87 Gorge Road,-45.022504,168.6625821,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12468346055,public
 red-rock-bar-cafe,Red Rock Bar Cafe,cafe,,,48 Camp Street,-45.0306017,168.6598588,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5491245032,public
-starbucks,Starbucks,cafe,,,Queenstown,-45.0318677,168.6616798,Mo-Th 08:00-18:00; Fr-Sa 08:00-19:00; Su 08:00-18:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/776037006,public
+starbucks,Starbucks,cafe,,,"Queenstown Mall, Queenstown",-45.0318677,168.6616798,Mo-Th 08:00-18:00; Fr-Sa 08:00-19:00; Su 08:00-18:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/776037006,public
 the-bakery-queenstown,The Bakery Queenstown,cafe,,,35 Shotover Street,-45.0313237,168.6594865,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6162124386,public
 the-bathhouse,The Bathhouse,cafe,,,"38 Marine Parade, Queenstown",-45.034316,168.662073,Mo-Su 08:00-19:00,+64 3 442 5625,https://bathhouse.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/way/385509850,public
-the-coffee-club,The Coffee Club,cafe,,,Queenstown,-45.0112796,168.7446499,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12001623624,public
-the-coffee-club-2,The Coffee Club,cafe,,,Queenstown,-45.0258754,168.743689,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073029,public
-the-exchange,The Exchange,cafe,,,Queenstown,-45.0316965,168.6621278,,,,,OpenStreetMap,https://www.openstreetmap.org/node/3475246599,public
-the-komunal-cafe-nz,The Komunal Cafe NZ,cafe,,,Queenstown,-45.0229872,168.7466982,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145464648,public
-vudu,Vudu,cafe,,,Queenstown,-45.0324502,168.6596841,,,https://vuducafe.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4782007524,public
+the-coffee-club,The Coffee Club,cafe,,,"Central Street, Frankton",-45.0112796,168.7446499,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12001623624,public
+the-coffee-club-2,The Coffee Club,cafe,,,"Cherry Blossom Avenue, Frankton",-45.0258754,168.743689,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073029,public
+the-exchange,The Exchange,cafe,,,"Ballarat Street, Queenstown",-45.0316965,168.6621278,,,,,OpenStreetMap,https://www.openstreetmap.org/node/3475246599,public
+the-komunal-cafe-nz,The Komunal Cafe NZ,cafe,,,"Red Oaks Drive, Frankton",-45.0229872,168.7466982,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145464648,public
+vudu,Vudu,cafe,,,"Rees Street, Queenstown",-45.0324502,168.6596841,,,https://vuducafe.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4782007524,public
 yonder,Yonder,cafe,,,"14 Church Street, Queenstown",-45.0330132,168.6616803,Mo-Su 08:00-02:30,+64 3 409 0994,https://www.yonderqt.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/5312523825,public
-awanui-labs,Awanui Labs,facility,medical,,Queenstown,-45.0163885,168.7311346,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863850705,public
-bobs-cove,Bobs Cove,facility,parking,,Queenstown,-45.0699913,168.5088914,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1352489780,public
-boundary-street-car-park,Boundary Street Car Park,facility,parking,,Queenstown,-45.0282099,168.6611147,,,,,OpenStreetMap,https://www.openstreetmap.org/way/153510066,public
-brecon-street-carpark,Brecon Street Carpark,facility,parking,,Queenstown,-45.0288049,168.6571624,,,,,OpenStreetMap,https://www.openstreetmap.org/way/153510074,public
-bus-coach,Bus/Coach,facility,parking,,Queenstown,-45.0280134,168.6559547,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1449630193,public
-cardrona-x-treble-cone-queenstown,Cardrona X Treble Cone Queenstown,facility,information,,Queenstown,-45.0308039,168.6601704,Jun-Oct: Mo-Su 07:00-21:00,,https://www.cardrona.com,,OpenStreetMap,https://www.openstreetmap.org/node/8934335841,public
-carpark-1,Carpark 1,facility,parking,,Queenstown,-44.9272468,168.7343954,,,,,OpenStreetMap,https://www.openstreetmap.org/way/297323777,public
-carpark-2,Carpark 2,facility,parking,,Queenstown,-44.9275806,168.7322186,,,,,OpenStreetMap,https://www.openstreetmap.org/way/297323778,public
-carpark-3,Carpark 3,facility,parking,,Queenstown,-44.927894,168.7328027,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1300657513,public
-carpark-4,Carpark 4,facility,parking,,Queenstown,-44.9284459,168.7357387,,,,,OpenStreetMap,https://www.openstreetmap.org/way/949520988,public
-carpark-5,Carpark 5,facility,parking,,Queenstown,-44.9284797,168.7321942,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1300657512,public
-carpark-6,Carpark 6,facility,parking,,Queenstown,-44.9288934,168.731421,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1300657511,public
-carpark-7,Carpark 7,facility,parking,,Queenstown,-44.9314931,168.7253263,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1300657510,public
+awanui-labs,Awanui Labs,facility,medical,,"Gray Street, Frankton",-45.0163885,168.7311346,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863850705,public
+bobs-cove,Bobs Cove,facility,parking,,Bobs Cove Track,-45.0699913,168.5088914,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1352489780,public
+boundary-street-car-park,Boundary Street Car Park,facility,parking,,"5 Boundary Street, Queenstown",-45.0282099,168.6611147,,,,,OpenStreetMap,https://www.openstreetmap.org/way/153510066,public
+brecon-street-carpark,Brecon Street Carpark,facility,parking,,"Brecon Street, Queenstown",-45.0288049,168.6571624,,,,,OpenStreetMap,https://www.openstreetmap.org/way/153510074,public
+bus-coach,Bus/Coach,facility,parking,,"Hammy's Track, Queenstown",-45.0280134,168.6559547,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1449630193,public
+cardrona-x-treble-cone-queenstown,Cardrona X Treble Cone Queenstown,facility,information,,"Camp Street, Queenstown",-45.0308039,168.6601704,Jun-Oct: Mo-Su 07:00-21:00,,https://www.cardrona.com,,OpenStreetMap,https://www.openstreetmap.org/node/8934335841,public
+carpark-1,Carpark 1,facility,parking,,Coronet Peak Road,-44.9272468,168.7343954,,,,,OpenStreetMap,https://www.openstreetmap.org/way/297323777,public
+carpark-2,Carpark 2,facility,parking,,Coronet Peak Road,-44.9275806,168.7322186,,,,,OpenStreetMap,https://www.openstreetmap.org/way/297323778,public
+carpark-3,Carpark 3,facility,parking,,Coronet Peak Road,-44.927894,168.7328027,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1300657513,public
+carpark-4,Carpark 4,facility,parking,,Coronet Peak Road,-44.9284459,168.7357387,,,,,OpenStreetMap,https://www.openstreetmap.org/way/949520988,public
+carpark-5,Carpark 5,facility,parking,,Coronet Peak Road,-44.9284797,168.7321942,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1300657512,public
+carpark-6,Carpark 6,facility,parking,,Coronet Peak Road,-44.9288934,168.731421,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1300657511,public
+carpark-7,Carpark 7,facility,parking,,Rude Rock,-44.9314931,168.7253263,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1300657510,public
 chemist-warehouse,Chemist Warehouse,facility,medical,,"32 Rees Street, Queenstown",-45.0320224,168.6591592,Mo-Su 08:00-22:00,+64 3 568 0931,https://www.chemistwarehouse.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13052478761,public
 coronet-peak-the-remarkables-snow-centre-rentals,Coronet Peak & The Remarkables Snow Centre & Rentals,facility,information,,"25 Shotover Street, Queenstown",-45.0308196,168.6601497,Mo-Su 07:00-18:00,,https://www.skiqueenstown.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13030805562,public
-doc-visitor-centre,DOC Visitor Centre,facility,information,,Queenstown,-45.0476116,168.5315905,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839323918,public
-doc-visitor-centre-2,DOC Visitor Centre,facility,information,,Queenstown,-45.0661555,168.5330603,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839324321,public
-doc-visitor-centre-3,DOC Visitor Centre,facility,information,,Queenstown,-45.0676342,168.5347323,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839324322,public
-doc-visitor-centre-4,DOC Visitor Centre,facility,information,,Queenstown,-45.0669858,168.5367898,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839324324,public
-doc-visitor-centre-5,DOC Visitor Centre,facility,information,,Queenstown,-45.0661089,168.5332033,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839324325,public
-doc-visitor-centre-6,DOC Visitor Centre,facility,information,,Queenstown,-45.0700112,168.5086412,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839325652,public
-earnslaw-park-toilets,Earnslaw Park Toilets,facility,toilet,,Queenstown,-45.032592,168.6590129,,,,,OpenStreetMap,https://www.openstreetmap.org/way/442158771,public
+doc-visitor-centre,DOC Visitor Centre,facility,information,,Mt Crichton Loop Track,-45.0476116,168.5315905,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839323918,public
+doc-visitor-centre-2,DOC Visitor Centre,facility,information,,Mt Crichton Loop Track,-45.0661555,168.5330603,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839324321,public
+doc-visitor-centre-3,DOC Visitor Centre,facility,information,,Mt Crichton Loop Track,-45.0676342,168.5347323,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839324322,public
+doc-visitor-centre-4,DOC Visitor Centre,facility,information,,Mt Crichton Loop Track,-45.0669858,168.5367898,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839324324,public
+doc-visitor-centre-5,DOC Visitor Centre,facility,information,,Mt Crichton Loop Track,-45.0661089,168.5332033,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839324325,public
+doc-visitor-centre-6,DOC Visitor Centre,facility,information,,Bobs Cove Track,-45.0700112,168.5086412,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4839325652,public
+earnslaw-park-toilets,Earnslaw Park Toilets,facility,toilet,,"Beach Street, Queenstown",-45.032592,168.6590129,,,,,OpenStreetMap,https://www.openstreetmap.org/way/442158771,public
 five-mile-pharmacy,Five Mile Pharmacy,facility,medical,,"8/32 Grant Road, Frankton",-45.013241,168.7423173,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4582158289,public
 frankton-library,Frankton Library,facility,library,,"Hawthorne Drive, Frankton, Queenstown",-45.0249672,168.746854,,+64 3 441 3680,,,OpenStreetMap,https://www.openstreetmap.org/way/963192534,public
-gorge-road-car-park,Gorge Road Car Park,facility,parking,,Queenstown,-45.017396,168.6631027,,,,,OpenStreetMap,https://www.openstreetmap.org/way/207114293,public
+gorge-road-car-park,Gorge Road Car Park,facility,parking,,"Big Dirt Jump Line, Queenstown",-45.017396,168.6631027,,,,,OpenStreetMap,https://www.openstreetmap.org/way/207114293,public
 howards-drive-carpark,Howards Drive Carpark,facility,parking,,Howards Drive,-44.9986452,168.7830309,,,,,OpenStreetMap,https://www.openstreetmap.org/node/13921803880,public
-lakes-district-hospital,Lakes District Hospital,facility,medical,,Queenstown,-45.0230052,168.7356688,,,,,OpenStreetMap,https://www.openstreetmap.org/way/237661797,public
-latrine,Latrine,facility,toilet,,Queenstown,-45.0024593,168.6285689,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12464279244,public
+lakes-district-hospital,Lakes District Hospital,facility,medical,,"20 Douglas Street, Queenstown",-45.0230052,168.7356688,,,,,OpenStreetMap,https://www.openstreetmap.org/way/237661797,public
+latrine,Latrine,facility,toilet,,"Ben Lomond Track, Queenstown",-45.0024593,168.6285689,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12464279244,public
 life-pharmacy,Life Pharmacy,facility,medical,,"Rees Street, Queenstown",-45.032518,168.6603331,Mo-Su 08:30-22:00,+64 3 442 7313,https://www.wilkinsonspharmacy.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/336424631,public
-physio,Physio,facility,medical,,Queenstown,-45.0150404,168.7312706,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863850905,public
+physio,Physio,facility,medical,,"Frankton Road, Frankton",-45.0150404,168.7312706,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863850905,public
 queenstown-lakes-district-library,Queenstown Lakes District Library,facility,library,,10 Gorge Road,-45.0292169,168.6615695,"Mo-We, Fr 09:00-17:30; Th 09:00-19:00; Sa 10:00-17:00",+64 3 441 0600,https://libraries.codc-qldc.govt.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/595478693,public
 queenstown-medical-centre,Queenstown Medical Centre,facility,medical,,"9 Isle Street, Queenstown",-45.0299233,168.6582531,,,https://www.qmc.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4650574489,public
-queenstown-oral-maxillofacial-surgery,Queenstown Oral & Maxillofacial Surgery,facility,medical,,Queenstown,-45.0273007,168.7443333,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145130807,public
-queenstown-pharmacy,Queenstown Pharmacy,facility,medical,,Queenstown,-45.0300331,168.6580866,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4820023721,public
+queenstown-oral-maxillofacial-surgery,Queenstown Oral & Maxillofacial Surgery,facility,medical,,"Cherry Blossom Avenue, Frankton",-45.0273007,168.7443333,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145130807,public
+queenstown-pharmacy,Queenstown Pharmacy,facility,medical,,"Isle Street, Queenstown",-45.0300331,168.6580866,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4820023721,public
 queenstown-visitor-centre,Queenstown Visitor Centre,facility,information,,50 Stanley Street,-45.0308193,168.6621511,Mo-Su 08:30-16:30,,,,OpenStreetMap,https://www.openstreetmap.org/node/4619155090,public
 queenstown-visitor-information,Queenstown Visitor Information,facility,information,,"22 Shotover Street, Queenstown",-45.0307986,168.660198,Mo-Su 08:30-20:30,+64 3 442 4100,https://www.queenstownisite.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/336424617,public
 rees-health-hub,Rees Health Hub,facility,medical,,"24 Beach Street, Queenstown",-45.0319679,168.6601783,Mo-Su 10:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/13052479612,public
-rental-cars,Rental Cars,facility,parking,,Queenstown,-45.0214865,168.7368985,,,,,OpenStreetMap,https://www.openstreetmap.org/way/340276969,public
-seven-mile-recreation-reserve,Seven Mile Recreation Reserve,facility,parking,,Queenstown,-45.057534,168.5908136,,,,,OpenStreetMap,https://www.openstreetmap.org/way/201003750,public
+rental-cars,Rental Cars,facility,parking,,"Sir Henry Wigley Drive, Frankton",-45.0214865,168.7368985,,,,,OpenStreetMap,https://www.openstreetmap.org/way/340276969,public
+seven-mile-recreation-reserve,Seven Mile Recreation Reserve,facility,parking,,Seven Mile Point Track,-45.057534,168.5908136,,,,,OpenStreetMap,https://www.openstreetmap.org/way/201003750,public
 shotover-canyon-swing,Shotover Canyon Swing,facility,information,,"34 Shotover Street, Queenstown",-45.0314186,168.6598679,,,,,OpenStreetMap,https://www.openstreetmap.org/node/13070136947,public
 southern-cross-central-lakes-hospital,Southern Cross Central Lakes Hospital,facility,medical,,7 Twelfth Avenue,-45.0019208,168.7803548,,+64 3 746 7460,https://southerncrosscentrallakeshospital.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/13997102514,public
-southern-discoveries,Southern Discoveries,facility,information,,Queenstown,-45.0317531,168.6614953,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8912816862,public
+southern-discoveries,Southern Discoveries,facility,information,,"Queenstown Mall, Queenstown",-45.0317531,168.6614953,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8912816862,public
 the-doctors-whakatipu-shotover,The Doctors Whakatipu - Shotover,facility,medical,,4 Thirteenth Avenue,-45.0018075,168.7820493,,+64 3 442 2288,https://thedoctors.co.nz,,OpenStreetMap,https://www.openstreetmap.org/way/926074471,public
-the-studio,The Studio,facility,medical,,Queenstown,-45.0194948,168.6629752,,,https://www.thestudioqueenstown.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13550864129,public
-travelpharm,TravelPharm,facility,medical,,Queenstown,-45.0323607,168.659678,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782003325,public
-unichem,Unichem,facility,medical,,Queenstown,-45.0159978,168.7311804,,,,,OpenStreetMap,https://www.openstreetmap.org/node/776024468,public
-unichem-2,Unichem,facility,medical,,Queenstown,-45.0274863,168.7434412,,,,,OpenStreetMap,https://www.openstreetmap.org/node/776030944,public
-wilson-bay,Wilson Bay,facility,parking,,Queenstown,-45.0607757,168.567463,,,,,OpenStreetMap,https://www.openstreetmap.org/node/2109674138,public
-wilson-parking,Wilson Parking,facility,parking,,Queenstown,-45.0299046,168.661467,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1201563597,public
-wilson-parking-2,Wilson Parking,facility,parking,,Queenstown,-45.0306002,168.6586851,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1201563598,public
-thai-cuisine,@ Thai Cuisine,food,,,Queenstown,-45.0327267,168.6619887,We-Mo 16:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/5491245223,public
+the-studio,The Studio,facility,medical,,"Gorge Road, Queenstown",-45.0194948,168.6629752,,,https://www.thestudioqueenstown.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13550864129,public
+travelpharm,TravelPharm,facility,medical,,"Rees Street, Queenstown",-45.0323607,168.659678,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782003325,public
+unichem,Unichem,facility,medical,,"Frankton Road, Frankton",-45.0159978,168.7311804,,,,,OpenStreetMap,https://www.openstreetmap.org/node/776024468,public
+unichem-2,Unichem,facility,medical,,"Elm Tree Avenue, Frankton",-45.0274863,168.7434412,,,,,OpenStreetMap,https://www.openstreetmap.org/node/776030944,public
+wilson-bay,Wilson Bay,facility,parking,,Seven Mile Point Track,-45.0607757,168.567463,,,,,OpenStreetMap,https://www.openstreetmap.org/node/2109674138,public
+wilson-parking,Wilson Parking,facility,parking,,"5 Shotover Street, Queenstown",-45.0299046,168.661467,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1201563597,public
+wilson-parking-2,Wilson Parking,facility,parking,,"11 Man Street, Queenstown",-45.0306002,168.6586851,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1201563598,public
+thai-cuisine,@ Thai Cuisine,food,,,"Church Street, Queenstown",-45.0327267,168.6619887,We-Mo 16:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/5491245223,public
 11th-avenue-eatery-and-bar,11th Avenue Eatery and Bar,food,,,"25 Eleventh Avenue, Lower Shotover",-45.0019231,168.7813285,Mo-Fr 07:30-21:00; Sa-Su 08:30-21:00,+64 3 222 7030,https://11thavenue.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/13996960949,public
-amisfield-winery-bistro,Amisfield Winery & Bistro,food,,,Queenstown,-44.9865779,168.8158464,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4213681091,public
-ayrburn-manure,Ayrburn Manure,food,,,Queenstown,-44.9568724,168.8124812,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1393511374,public
-ayrburn-woolshed,Ayrburn Woolshed,food,,,Queenstown,-44.9565036,168.8124,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1393511375,public
-bella-cucina,Bella Cucina,food,,,Queenstown,-45.0315759,168.658719,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11962203517,public
+amisfield-winery-bistro,Amisfield Winery & Bistro,food,,,Lake Hayes Arrow Junction Highway,-44.9865779,168.8158464,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4213681091,public
+ayrburn-manure,Ayrburn Manure,food,,,"6 William Paterson Close, Millbrook",-44.9568724,168.8124812,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1393511374,public
+ayrburn-woolshed,Ayrburn Woolshed,food,,,"7 William Paterson Close, Millbrook",-44.9565036,168.8124,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1393511375,public
+bella-cucina,Bella Cucina,food,,,"Brecon Street, Queenstown",-45.0315759,168.658719,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11962203517,public
 bespoke-kitchen,Bespoke Kitchen,food,,,9 Isle Street,-45.0301726,168.6578758,Mo-Su 07:30-16:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/4865632321,public
 biga-neapolitan-style-pizza,Biga - Neapolitan style pizza,food,,,"65 Shotover Street, Queenstown",-45.0323707,168.6574915,"Mo, We 17:00-20:30; Tu 17:30-20:30; Th-Su 12:00-20:30",+64 210 813 7838,https://pizzabiganz.com/,,OpenStreetMap,https://www.openstreetmap.org/node/13102829271,public
-black-burger,Black Burger,food,,,Queenstown,-45.0323283,168.6615094,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11762883269,public
-blue-kanu,Blue Kanu,food,,,Queenstown,-45.0330901,168.6615602,,,https://www.bluekanu.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4780411921,public
-boardwalk,Boardwalk,food,,,Queenstown,-45.0333433,168.6580035,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12600070277,public
+black-burger,Black Burger,food,,,"Searle Lane, Queenstown",-45.0323283,168.6615094,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11762883269,public
+blue-kanu,Blue Kanu,food,,,"Church Street, Queenstown",-45.0330901,168.6615602,,,https://www.bluekanu.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4780411921,public
+boardwalk,Boardwalk,food,,,"Beach Street, Queenstown",-45.0333433,168.6580035,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12600070277,public
 boat-shed-cafe-bistro,Boat Shed Cafe & Bistro,food,,,847 Frankton Road,-45.0186964,168.7152869,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5874604385,public
-boliwood,Boliwood,food,,,Queenstown,-45.0323273,168.6583522,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4836216123,public
+boliwood,Boliwood,food,,,"Shotover Street, Queenstown",-45.0323273,168.6583522,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4836216123,public
 boliwood-restaurant-five-mile,Boliwood Restaurant Five Mile,food,,,3/34 Grant Road,-45.0130062,168.7429576,,+64 3 442 2019,,,OpenStreetMap,https://www.openstreetmap.org/node/12523108606,public
-bombay-palace,Bombay Palace,food,,,Queenstown,-45.0325743,168.6578647,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780449921,public
-botswana-butchery,Botswana Butchery,food,,,Queenstown,-45.0333629,168.6617025,,+64 3 442 6994,,,OpenStreetMap,https://www.openstreetmap.org/node/1112444291,public
-brazz,Brazz,food,,,Queenstown,-45.0311533,168.6621949,,,,,OpenStreetMap,https://www.openstreetmap.org/node/336440584,public
-brunch-on-church,Brunch on Church,food,,,Queenstown,-45.0329547,168.662142,Mo-Su 09:00-13:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/13542442757,public
+bombay-palace,Bombay Palace,food,,,"Shotover Street, Queenstown",-45.0325743,168.6578647,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780449921,public
+botswana-butchery,Botswana Butchery,food,,,"Marine Parade, Queenstown",-45.0333629,168.6617025,,+64 3 442 6994,,,OpenStreetMap,https://www.openstreetmap.org/node/1112444291,public
+brazz,Brazz,food,,,"Athol Street, Queenstown",-45.0311533,168.6621949,,,,,OpenStreetMap,https://www.openstreetmap.org/node/336440584,public
+brunch-on-church,Brunch on Church,food,,,"Church Lane, Queenstown",-45.0329547,168.662142,Mo-Su 09:00-13:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/13542442757,public
 burger-king-queenstown,Burger King Queenstown,food,,,1092 Frankton Road,-45.0154471,168.7307917,,0800 425 464,https://burgerking.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/776025073,public
 captains-restaurant-and-bar,Captains Restaurant And Bar,food,,,"15 Ballarat Street, Queenstown",-45.0323975,168.6609579,09:00-21:00,,https://captains.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/5616393156,public
-caribe-latin-kitchen,Caribe Latin Kitchen,food,,,Queenstown,-45.0318396,168.6613763,"Su-Th 10:30-21:00; Fr,Sa 10:30-22:00",,,,OpenStreetMap,https://www.openstreetmap.org/node/8912827729,public
-coco-cabana-by-frank-s,Coco Cabana by Frank's,food,,,Queenstown,-45.0339538,168.6663166,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845616,public
+caribe-latin-kitchen,Caribe Latin Kitchen,food,,,"Queenstown Mall, Queenstown",-45.0318396,168.6613763,"Su-Th 10:30-21:00; Fr,Sa 10:30-22:00",,,,OpenStreetMap,https://www.openstreetmap.org/node/8912827729,public
+coco-cabana-by-frank-s,Coco Cabana by Frank's,food,,,"Frankton Road, Queenstown",-45.0339538,168.6663166,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845616,public
 devil-burger,Devil Burger,food,,,"5/11 Church Street, Queenstown",-45.0326134,168.6615617,10:00-04:00,+64 3 442 4666,https://www.devilburger.com/,,OpenStreetMap,https://www.openstreetmap.org/node/4640827396,public
-domino-s,Domino's,food,,,Queenstown,-45.0305642,168.6606723,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4820022924,public
+domino-s,Domino's,food,,,"Shotover Street, Queenstown",-45.0305642,168.6606723,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4820022924,public
 domino-s-2,Domino's,food,,,"2B/34 Grant Road, Frankton",-45.0129733,168.74291,Mo-Su 11:00-23:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/5391930314,public
-eichardt-s,Eichardt's,food,,,Queenstown,-45.0328814,168.6606319,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780411922,public
-eichardt-s-grille,Eichardt's Grille,food,,,Queenstown,-45.0330018,168.6608041,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780397324,public
+eichardt-s,Eichardt's,food,,,"2 Marine Parade, Queenstown",-45.0328814,168.6606319,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780411922,public
+eichardt-s-grille,Eichardt's Grille,food,,,"Marine Parade, Queenstown",-45.0330018,168.6608041,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780397324,public
 erik-s-fish-and-chips,Erik's Fish and Chips,food,,,13 Earl Street,-45.0332422,168.6620823,Mo-Su 11:30-20:30,+64 3 441 3474,https://eriksfishandchips.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/5573100522,public
 excuse-my-creps-french-crepes,Excuse My Creps - French Crepes,food,,,34 Brecon Street,-45.0298446,168.6566109,Tu-Sa 12:00-16:00,+64 3 442 9861,https://www.habebes.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/6361424385,public
-farelli-s-trattoria,Farelli's Trattoria,food,,,Queenstown,-45.0334187,168.6573548,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4599195889,public
+farelli-s-trattoria,Farelli's Trattoria,food,,,"Beach Street, Queenstown",-45.0334187,168.6573548,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4599195889,public
 fat-badgers-pizza-bar,Fat Badgers Pizza Bar,food,,,33 Camp Street,-45.0311839,168.6611989,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6001903585,public
 fergburger,Fergburger,food,,,42 Shotover Street,-45.0317416,168.6594621,Mo-Su 08:00-00:00,+64 3 441 1232,https://www.fergburger.com/,,OpenStreetMap,https://www.openstreetmap.org/node/336415647,public
-finz-seafood-grill,Finz Seafood & Grill,food,,,Queenstown,-45.0335583,168.657715,,,https://www.finzseafoodandgrill.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/11958084177,public
-fish-and-chips-takeaway,fish and chips takeaway,food,,,Queenstown,-45.0159647,168.7309232,,,,,OpenStreetMap,https://www.openstreetmap.org/node/776026237,public
+finz-seafood-grill,Finz Seafood & Grill,food,,,"Beach Street, Queenstown",-45.0335583,168.657715,,,https://www.finzseafoodandgrill.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/11958084177,public
+fish-and-chips-takeaway,fish and chips takeaway,food,,,"Frankton Road, Frankton",-45.0159647,168.7309232,,,,,OpenStreetMap,https://www.openstreetmap.org/node/776026237,public
 fishbone-bar-grill,Fishbone Bar & Grill,food,,,"7 Beach St, Queenstown Town Centre 9300, 新西蘭",-45.0314662,168.6603634,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5008524122,public
 flame,Flame,food,,,"61 Beach Street, Queenstown",-45.032452,168.658688,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1112253644,public
 frankton-pizzeria,Frankton Pizzeria,food,,,"1085 Frankton Road, Frankton",-45.0160047,168.7305857,Mo-Su 11:00-23:00,+64 3 451 1271,https://franktonpizzeria.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/11957193062,public
-giovi-fine-food,Giovi Fine Food,food,,,Queenstown,-45.025704,168.7435839,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073032,public
+giovi-fine-food,Giovi Fine Food,food,,,"Hawthorne Drive, Frankton",-45.025704,168.7435839,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073032,public
 handlebar-restaurant-and-brewary,Handlebar Restaurant and Brewary,food,,,"211a Glenda Drive, Frankton",-45.0140091,168.7571273,Mo-We 07:00-15:00; Th-Fr 07:00-20:00; Sa 11:00-17:00,,https://www.handlebar.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/12743715689,public
-hell,Hell,food,,,Queenstown,-45.0321753,168.6616774,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780375724,public
+hell,Hell,food,,,"Searle Lane, Queenstown",-45.0321753,168.6616774,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780375724,public
 hikari-teppanyaki-queenstown,Hikari Teppanyaki Queenstown,food,,,A-13/19 Grant Road,-45.0114652,168.7443879,,,,,OpenStreetMap,https://www.openstreetmap.org/node/13335092701,public
 i-love-kimchi,I love KIMCHI,food,,,54 Shotover Street,-45.0322515,168.6584576,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11301545770,public
 italian-way,Italian Way,food,,,"10/1 Sugar Lane, Frankton Arm",-45.0184187,168.7168452,Fr-Su 12:00-22:00,+64 210 809 1933,https://italianway.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/8598566299,public
-jervois-steak-house,Jervois Steak House,food,,,Queenstown,-45.0312611,168.658818,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11962180653,public
-joe-s-garage,Joe's Garage,food,,,Queenstown,-45.0322526,168.6615569,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780357526,public
-kappa-japanese-cuisine,Kappa Japanese Cuisine,food,,,Queenstown,-45.0318229,168.6613523,"12:00-14:00,17:00-21:00",+64 3 441 1423,,,OpenStreetMap,https://www.openstreetmap.org/node/8912802314,public
-kfc,KFC,food,,,Queenstown,-45.0313139,168.661477,,,,,OpenStreetMap,https://www.openstreetmap.org/way/211230092,public
-kobe-cuisine,Kobe Cuisine,food,,,Queenstown,-44.949758,168.8134068,,,https://www.millbrook.co.nz/dining/kobe/,,OpenStreetMap,https://www.openstreetmap.org/way/933687258,public
-lakeside-palace-chinese-restaurant,Lakeside Palace Chinese Restaurant,food,,,Queenstown,-45.0324508,168.6602265,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780412025,public
+jervois-steak-house,Jervois Steak House,food,,,"Brecon Street, Queenstown",-45.0312611,168.658818,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11962180653,public
+joe-s-garage,Joe's Garage,food,,,"Searle Lane, Queenstown",-45.0322526,168.6615569,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780357526,public
+kappa-japanese-cuisine,Kappa Japanese Cuisine,food,,,"Queenstown Mall, Queenstown",-45.0318229,168.6613523,"12:00-14:00,17:00-21:00",+64 3 441 1423,,,OpenStreetMap,https://www.openstreetmap.org/node/8912802314,public
+kfc,KFC,food,,,"27 Camp Street, Queenstown",-45.0313139,168.661477,,,,,OpenStreetMap,https://www.openstreetmap.org/way/211230092,public
+kobe-cuisine,Kobe Cuisine,food,,,"Streamside Lane, Arrowtown",-44.949758,168.8134068,,,https://www.millbrook.co.nz/dining/kobe/,,OpenStreetMap,https://www.openstreetmap.org/way/933687258,public
+lakeside-palace-chinese-restaurant,Lakeside Palace Chinese Restaurant,food,,,"Rees Street, Queenstown",-45.0324508,168.6602265,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780412025,public
 lanzhou-ramen,LanZhou Ramen,food,,,5 Athol Street,-45.0309912,168.6619062,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11074368405,public
-left-bank-bistro,Left Bank Bistro,food,,,Queenstown,-45.0311696,168.6587391,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11962180654,public
-little-blackwood,Little Blackwood,food,,,Queenstown,-45.0333434,168.6578997,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11958084176,public
-lobster-tank,Lobster Tank,food,,,Queenstown,-45.0317624,168.6613964,"Mo,We-Su 12:00-21:30; Tu 16:00-21:30",+64 3 441 1423,,,OpenStreetMap,https://www.openstreetmap.org/node/12338734439,public
-madam-woo,Madam Woo,food,,,Queenstown,-45.0325701,168.6606982,,,https://www.madamwoo.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4780412023,public
-mandarin-seafood-restaurant,Mandarin Seafood Restaurant,food,,,Queenstown,-45.0325305,168.6584067,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007321,public
-margo-s,Margo’s,food,,,Queenstown,-45.032099,168.6609899,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10610387107,public
-mcdonald-s,McDonald's,food,,,Queenstown,-45.0312814,168.6613187,24/7,,,,OpenStreetMap,https://www.openstreetmap.org/node/776037257,public
+left-bank-bistro,Left Bank Bistro,food,,,"Brecon Street, Queenstown",-45.0311696,168.6587391,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11962180654,public
+little-blackwood,Little Blackwood,food,,,"Beach Street, Queenstown",-45.0333434,168.6578997,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11958084176,public
+lobster-tank,Lobster Tank,food,,,"Queenstown Mall, Queenstown",-45.0317624,168.6613964,"Mo,We-Su 12:00-21:30; Tu 16:00-21:30",+64 3 441 1423,,,OpenStreetMap,https://www.openstreetmap.org/node/12338734439,public
+madam-woo,Madam Woo,food,,,"Queenstown Mall, Queenstown",-45.0325701,168.6606982,,,https://www.madamwoo.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4780412023,public
+mandarin-seafood-restaurant,Mandarin Seafood Restaurant,food,,,"Beach Street, Queenstown",-45.0325305,168.6584067,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007321,public
+margo-s,Margo’s,food,,,"Queenstown Mall, Queenstown",-45.032099,168.6609899,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10610387107,public
+mcdonald-s,McDonald's,food,,,"Camp Street, Queenstown",-45.0312814,168.6613187,24/7,,,,OpenStreetMap,https://www.openstreetmap.org/node/776037257,public
 mcdonald-s-queenstown-frankton,"McDonald's Queenstown, Frankton",food,,,1063 Frankton Road,-45.0160807,168.729145,,+64 3 441 4257,https://mcdonalds.com,,OpenStreetMap,https://www.openstreetmap.org/node/12452647164,public
-minami-jujisei,Minami Jujisei,food,,,Queenstown,-45.0323762,168.658801,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007123,public
-mirch-masala,Mirch Masala,food,,,Queenstown,-45.0325499,168.6579331,Tu-Su 16:00+,,,,OpenStreetMap,https://www.openstreetmap.org/node/8912855952,public
-miss-lucy-s-restaurant-bar,Miss Lucy’s Restaurant & Bar,food,,,Queenstown,-45.030335,168.6600138,"Mo,Tu off; We-Su 16:00-21:00",+64 3 974 4029,https://www.misslucys.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/8515853917,public
-momentos-by-the-lake-restaurant,Momentos By The Lake Restaurant,food,,,Queenstown,-45.0325428,168.6592521,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8912820592,public
-monkee-s,MONKEE'S,food,,,Queenstown,-45.0252193,168.7464939,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145131017,public
-my-thai-lounge,My Thai Lounge,food,,,Queenstown,-45.032605,168.658146,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007122,public
-noodle-canteen,Noodle Canteen,food,,,Queenstown,-45.0324209,168.6582431,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4836216124,public
+minami-jujisei,Minami Jujisei,food,,,"Beach Street, Queenstown",-45.0323762,168.658801,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007123,public
+mirch-masala,Mirch Masala,food,,,"Shotover Street, Queenstown",-45.0325499,168.6579331,Tu-Su 16:00+,,,,OpenStreetMap,https://www.openstreetmap.org/node/8912855952,public
+miss-lucy-s-restaurant-bar,Miss Lucy’s Restaurant & Bar,food,,,"Camp Shared Path, Queenstown",-45.030335,168.6600138,"Mo,Tu off; We-Su 16:00-21:00",+64 3 974 4029,https://www.misslucys.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/8515853917,public
+momentos-by-the-lake-restaurant,Momentos By The Lake Restaurant,food,,,"Beach Street, Queenstown",-45.0325428,168.6592521,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8912820592,public
+monkee-s,MONKEE'S,food,,,"24 Hawthorne Drive, Queenstown",-45.0252193,168.7464939,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145131017,public
+my-thai-lounge,My Thai Lounge,food,,,"Beach Street, Queenstown",-45.032605,168.658146,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007122,public
+noodle-canteen,Noodle Canteen,food,,,"Shotover Street, Queenstown",-45.0324209,168.6582431,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4836216124,public
 pedro-s-house-of-lamb,Pedro's House of Lamb,food,,,47 Gorge Road,-45.0239875,168.6623305,Mo-Su 12:00-20:00,+64 3 441 4526,,,OpenStreetMap,https://www.openstreetmap.org/node/4933114223,public
-pier-restaurant,Pier Restaurant,food,,,Queenstown,-45.0332871,168.6580497,,,https://www.pier.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/5227643032,public
-pizza-hut,Pizza Hut,food,,,Queenstown,-45.0264375,168.7436603,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073014,public
-public-kitchen-bar,Public Kitchen & Bar,food,,,Queenstown,-45.0335877,168.6576287,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11958084178,public
-rakau,Rakau,food,,,Queenstown,-44.9799613,168.686427,"PH,Mo-Su 09:00-20:00",,,,OpenStreetMap,https://www.openstreetmap.org/node/10600420206,public
-ramen-ramen,Ramen Ramen,food,,,Queenstown,-45.0325467,168.6614401,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10610387206,public
-rata-dining,Rata Dining,food,,,Queenstown,-45.0315723,168.6627773,Mo-Su 12:00-22:00,,https://www.ratadining.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4293277990,public
+pier-restaurant,Pier Restaurant,food,,,"Beach Street, Queenstown",-45.0332871,168.6580497,,,https://www.pier.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/5227643032,public
+pizza-hut,Pizza Hut,food,,,"Cherry Blossom Avenue, Frankton",-45.0264375,168.7436603,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073014,public
+public-kitchen-bar,Public Kitchen & Bar,food,,,"Beach Street, Queenstown",-45.0335877,168.6576287,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11958084178,public
+rakau,Rakau,food,,,"Wharehuanui Trail, Arthurs Point",-44.9799613,168.686427,"PH,Mo-Su 09:00-20:00",,,,OpenStreetMap,https://www.openstreetmap.org/node/10600420206,public
+ramen-ramen,Ramen Ramen,food,,,"Searle Lane, Queenstown",-45.0325467,168.6614401,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10610387206,public
+rata-dining,Rata Dining,food,,,"Stanley Street, Queenstown",-45.0315723,168.6627773,Mo-Su 12:00-22:00,,https://www.ratadining.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4293277990,public
 real-food-kitchen,Real Food Kitchen,food,,,"793 Malaghans Road, Queenstown",-45.0163448,168.6622026,Mo-Fr 09:00-17:00,,https://www.realfoodkitchen.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/12542978302,public
-saigon-kingdom,Saigon Kingdom,food,,,Queenstown,-45.0256515,168.7430138,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073040,public
-saigon-kingdom-2,Saigon Kingdom,food,,,Queenstown,-45.0333348,168.6574163,,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476838,public
-sal-s-authentic-ny-pizza-frankton,Sal's Authentic NY Pizza - Frankton,food,,,Queenstown,-45.0115763,168.7442601,"Su-Th 11:00-21:00; Fr,Sa 11:00-22:00",+6433077257,https://sals.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13949047339,public
-shanghai-2-tapai,Shanghai 2 Tapai,food,,,Queenstown,-45.0318676,168.6613192,"Mo-We 17:30-22:00; Th-Su 12:00-14:00,17:30-22:00",,,,OpenStreetMap,https://www.openstreetmap.org/node/12338734438,public
-soda,Soda,food,,,Queenstown,-45.0326719,168.6601712,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11962636273,public
-soki-sushi-train,Soki Sushi Train,food,,,Queenstown,-45.0312043,168.6601902,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845621,public
-sports-bar,Sports Bar,food,,,Queenstown,-45.0283501,168.7287686,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11697337738,public
-st-pierre-s-sushi,St Pierre's Sushi,food,,,Queenstown,-45.025672,168.742927,,+64 3 442 8316,https://stpierres.online,,OpenStreetMap,https://www.openstreetmap.org/node/12145073036,public
-stratosfare-restaurant,Stratosfare Restaurant,food,,,Queenstown,-45.0264164,168.6494161,11:45-20:45,+64 3 441 0101,https://queenstown.skyline.co.nz/things-to-do/stratosfare-restaurant-queenstown/,,OpenStreetMap,https://www.openstreetmap.org/node/4839280865,public
-subway,Subway,food,,,Queenstown,-45.0119948,168.7436499,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12001623623,public
-surreal-bar-restaurant,Surreal Bar & Restaurant,food,,,Queenstown,-45.0323697,168.6601943,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963847304,public
-taco-medic,Taco Medic,food,,,Queenstown,-45.0327896,168.6610426,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780397323,public
+saigon-kingdom,Saigon Kingdom,food,,,"Hawthorne Drive, Frankton",-45.0256515,168.7430138,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073040,public
+saigon-kingdom-2,Saigon Kingdom,food,,,"Beach Street, Queenstown",-45.0333348,168.6574163,,,,,OpenStreetMap,https://www.openstreetmap.org/node/595476838,public
+sal-s-authentic-ny-pizza-frankton,Sal's Authentic NY Pizza - Frankton,food,,,"Central Street, Frankton",-45.0115763,168.7442601,"Su-Th 11:00-21:00; Fr,Sa 11:00-22:00",+6433077257,https://sals.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13949047339,public
+shanghai-2-tapai,Shanghai 2 Tapai,food,,,"Queenstown Mall, Queenstown",-45.0318676,168.6613192,"Mo-We 17:30-22:00; Th-Su 12:00-14:00,17:30-22:00",,,,OpenStreetMap,https://www.openstreetmap.org/node/12338734438,public
+soda,Soda,food,,,"Rees Street, Queenstown",-45.0326719,168.6601712,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11962636273,public
+soki-sushi-train,Soki Sushi Train,food,,,"Shotover Street, Queenstown",-45.0312043,168.6601902,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845621,public
+sports-bar,Sports Bar,food,,,"Alpine Lakes Drive, Frankton",-45.0283501,168.7287686,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11697337738,public
+st-pierre-s-sushi,St Pierre's Sushi,food,,,"Hawthorne Drive, Frankton",-45.025672,168.742927,,+64 3 442 8316,https://stpierres.online,,OpenStreetMap,https://www.openstreetmap.org/node/12145073036,public
+stratosfare-restaurant,Stratosfare Restaurant,food,,,"Skyline Road, Queenstown",-45.0264164,168.6494161,11:45-20:45,+64 3 441 0101,https://queenstown.skyline.co.nz/things-to-do/stratosfare-restaurant-queenstown/,,OpenStreetMap,https://www.openstreetmap.org/node/4839280865,public
+subway,Subway,food,,,"Central Street, Frankton",-45.0119948,168.7436499,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12001623623,public
+surreal-bar-restaurant,Surreal Bar & Restaurant,food,,,"Rees Street, Queenstown",-45.0323697,168.6601943,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963847304,public
+taco-medic,Taco Medic,food,,,"Searle Lane, Queenstown",-45.0327896,168.6610426,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780397323,public
 tacos-jaguar,Tacos Jaguar,food,,,12 Industrial Place,-45.0179189,168.6622547,Th 15:00-21:00; Fr-Sa 14:00-21:30,,,,OpenStreetMap,https://www.openstreetmap.org/node/11966238883,public
-tanoshi,Tanoshi,food,,,Queenstown,-45.0122737,168.7420115,"Mo-Su 12:00-16:00,17:00-21:30",+64 3 428 2612,https://www.tanoshi.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13724474328,public
+tanoshi,Tanoshi,food,,,"Grant Road, Frankton",-45.0122737,168.7420115,"Mo-Su 12:00-16:00,17:00-21:30",+64 3 428 2612,https://www.tanoshi.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13724474328,public
 tanoshi-cow-lane,Tanoshi Cow Lane,food,,,Cow Lane,-45.0321301,168.6605959,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11074372205,public
-thai-siam-kitchen,Thai Siam Kitchen,food,,,Queenstown,-45.0253781,168.7463754,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145131018,public
-tham-nak-thai,Tham Nak Thai,food,,,Queenstown,-45.0313785,168.6604962,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780363525,public
-tham-nak-thai-2,Tham Nak Thai,food,,,Queenstown,-45.0266679,168.7428195,Mo-Su 11:30-21:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/6451045386,public
-the-assembly-gastropub,The Assembly Gastropub,food,,,Queenstown,-45.0296055,168.6576635,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11964041833,public
-the-ballarat-trading-co-2,The Ballarat Trading Co.,food,,,Queenstown,-45.0324638,168.6608573,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4173444992,public
-the-cow,The Cow,food,,,Queenstown,-45.0322792,168.6604257,12:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/11077828805,public
+thai-siam-kitchen,Thai Siam Kitchen,food,,,"24 Hawthorne Drive, Queenstown",-45.0253781,168.7463754,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145131018,public
+tham-nak-thai,Tham Nak Thai,food,,,"Beach Street, Queenstown",-45.0313785,168.6604962,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780363525,public
+tham-nak-thai-2,Tham Nak Thai,food,,,"Elm Tree Avenue, Frankton",-45.0266679,168.7428195,Mo-Su 11:30-21:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/6451045386,public
+the-assembly-gastropub,The Assembly Gastropub,food,,,"Brecon Street, Queenstown",-45.0296055,168.6576635,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11964041833,public
+the-ballarat-trading-co-2,The Ballarat Trading Co.,food,,,"Queenstown Mall, Queenstown",-45.0324638,168.6608573,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4173444992,public
+the-cow,The Cow,food,,,"Cow Lane, Queenstown",-45.0322792,168.6604257,12:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/11077828805,public
 the-hayes,The Hayes,food,,,"1 Onslow Road, Lake Hayes",-45.0019989,168.7894887,,+64 3 441 4074,https://www.thehayes.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/way/982909331,public
-the-lone-star,The Lone Star,food,,,Queenstown,-45.0313572,168.6584952,Mo-Su 04:00-24:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/336409181,public
+the-lone-star,The Lone Star,food,,,"Brecon Street, Queenstown",-45.0313572,168.6584952,Mo-Su 04:00-24:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/336409181,public
 the-meat-preachers,The Meat Preachers,food,,,"Shop B09/19 Grant Road, Frankton",-45.0118467,168.7425868,Mo-Su 11:00-20:00,+64 3 974 4590,https://www.themeatpreachers.com,,OpenStreetMap,https://www.openstreetmap.org/node/13233658646,public
-the-shelter-bar-and-kitchen,The Shelter Bar and Kitchen,food,,,Queenstown,-45.0265611,168.7427569,Mo-Su 09:00-21:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072930,public
+the-shelter-bar-and-kitchen,The Shelter Bar and Kitchen,food,,,"Hawthorne Drive, Frankton",-45.0265611,168.7427569,Mo-Su 09:00-21:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072930,public
 the-sushi-platter,The Sushi Platter,food,,,30 Camp Street,-45.0314459,168.6608766,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6698496885,public
-the-taj,The Taj,food,,,Queenstown,-45.0327327,168.658112,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4781996221,public
+the-taj,The Taj,food,,,"Beach Street, Queenstown",-45.0327327,168.658112,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4781996221,public
 the-world-bar,The World Bar,food,,,"12 Church Street, Queenstown",-45.0329452,168.6618252,Mo-Su 15:00-02:30,+64 3 450 0008,https://www.theworldbar.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4780397325,public
-threesixty-restaurant-bar,Threesixty Restaurant & Bar,food,,,Queenstown,-45.0333833,168.656735,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11958084260,public
+threesixty-restaurant-bar,Threesixty Restaurant & Bar,food,,,"Beach Street, Queenstown",-45.0333833,168.656735,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11958084260,public
 toast-oak,Toast & Oak,food,,,"15 Shotover Street, Queenstown",-45.0304263,168.6608275,Mo-Su 16:00-00:00,+64 3 442 8627,https://www.toastandoak.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/14100501433,public
 turkish-kebabs-of-queenstown,Turkish Kebabs of Queenstown,food,,,34 Shotover Street,-45.0314724,168.6599497,,+64 3 441 3424,,,OpenStreetMap,https://www.openstreetmap.org/node/11504267269,public
-waikapia-grill,Waikapia Grill,food,,,Queenstown,-45.0282104,168.7284524,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11697337737,public
-white-wong-s,White & Wong's,food,,,Queenstown,-45.0321892,168.6586544,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11959305692,public
+waikapia-grill,Waikapia Grill,food,,,"Kelvin Heights Trail, Frankton",-45.0282104,168.7284524,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11697337737,public
+white-wong-s,White & Wong's,food,,,"Shotover Street, Queenstown",-45.0321892,168.6586544,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11959305692,public
 wild-thyme,Wild Thyme,food,,,"16-24 Beach Street, Queenstown",-45.0317912,168.6603633,,+64 3 441 0400,,,OpenStreetMap,https://www.openstreetmap.org/node/6696106903,public
-winnebagos,Winnebagos,food,,,Queenstown,-45.0322154,168.6612564,,,,,OpenStreetMap,https://www.openstreetmap.org/node/336428102,public
-winnies,Winnies,food,,,Queenstown,-45.0325263,168.6607626,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8912820591,public
-active-adventures-new-zealand,Active Adventures New Zealand,shopping,,,Queenstown,-45.0330606,168.66151,,,,,OpenStreetMap,https://www.openstreetmap.org/node/3003294747,public
-alpha-gifts,Alpha Gifts,shopping,,,Queenstown,-45.0326243,168.6583026,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007121,public
+winnebagos,Winnebagos,food,,,"Queenstown Mall, Queenstown",-45.0322154,168.6612564,,,,,OpenStreetMap,https://www.openstreetmap.org/node/336428102,public
+winnies,Winnies,food,,,"Queenstown Mall, Queenstown",-45.0325263,168.6607626,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8912820591,public
+active-adventures-new-zealand,Active Adventures New Zealand,shopping,,,"Church Street, Queenstown",-45.0330606,168.66151,,,,,OpenStreetMap,https://www.openstreetmap.org/node/3003294747,public
+alpha-gifts,Alpha Gifts,shopping,,,"Beach Street, Queenstown",-45.0326243,168.6583026,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007121,public
 alta-bikes-five-mile,Alta Bikes Five Mile,shopping,,,"4/34 Grant Road, Frankton",-45.0130463,168.7430016,Mo-Su 09:00-18:00,+64 3 441 4645,https://alta.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/5391923070,public
 alta-queenstown,Alta Queenstown,shopping,,,"18 Duke Street, Queenstown",-45.0313161,168.6588857,,+64 3 442 4994,https://www.alta.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/5616392614,public
-anderson-outfitters,Anderson Outfitters,shopping,,,Queenstown,-45.0326659,168.6582102,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4781996321,public
+anderson-outfitters,Anderson Outfitters,shopping,,,"Beach Street, Queenstown",-45.0326659,168.6582102,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4781996321,public
 angel-divine,Angel Divine,shopping,,,61 Beach Street,-45.0324714,168.6586381,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780357525,public
 aotea-gifts,Aotea Gifts,shopping,,,"30 The Mall, Queenstown",-45.0320538,168.6610656,09:30-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/2637437344,public
 aotea-gifts-queenstown,Aotea Gifts Queenstown,shopping,,,"87 Beach Street, Queenstown",-45.0328595,168.6576821,,+64 3 442 6444,https://aoteanz.com/,,OpenStreetMap,https://www.openstreetmap.org/node/4076280951,public
 aotea-souvenirs,Aotea Souvenirs,shopping,,,87 Beach Street,-45.0328428,168.6577455,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4465736193,public
-arrow-bikes,Arrow Bikes,shopping,,,Queenstown,-45.0246887,168.742691,"Mo-Fr 09:00-17:00; Sa, Su 09:00-16:00",+64 3 409 8140,https://www.arrowbikes.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/13591220749,public
-arrowtown-wine-tours,Arrowtown Wine Tours,shopping,,,Queenstown,-45.0241974,168.6617098,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11967944460,public
+arrow-bikes,Arrow Bikes,shopping,,,"Hawthorne Drive, Frankton",-45.0246887,168.742691,"Mo-Fr 09:00-17:00; Sa, Su 09:00-16:00",+64 3 409 8140,https://www.arrowbikes.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/13591220749,public
+arrowtown-wine-tours,Arrowtown Wine Tours,shopping,,,"Hylton Place, Queenstown",-45.0241974,168.6617098,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11967944460,public
 asian-mart,Asian Mart,shopping,,,"19 Shotover Street, Queenstown",-45.0305124,168.6607366,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6174676685,public
-audi,Audi,shopping,,,Queenstown,-45.0258804,168.7409444,,,,,OpenStreetMap,https://www.openstreetmap.org/node/13299686383,public
-bedsrus,BedsRus,shopping,,,Queenstown,-45.02605,168.7437028,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073027,public
+audi,Audi,shopping,,,"2 Hawthorne Drive, Frankton",-45.0258804,168.7409444,,,,,OpenStreetMap,https://www.openstreetmap.org/node/13299686383,public
+bedsrus,BedsRus,shopping,,,"Cherry Blossom Avenue, Frankton",-45.02605,168.7437028,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073027,public
 bee-the-change,Bee The Change,shopping,,,"58 Red Cottage Drive, Lake Hayes",-45.0023684,168.7960739,,,https://beethechange.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/5629820888,public
-behind-the-tree,Behind the Tree,shopping,,,Queenstown,-45.0326853,168.6590945,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6072748396,public
-bendon-outlet,Bendon Outlet,shopping,,,Queenstown,-45.0264604,168.743551,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073015,public
-betty-s,Betty's,shopping,,,Queenstown,-45.0322175,168.6591162,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007521,public
-betty-s-liquor-store,Betty's Liquor Store,shopping,,,Queenstown,-45.031593,168.6612712,,,,,OpenStreetMap,https://www.openstreetmap.org/node/2553055288,public
-big-barrel,Big Barrel,shopping,,,Queenstown,-45.0256885,168.7428336,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073037,public
+behind-the-tree,Behind the Tree,shopping,,,"Beach Street, Queenstown",-45.0326853,168.6590945,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6072748396,public
+bendon-outlet,Bendon Outlet,shopping,,,"Cherry Blossom Avenue, Frankton",-45.0264604,168.743551,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073015,public
+betty-s,Betty's,shopping,,,"Beach Street, Queenstown",-45.0322175,168.6591162,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007521,public
+betty-s-liquor-store,Betty's Liquor Store,shopping,,,"Cow Lane, Queenstown",-45.031593,168.6612712,,,,,OpenStreetMap,https://www.openstreetmap.org/node/2553055288,public
+big-barrel,Big Barrel,shopping,,,"Hawthorne Drive, Frankton",-45.0256885,168.7428336,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073037,public
 bikeaholic,Bikeaholic,shopping,,,109a Gorge Road,-45.0217397,168.6625224,,+64 3 428 4250,https://www.bikeaholic.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/6456726186,public
-bikes-beyond,Bikes & Beyond,shopping,,,Queenstown,-45.0154577,168.7308675,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845610,public
-billabong,Billabong,shopping,,,Queenstown,-45.0317819,168.6602708,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780363523,public
-bivouac-outdoor,Bivouac Outdoor,shopping,,,Queenstown,-45.0122672,168.7421244,Mo-Fr 09:00-17:30,+64 3 260 5525,,,OpenStreetMap,https://www.openstreetmap.org/node/9239158193,public
-bound-books-records,Bound Books & Records,shopping,,,Queenstown,-45.0324069,168.6619483,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782057321,public
-bp-2go,BP 2go,shopping,,,Queenstown,-45.0152032,168.7318636,,,,,OpenStreetMap,https://www.openstreetmap.org/way/385512184,public
-bread-by-european-bakery,Bread by European Bakery,shopping,,,Queenstown,-45.0163982,168.7306878,Mo-Fr 08:00-15:00; Sa 08:00-13:00,+64 3 442 3909,https://europeanbakery.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/13588631058,public
-bridgestone,Bridgestone,shopping,,,Queenstown,-45.0177975,168.6610329,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11966238916,public
-bridgestone-tires-centre-queenstown,Bridgestone Tires Centre - Queenstown,shopping,,,Queenstown,-45.0069189,168.7498136,,+643 442 6706,,,OpenStreetMap,https://www.openstreetmap.org/node/13994313292,public
+bikes-beyond,Bikes & Beyond,shopping,,,"Frankton Road, Frankton",-45.0154577,168.7308675,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845610,public
+billabong,Billabong,shopping,,,"Beach Street, Queenstown",-45.0317819,168.6602708,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780363523,public
+bivouac-outdoor,Bivouac Outdoor,shopping,,,"Grant Road, Frankton",-45.0122672,168.7421244,Mo-Fr 09:00-17:30,+64 3 260 5525,,,OpenStreetMap,https://www.openstreetmap.org/node/9239158193,public
+bound-books-records,Bound Books & Records,shopping,,,"Church Street, Queenstown",-45.0324069,168.6619483,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782057321,public
+bp-2go,BP 2go,shopping,,,"Frankton Ladies Mile Highway, Frankton",-45.0152032,168.7318636,,,,,OpenStreetMap,https://www.openstreetmap.org/way/385512184,public
+bread-by-european-bakery,Bread by European Bakery,shopping,,,"McBride Street, Frankton",-45.0163982,168.7306878,Mo-Fr 08:00-15:00; Sa 08:00-13:00,+64 3 442 3909,https://europeanbakery.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/13588631058,public
+bridgestone,Bridgestone,shopping,,,"Industrial Place, Queenstown",-45.0177975,168.6610329,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11966238916,public
+bridgestone-tires-centre-queenstown,Bridgestone Tires Centre - Queenstown,shopping,,,"Jock Boyd Place, Frankton",-45.0069189,168.7498136,,+643 442 6706,,,OpenStreetMap,https://www.openstreetmap.org/node/13994313292,public
 briscoes,Briscoes,shopping,,,"2/28 Grant Road, Frankton",-45.0138539,168.7413032,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5391926004,public
 bro-barbershop,BRO Barbershop,shopping,,,"70 Glenda Drive, Frankton",-45.007098,168.7517465,"Mo 09:00-17:00; Tu,We 09:00-18:00; Th 09:00-19:00; Fr 09:00-18:00; Sa 09:00-14:00",+64 21 173 8047,https://www.brobarbershop.com/,,OpenStreetMap,https://www.openstreetmap.org/node/8660673426,public
-brobike,Brobike,shopping,,,Queenstown,-45.0305354,168.6602873,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12661264654,public
+brobike,Brobike,shopping,,,"Camp Street, Queenstown",-45.0305354,168.6602873,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12661264654,public
 browns-ski-rental,Browns Ski Rental,shopping,,,"4 Brecon Street, Queenstown",-45.0316454,168.6587575,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5616389406,public
 browns-ski-shop,Browns Ski Shop,shopping,,,"39 Shotover Street, Queenstown",-45.0314044,168.6592678,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11259252907,public
-bunnings-warehouse,Bunnings Warehouse,shopping,,,Queenstown,-45.0082991,168.7474528,,,,,OpenStreetMap,https://www.openstreetmap.org/way/971081022,public
-burberry,Burberry,shopping,,,Queenstown,-45.031413,168.6609315,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6698494686,public
+bunnings-warehouse,Bunnings Warehouse,shopping,,,"Te Kirikiri Frankton Link, Frankton",-45.0082991,168.7474528,,,,,OpenStreetMap,https://www.openstreetmap.org/way/971081022,public
+burberry,Burberry,shopping,,,"Beach Street, Queenstown",-45.031413,168.6609315,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6698494686,public
 buzzstop,Buzzstop,shopping,,,"26 hansen road, Country Lane",-45.0125318,168.7367603,Mo-Su 09:00-17:00,+6421 942 808,https://buzzstop.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/14100493244,public
-canshop-queenstown,CanShop Queenstown,shopping,,,Queenstown,-45.0275736,168.7438032,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6451122285,public
+canshop-queenstown,CanShop Queenstown,shopping,,,"Copper Beech Avenue, Frankton",-45.0275736,168.7438032,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6451122285,public
 carpet-court,Carpet Court,shopping,,,17 Brookes Road,-45.0083536,168.7507001,Mo-Fr 08:00-17:00,+64 3 442 9173,https://CarpetCourt.nz,,OpenStreetMap,https://www.openstreetmap.org/node/13897834903,public
-city-express,City Express,shopping,,,Queenstown,-45.0325677,168.661641,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782055323,public
-commencal,Commencal,shopping,,,Queenstown,-45.0301771,168.6612535,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12661264630,public
+city-express,City Express,shopping,,,"Church Street, Queenstown",-45.0325677,168.661641,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782055323,public
+commencal,Commencal,shopping,,,"Shotover Street, Queenstown",-45.0301771,168.6612535,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12661264630,public
 cookie-time,Cookie Time,shopping,,,"18 Camp Street, Queenstown",-45.0319755,168.6620108,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4459135894,public
-country-road,Country Road,shopping,,,Queenstown,-45.0327496,168.6604553,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780412221,public
-cutting-edge,Cutting Edge,shopping,,,Queenstown,-45.0323968,168.6592991,,,,,OpenStreetMap,https://www.openstreetmap.org/node/3475246407,public
-decode,Decode,shopping,,,Queenstown,-45.0320852,168.6623987,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780375723,public
+country-road,Country Road,shopping,,,"2 Marine Parade, Queenstown",-45.0327496,168.6604553,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780412221,public
+cutting-edge,Cutting Edge,shopping,,,"Beach Street, Queenstown",-45.0323968,168.6592991,,,,,OpenStreetMap,https://www.openstreetmap.org/node/3475246407,public
+decode,Decode,shopping,,,"Camp Street, Queenstown",-45.0320852,168.6623987,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780375723,public
 designa,Designa,shopping,,,"128 Gorge Road, Queenstown",-45.0211313,168.6619895,Mo-Fr 08:30-17:00; Sa off; Su off,+64 3 442 4999,https://www.designatilesqt.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/12073372023,public
-df-souvenirs,DF Souvenirs,shopping,,,Queenstown,-45.0321907,168.6608466,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963847276,public
+df-souvenirs,DF Souvenirs,shopping,,,"Queenstown Mall, Queenstown",-45.0321907,168.6608466,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963847276,public
 dotti,Dotti,shopping,,,"29 Ballarat Street, Queenstown",-45.0320294,168.6614645,10:00-17:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/5616390308,public
-everlasting-daisies,Everlasting Daisies,shopping,,,Queenstown,-45.0159728,168.7311439,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845611,public
+everlasting-daisies,Everlasting Daisies,shopping,,,"Frankton Road, Frankton",-45.0159728,168.7311439,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845611,public
 evo-cycles,EVO Cycles,shopping,,,Shop 12-101 Remarkables Park Town Centre,-45.0275229,168.7432488,Mo-Sa 09:00-18:00,+64 3 974 4868,https://www.evocycles.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/6451107085,public
-fergbaker,Fergbaker,shopping,,,Queenstown,-45.0316688,168.6595555,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4595260291,public
-fjallraven,Fjällräven,shopping,,,Queenstown,-45.0319514,168.659441,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11959305693,public
-flo-frankie,Flo & Frankie,shopping,,,Queenstown,-45.0322357,168.6607888,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963847277,public
-four-square,Four Square,shopping,,,Queenstown,-45.0304354,168.6613622,Mo-Su 07:00-22:00,+64 3 442 8961,https://www.foursquare.co.nz/south-island/otago/alpine,,OpenStreetMap,https://www.openstreetmap.org/node/595464790,public
-fragrance-and-body-luxuries,Fragrance and Body Luxuries,shopping,,,Queenstown,-45.0314917,168.6610699,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963895948,public
-frank-s-corner,Frank's Corner,shopping,,,Queenstown,-45.0299842,168.6588508,"PH,Mo-Su 10:00-17:00",,,,OpenStreetMap,https://www.openstreetmap.org/node/11111046917,public
-freshchoice,FreshChoice,shopping,,,Queenstown,-45.0247689,168.6614026,Mo-Su 07:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/way/255395770,public
-fuji-xerox,Fuji Xerox,shopping,,,Queenstown,-45.0248907,168.7434893,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145548034,public
-gents-barber-shop,Gents Barber Shop,shopping,,,Queenstown,-45.0312568,168.6596214,Mo-Su 09:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/11964041713,public
-girl-next-door-fashion,Girl Next Door Fashion,shopping,,,Queenstown,-45.0248228,168.7432973,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145548031,public
-glassons,Glassons,shopping,,,Queenstown,-45.032116,168.6597462,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780359836,public
-green-toad,GREEN TOAD,shopping,,,Queenstown,-45.0314345,168.6600287,,,,,OpenStreetMap,https://www.openstreetmap.org/node/13542442758,public
+fergbaker,Fergbaker,shopping,,,"Shotover Street, Queenstown",-45.0316688,168.6595555,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4595260291,public
+fjallraven,Fjällräven,shopping,,,"Rees Street, Queenstown",-45.0319514,168.659441,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11959305693,public
+flo-frankie,Flo & Frankie,shopping,,,"Queenstown Mall, Queenstown",-45.0322357,168.6607888,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963847277,public
+four-square,Four Square,shopping,,,"Shotover Street, Queenstown",-45.0304354,168.6613622,Mo-Su 07:00-22:00,+64 3 442 8961,https://www.foursquare.co.nz/south-island/otago/alpine,,OpenStreetMap,https://www.openstreetmap.org/node/595464790,public
+fragrance-and-body-luxuries,Fragrance and Body Luxuries,shopping,,,"Cow Lane, Queenstown",-45.0314917,168.6610699,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963895948,public
+frank-s-corner,Frank's Corner,shopping,,,"58 Isle Street, Queenstown",-45.0299842,168.6588508,"PH,Mo-Su 10:00-17:00",,,,OpenStreetMap,https://www.openstreetmap.org/node/11111046917,public
+freshchoice,FreshChoice,shopping,,,"3 Hylton Place, Queenstown",-45.0247689,168.6614026,Mo-Su 07:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/way/255395770,public
+fuji-xerox,Fuji Xerox,shopping,,,"Hawthorne Drive, Frankton",-45.0248907,168.7434893,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145548034,public
+gents-barber-shop,Gents Barber Shop,shopping,,,"Shotover Street, Queenstown",-45.0312568,168.6596214,Mo-Su 09:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/11964041713,public
+girl-next-door-fashion,Girl Next Door Fashion,shopping,,,"Hawthorne Drive, Frankton",-45.0248228,168.7432973,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145548031,public
+glassons,Glassons,shopping,,,"Beach Street, Queenstown",-45.032116,168.6597462,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780359836,public
+green-toad,GREEN TOAD,shopping,,,"Shotover Street, Queenstown",-45.0314345,168.6600287,,,,,OpenStreetMap,https://www.openstreetmap.org/node/13542442758,public
 guthrie-bowron-queenstown,Guthrie Bowron Queenstown,shopping,,,"134 Gorge Road, Queenstown",-45.0208397,168.6619867,Mo-Fr 07:30-17:00; Sa 09:00-13:00; Su off,+64 3 442 4088,https://www.guthriebowron.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/12073372021,public
 gypsy-oven-2,Gypsy Oven,shopping,,,"19 Camp Street, Queenstown",-45.0306131,168.6603426,Mo-Sa 08:00-13:00,+64 210 797 839,https://www.gypsyoven.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/12972122170,public
 hair-on-church-st,Hair on Church st,shopping,,,3 Church Street,-45.0323822,168.6620015,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782057621,public
-hallensteins,Hallensteins,shopping,,,Queenstown,-45.0318548,168.6597855,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780359835,public
+hallensteins,Hallensteins,shopping,,,"Beach Street, Queenstown",-45.0318548,168.6597855,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780359835,public
 happy-travels-nz,Happy Travels NZ,shopping,,,"37 Shotover Street, Queenstown",-45.0311859,168.6602666,,,,,OpenStreetMap,https://www.openstreetmap.org/node/2637437349,public
-harmony-spa,Harmony Spa,shopping,,,Queenstown,-45.0331894,168.6622065,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782050421,public
-harvey-norman,Harvey Norman,shopping,,,Queenstown,-45.0265637,168.7420452,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6451049285,public
-hector-salles-massage-therapist,Hector Salles | Massage Therapist,shopping,,,Queenstown,-45.0191011,168.6631372,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11967853487,public
-henry-s,Henry's,shopping,,,Queenstown,-45.0306123,168.6613939,Mo-Su 10:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780375722,public
+harmony-spa,Harmony Spa,shopping,,,"Church Lane, Queenstown",-45.0331894,168.6622065,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782050421,public
+harvey-norman,Harvey Norman,shopping,,,"Riverside Road, Frankton",-45.0265637,168.7420452,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6451049285,public
+hector-salles-massage-therapist,Hector Salles | Massage Therapist,shopping,,,"Gorge Road, Queenstown",-45.0191011,168.6631372,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11967853487,public
+henry-s,Henry's,shopping,,,"Athol Street, Queenstown",-45.0306123,168.6613939,Mo-Su 10:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780375722,public
 henry-s-2,Henry's,shopping,,,"317 Hawthorne Drive, Frankton",-45.0098421,168.7458157,,,,,OpenStreetMap,https://www.openstreetmap.org/way/963209057,public
 hospice-shop,Hospice Shop,shopping,,,106 Gorge Road,-45.0222088,168.662019,Mo-Sa 10:00-15:00,+64 3 442 5857,https://www.hospicesouthland.org.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/9409070617,public
-ideal-electrical,Ideal Electrical,shopping,,,Queenstown,-45.0184382,168.6629309,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11967853489,public
-internet-laundry,Internet Laundry,shopping,,,Queenstown,-45.0295361,168.6618131,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6348092086,public
-issimo-shoes,Issimo Shoes,shopping,,,Queenstown,-45.0322683,168.6618345,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780376022,public
-jardine-boulders,Jardine boulders,shopping,,,Queenstown,-45.0998731,168.7560421,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4844786529,public
-just-jeans,Just Jeans,shopping,,,Queenstown,-45.0319409,168.6617889,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780357524,public
-kanmanee-thai-massage,Kanmanee Thai Massage,shopping,,,Queenstown,-45.0335402,168.6563601,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11964260681,public
-kathmandu,Kathmandu,shopping,,,Queenstown,-45.0124637,168.7423572,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12001623627,public
-kathmandu-2,Kathmandu,shopping,,,Queenstown,-45.0321813,168.6591896,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782003323,public
-kmart,Kmart,shopping,,,Queenstown,-45.0114515,168.7436061,Mo-Su 08:00-24:00,+64 3 450 9900,https://www.kmart.co.nz/store-detail/Queenstown,,OpenStreetMap,https://www.openstreetmap.org/node/7059090685,public
-lexus,Lexus,shopping,,,Queenstown,-45.0260906,168.7389098,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072914,public
-liquid-laundromat,Liquid Laundromat,shopping,,,Queenstown,-45.0252882,168.7462137,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145131020,public
+ideal-electrical,Ideal Electrical,shopping,,,"Gorge Road, Queenstown",-45.0184382,168.6629309,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11967853489,public
+internet-laundry,Internet Laundry,shopping,,,"Gorge Road, Queenstown",-45.0295361,168.6618131,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6348092086,public
+issimo-shoes,Issimo Shoes,shopping,,,"Searle Lane, Queenstown",-45.0322683,168.6618345,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780376022,public
+jardine-boulders,Jardine boulders,shopping,,,Kingston Road,-45.0998731,168.7560421,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4844786529,public
+just-jeans,Just Jeans,shopping,,,"Camp Street, Queenstown",-45.0319409,168.6617889,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780357524,public
+kanmanee-thai-massage,Kanmanee Thai Massage,shopping,,,"Lake Street, Queenstown",-45.0335402,168.6563601,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11964260681,public
+kathmandu,Kathmandu,shopping,,,"Grant Road, Frankton",-45.0124637,168.7423572,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12001623627,public
+kathmandu-2,Kathmandu,shopping,,,"Beach Street, Queenstown",-45.0321813,168.6591896,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782003323,public
+kmart,Kmart,shopping,,,"Central Street, Frankton",-45.0114515,168.7436061,Mo-Su 08:00-24:00,+64 3 450 9900,https://www.kmart.co.nz/store-detail/Queenstown,,OpenStreetMap,https://www.openstreetmap.org/node/7059090685,public
+lexus,Lexus,shopping,,,"Robertson Street, Frankton",-45.0260906,168.7389098,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072914,public
+liquid-laundromat,Liquid Laundromat,shopping,,,"Market Street, Frankton",-45.0252882,168.7462137,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145131020,public
 liquid-self-service-laundromat,Liquid self service laundromat,shopping,,,"5/32 Grant Road, Frankton",-45.0132156,168.7426949,24/7,,,,OpenStreetMap,https://www.openstreetmap.org/node/5391925984,public
-louis-vuitton,Louis Vuitton,shopping,,,Queenstown,-45.0330603,168.660901,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780412022,public
+louis-vuitton,Louis Vuitton,shopping,,,"Marine Parade, Queenstown",-45.0330603,168.660901,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780412022,public
 lululemon,Lululemon,shopping,,,The Mall,-45.0318961,168.6612956,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6317285785,public
-ma-boulangerie-french-bakery,Ma Boulangerie French Bakery,shopping,,,Queenstown,-45.0263756,168.7421704,Mo-Su 07:00-19:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/4808467222,public
+ma-boulangerie-french-bakery,Ma Boulangerie French Bakery,shopping,,,"Hawthorne Drive, Frankton",-45.0263756,168.7421704,Mo-Su 07:00-19:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/4808467222,public
 macaulay-mazda,Macaulay Mazda,shopping,,,"42 Grant Road, Frankton",-45.0142532,168.7440467,,+64 3 442 3914,https://www.macaulaymazda.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/way/963209060,public
-macpac,Macpac,shopping,,,Queenstown,-45.0122117,168.7433204,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12001623626,public
-macpac-2,Macpac,shopping,,,Queenstown,-45.032487,168.659375,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8912832285,public
+macpac,Macpac,shopping,,,"Central Street, Frankton",-45.0122117,168.7433204,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12001623626,public
+macpac-2,Macpac,shopping,,,"Beach Street, Queenstown",-45.032487,168.659375,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8912832285,public
 manaaki-touch-online-shop,Manaaki Touch (Online Shop),shopping,,,"33 Camp Street, Queenstown",-45.0323948,168.6574607,24/7,,https://www.manaakitouch.com/,,OpenStreetMap,https://www.openstreetmap.org/node/13762521545,public
-market-by-frank-s,Market by Frank's,shopping,,,Queenstown,-45.0282197,168.7503764,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145457533,public
-mary-s-sheep,Mary's Sheep,shopping,,,Queenstown,-45.0318148,168.6598755,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780363023,public
-maya-music,Maya Music,shopping,,,Queenstown,-45.0226103,168.7472642,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145548026,public
+market-by-frank-s,Market by Frank's,shopping,,,"Mountain Ash Drive, Frankton",-45.0282197,168.7503764,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145457533,public
+mary-s-sheep,Mary's Sheep,shopping,,,"Beach Street, Queenstown",-45.0318148,168.6598755,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780363023,public
+maya-music,Maya Music,shopping,,,"White Birch Way, Frankton",-45.0226103,168.7472642,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145548026,public
 mckenzie-willis-interiors,McKenzie & Willis Interiors,shopping,,,"314 Hawthorne Drive, Frankton",-45.0094698,168.7467271,"Mo-Fr 09:00-17:30, Sa 10:00-16:00",+64 3 442 7355,https://mcw.nz/,,OpenStreetMap,https://www.openstreetmap.org/way/1551842897,public
-michael-hill,Michael Hill,shopping,,,Queenstown,-45.0321792,168.6598256,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780412223,public
+michael-hill,Michael Hill,shopping,,,"Rees Street, Queenstown",-45.0321792,168.6598256,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780412223,public
 mikael,Mikael,shopping,,,91 Beach Street,-45.0331254,168.6572799,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6051483381,public
-milan-design,Milan Design,shopping,,,Queenstown,-45.0329483,168.6625299,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782045521,public
-million-dollar-queenstown-cruise,Million Dollar Queenstown Cruise,shopping,,,Queenstown,-45.0324997,168.6592049,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1540271508,public
+milan-design,Milan Design,shopping,,,"Earl Street, Queenstown",-45.0329483,168.6625299,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782045521,public
+million-dollar-queenstown-cruise,Million Dollar Queenstown Cruise,shopping,,,"Beach Street, Queenstown",-45.0324997,168.6592049,,,,,OpenStreetMap,https://www.openstreetmap.org/node/1540271508,public
 mitre-10-mega,Mitre 10 MEGA,shopping,,,46 Brookes Road,-45.0099795,168.7504977,"Mo-Fr 07:00-18:00; Sa,Su,PH 08:00-18:00",+64 3 450 9262,https://mitre10.co.nz/local/MEGAQueenstown/,,OpenStreetMap,https://www.openstreetmap.org/way/494163866,public
-mooch,Mooch,shopping,,,Queenstown,-45.0268414,168.7424049,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6451137585,public
-mountain-warehouse,Mountain Warehouse,shopping,,,Queenstown,-45.0323862,168.6605576,Mo-Su 09:00-19:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/10501536450,public
-mountain-warehouse-2,Mountain Warehouse,shopping,,,Queenstown,-45.0317313,168.660399,,,,,OpenStreetMap,https://www.openstreetmap.org/node/7252020785,public
-mr-davis-menswear,Mr Davis Menswear,shopping,,,Queenstown,-45.0246433,168.7426923,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11111213243,public
-new-world-queenstown,New World Queenstown,shopping,,,Queenstown,-45.0257658,168.7415457,Mo-Su 07:30-22:00,+64 3 442 3045,https://newworld.co.nz,,OpenStreetMap,https://www.openstreetmap.org/way/237661672,public
-night-n-day,Night 'n Day,shopping,,,Queenstown,-45.0320608,168.6589499,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6298924385,public
+mooch,Mooch,shopping,,,"Elm Tree Avenue, Frankton",-45.0268414,168.7424049,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6451137585,public
+mountain-warehouse,Mountain Warehouse,shopping,,,"Queenstown Mall, Queenstown",-45.0323862,168.6605576,Mo-Su 09:00-19:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/10501536450,public
+mountain-warehouse-2,Mountain Warehouse,shopping,,,"Beach Street, Queenstown",-45.0317313,168.660399,,,,,OpenStreetMap,https://www.openstreetmap.org/node/7252020785,public
+mr-davis-menswear,Mr Davis Menswear,shopping,,,"Hawthorne Drive, Frankton",-45.0246433,168.7426923,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11111213243,public
+new-world-queenstown,New World Queenstown,shopping,,,"Hawthorne Drive, Frankton",-45.0257658,168.7415457,Mo-Su 07:30-22:00,+64 3 442 3045,https://newworld.co.nz,,OpenStreetMap,https://www.openstreetmap.org/way/237661672,public
+night-n-day,Night 'n Day,shopping,,,"Shotover Street, Queenstown",-45.0320608,168.6589499,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6298924385,public
 night-n-day-2,Night 'n Day,shopping,,,"Cnr Church & Camp Streets, Queenstown",-45.0321929,168.6620875,24/7,,,,OpenStreetMap,https://www.openstreetmap.org/node/776038174,public
 night-n-day-kawarau,Night 'n Day Kawarau,shopping,,,"23 Eleventh Avenue, Lake Hayes",-45.0018359,168.7811333,,+64 3 428 2041,https://nightnday.co.nz,,OpenStreetMap,https://www.openstreetmap.org/node/8597291024,public
 noel-leeming,Noel Leeming,shopping,,,"2/22 Grant Road, Frankton",-45.0125407,168.7412724,Mo-Su 09:00-17:30,,https://www.noelleeming.co.nz/queenstown,,OpenStreetMap,https://www.openstreetmap.org/node/5391925925,public
-nood,Nood,shopping,,,Queenstown,-45.0263784,168.7439405,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073024,public
+nood,Nood,shopping,,,"Cherry Blossom Avenue, Frankton",-45.0263784,168.7439405,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073024,public
 nz-shred,NZ Shred,shopping,,,"19 Shotover Street, Queenstown",-45.0306081,168.6606108,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12335969116,public
 nzone-skydive,NZOne Skydive,shopping,,,"35 Shotover Street, Queenstown",-45.0312228,168.6596978,,+64 3 442 5867,https://www.nzoneskydive.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4884640823,public
 o-connells-shopping-centre,O'Connells Shopping Centre,shopping,,,9348 Corner Camp and Beach Streets,-45.0315703,168.660862,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5008456427,public
-oakley,Oakley,shopping,,,Queenstown,-45.0316756,168.6604758,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963895943,public
-oamaru-organics,Oamaru Organics,shopping,,,Queenstown,-45.0162211,168.73007,Mo-Fr 09:00-20:00; Sa-Su 10:00-20:00,+64 3 451 1414,https://www.oamaruorganics.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/6020740685,public
-ok-gift-shop,OK Gift Shop,shopping,,,Queenstown,-45.0332096,168.6577064,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4781983621,public
-omen-suit-hire,Omen Suit Hire,shopping,,,Queenstown,-45.0164255,168.7310339,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845607,public
-one-nz,One NZ,shopping,,,Queenstown,-45.0322789,168.6594227,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007124,public
-one-nz-2,One NZ,shopping,,,Queenstown,-45.0326323,168.6584312,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4943483814,public
+oakley,Oakley,shopping,,,"Beach Street, Queenstown",-45.0316756,168.6604758,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11963895943,public
+oamaru-organics,Oamaru Organics,shopping,,,"Te Kirikiri Frankton Link, Frankton",-45.0162211,168.73007,Mo-Fr 09:00-20:00; Sa-Su 10:00-20:00,+64 3 451 1414,https://www.oamaruorganics.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/6020740685,public
+ok-gift-shop,OK Gift Shop,shopping,,,"Beach Street, Queenstown",-45.0332096,168.6577064,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4781983621,public
+omen-suit-hire,Omen Suit Hire,shopping,,,"Gray Street, Frankton",-45.0164255,168.7310339,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845607,public
+one-nz,One NZ,shopping,,,"Beach Street, Queenstown",-45.0322789,168.6594227,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007124,public
+one-nz-2,One NZ,shopping,,,"Beach Street, Queenstown",-45.0326323,168.6584312,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4943483814,public
 outdoor-concepts-queenstown,Outdoor Concepts Queenstown,shopping,,,313 Hawthorne Drive,-45.0100985,168.7462432,,,,,OpenStreetMap,https://www.openstreetmap.org/node/13903233910,public
 outside-sports,Outside Sports,shopping,,,9 Shotover Street,-45.0303349,168.6610071,Mo-Su 08:00-21:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/6386874186,public
-pack-send,Pack & Send,shopping,,,Queenstown,-45.018505,168.6634688,Mo-Fr 09:00-17:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/11967853488,public
+pack-send,Pack & Send,shopping,,,"Gorge Road, Queenstown",-45.018505,168.6634688,Mo-Fr 09:00-17:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/11967853488,public
 pak-nsave,PAK'nSAVE,shopping,,,"302 Hawthorne Drive, Frankton",-45.0108752,168.7492078,Mo-Su 07:00-22:00,+64 3 409 1000,https://www.paknsave.co.nz/south-island/otago-and-southland/queenstown,,OpenStreetMap,https://www.openstreetmap.org/way/618753816,public
-paper-plus,Paper Plus,shopping,,,Queenstown,-45.02161,168.7394024,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12018616296,public
+paper-plus,Paper Plus,shopping,,,"Sir Henry Wigley Drive, Frankton",-45.02161,168.7394024,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12018616296,public
 partridge-jewellers,Partridge Jewellers,shopping,,,Corner Beach Street and Rees Street,-45.0321108,168.6593229,Mo-Su 10:00-18:30,+64 3 441 8845,https://partridgejewellers.com/,,OpenStreetMap,https://www.openstreetmap.org/node/4780412026,public
-peter-alexander,Peter Alexander,shopping,,,Queenstown,-45.0320351,168.6618937,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782057622,public
+peter-alexander,Peter Alexander,shopping,,,"Searle Lane, Queenstown",-45.0320351,168.6618937,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782057622,public
 platypus-shoes,Platypus Shoes,shopping,,,Rees Street,-45.0322308,168.6598838,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4599039891,public
-quality-convenience-store,Quality Convenience Store,shopping,,,Queenstown,-45.0331588,168.6572121,,,,,OpenStreetMap,https://www.openstreetmap.org/node/2090738897,public
+quality-convenience-store,Quality Convenience Store,shopping,,,"Beach Street, Queenstown",-45.0331588,168.6572121,,,,,OpenStreetMap,https://www.openstreetmap.org/node/2090738897,public
 queenstown-barber,Queenstown Barber,shopping,,,62 Shotover Street,-45.032404,168.6582917,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780449621,public
-queenstown-furniture-gallery,Queenstown Furniture Gallery,shopping,,,Queenstown,-45.0267583,168.7422827,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072920,public
-queenstown-rockshop,Queenstown Rockshop,shopping,,,Queenstown,-45.0198169,168.6630133,,,https://www.rockshop.co.nz/stores/south-island/queenstown,,OpenStreetMap,https://www.openstreetmap.org/node/11967853463,public
-queenz-asian-market,Queenz Asian Market,shopping,,,Queenstown,-45.0163497,168.731229,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845606,public
-quiksilver,Quiksilver,shopping,,,Queenstown,-45.0319704,168.6591882,,,,,OpenStreetMap,https://www.openstreetmap.org/node/3475246596,public
-realnz,RealNZ,shopping,,,Queenstown,-45.111547,168.5424448,,+64 3 249 6000,https://www.realnz.com,,OpenStreetMap,https://www.openstreetmap.org/node/2255625189,public
+queenstown-furniture-gallery,Queenstown Furniture Gallery,shopping,,,"Elm Tree Avenue, Frankton",-45.0267583,168.7422827,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072920,public
+queenstown-rockshop,Queenstown Rockshop,shopping,,,"Gorge Road, Queenstown",-45.0198169,168.6630133,,,https://www.rockshop.co.nz/stores/south-island/queenstown,,OpenStreetMap,https://www.openstreetmap.org/node/11967853463,public
+queenz-asian-market,Queenz Asian Market,shopping,,,"Gray Street, Frankton",-45.0163497,168.731229,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845606,public
+quiksilver,Quiksilver,shopping,,,"Rees Street, Queenstown",-45.0319704,168.6591882,,,,,OpenStreetMap,https://www.openstreetmap.org/node/3475246596,public
+realnz,RealNZ,shopping,,,Mount Nicholas-Beach Bay Road,-45.111547,168.5424448,,+64 3 249 6000,https://www.realnz.com,,OpenStreetMap,https://www.openstreetmap.org/node/2255625189,public
 realnz-visitor-centre,RealNZ Visitor Centre,shopping,,,"88 Beach Street, Queenstown",-45.0334862,168.6579231,,+64 3 249 6000,https://www.realnz.com,,OpenStreetMap,https://www.openstreetmap.org/node/4884649722,public
 rebel-sport,Rebel Sport,shopping,,,"1/28 Grant Road, Frankton",-45.0137183,168.7415393,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5391926924,public
-remarkable-gifts,Remarkable Gifts,shopping,,,Queenstown,-45.0315665,168.6601246,,,,,OpenStreetMap,https://www.openstreetmap.org/node/13542442761,public
-remarkable-sweet-shop,Remarkable Sweet Shop,shopping,,,Queenstown,-45.0215306,168.7394376,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12018616299,public
-remarkables-spa,Remarkables Spa,shopping,,,Queenstown,-45.026326,168.7466471,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145130974,public
-repco,Repco,shopping,,,Queenstown,-45.0174463,168.6620324,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11966238906,public
+remarkable-gifts,Remarkable Gifts,shopping,,,"Beach Street, Queenstown",-45.0315665,168.6601246,,,,,OpenStreetMap,https://www.openstreetmap.org/node/13542442761,public
+remarkable-sweet-shop,Remarkable Sweet Shop,shopping,,,"Sir Henry Wigley Drive, Frankton",-45.0215306,168.7394376,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12018616299,public
+remarkables-spa,Remarkables Spa,shopping,,,"Golden Elm Lane, Frankton",-45.026326,168.7466471,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145130974,public
+repco,Repco,shopping,,,"Repco Boulevard, Queenstown",-45.0174463,168.6620324,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11966238906,public
 resale-shop,Resale Shop,shopping,,,Glenda Drive,-45.0089452,168.753471,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4879717535,public
 resene,Resene,shopping,,,"11 Glenda Drive, Frankton",-45.0093607,168.7477235,,,,,OpenStreetMap,https://www.openstreetmap.org/way/963209064,public
-rip-curl,Rip Curl,shopping,,,Queenstown,-45.0318858,168.6597288,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780359834,public
-rockies,Rockies,shopping,,,Queenstown,-45.0259333,168.7437084,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073028,public
-rockies-2,Rockies,shopping,,,Queenstown,-45.0324139,168.6587481,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007421,public
-rodd-gunn,Rodd & Gunn,shopping,,,Queenstown,-45.0325994,168.6600507,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780412024,public
-rugby-planet,Rugby Planet,shopping,,,Queenstown,-45.0322927,168.6595741,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007523,public
-skoda,Škoda,shopping,,,Queenstown,-45.0257396,168.7408583,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072915,public
+rip-curl,Rip Curl,shopping,,,"Beach Street, Queenstown",-45.0318858,168.6597288,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780359834,public
+rockies,Rockies,shopping,,,"Cherry Blossom Avenue, Frankton",-45.0259333,168.7437084,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073028,public
+rockies-2,Rockies,shopping,,,"Beach Street, Queenstown",-45.0324139,168.6587481,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007421,public
+rodd-gunn,Rodd & Gunn,shopping,,,"Rees Street, Queenstown",-45.0325994,168.6600507,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780412024,public
+rugby-planet,Rugby Planet,shopping,,,"Rees Street, Queenstown",-45.0322927,168.6595741,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007523,public
+skoda,Škoda,shopping,,,"2 Hawthorne Drive, Frankton",-45.0257396,168.7408583,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072915,public
 small-planet-sports,Small Planet Sports,shopping,,,15-17 Shotover Street,-45.030413,168.6608528,Mo-Su 09:00-19:00,+64 3 442 5397,https://smallplanetsports.com/,,OpenStreetMap,https://www.openstreetmap.org/node/6456809386,public
-smiggle,Smiggle,shopping,,,Queenstown,-45.0319505,168.6615514,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12338734437,public
-snopro-queenstown,Snopro Queenstown,shopping,,,Queenstown,-45.0195748,168.6613982,Mo-Su 07:00-21:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/11967853530,public
-sotheby-s-international-realty,Sotheby's International Realty,shopping,,,Queenstown,-45.0319852,168.6590811,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6298924181,public
-southern-lakes-flooring-design,Southern Lakes Flooring Design,shopping,,,Queenstown,-45.024919,168.7433576,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145548032,public
-spark,Spark,shopping,,,Queenstown,-45.0121401,168.7440295,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12001623622,public
+smiggle,Smiggle,shopping,,,"Queenstown Mall, Queenstown",-45.0319505,168.6615514,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12338734437,public
+snopro-queenstown,Snopro Queenstown,shopping,,,"Industrial Place, Queenstown",-45.0195748,168.6613982,Mo-Su 07:00-21:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/11967853530,public
+sotheby-s-international-realty,Sotheby's International Realty,shopping,,,"Rees Street, Queenstown",-45.0319852,168.6590811,,,,,OpenStreetMap,https://www.openstreetmap.org/node/6298924181,public
+southern-lakes-flooring-design,Southern Lakes Flooring Design,shopping,,,"Hawthorne Drive, Frankton",-45.024919,168.7433576,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145548032,public
+spark,Spark,shopping,,,"Central Street, Frankton",-45.0121401,168.7440295,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12001623622,public
 spca-op-shop,SPCA Op Shop,shopping,,,51 Gorge Road,-45.0237775,168.6622946,Mo-Fr 09:00-17:00,+64 3 777 4054,https://spca.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/9409051817,public
-specsavers,Specsavers,shopping,,,Queenstown,-45.0257633,168.7436055,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073031,public
-spotlight,Spotlight,shopping,,,Queenstown,-45.0270788,168.7426449,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072919,public
-subaru,Subaru,shopping,,,Queenstown,-45.0259477,168.7408692,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072917,public
-super-liquor,Super Liquor,shopping,,,Queenstown,-45.0306613,168.6617342,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845618,public
-super-liquor-2,Super Liquor,shopping,,,Queenstown,-45.0326307,168.6577702,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11959305672,public
-that-store,That Store,shopping,,,Queenstown,-45.0258196,168.7436665,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073030,public
+specsavers,Specsavers,shopping,,,"Hawthorne Drive, Frankton",-45.0257633,168.7436055,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073031,public
+spotlight,Spotlight,shopping,,,"Elm Tree Avenue, Frankton",-45.0270788,168.7426449,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072919,public
+subaru,Subaru,shopping,,,"2 Hawthorne Drive, Frankton",-45.0259477,168.7408692,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072917,public
+super-liquor,Super Liquor,shopping,,,"Stanley Street, Queenstown",-45.0306613,168.6617342,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845618,public
+super-liquor-2,Super Liquor,shopping,,,"Shotover Street, Queenstown",-45.0326307,168.6577702,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11959305672,public
+that-store,That Store,shopping,,,"Hawthorne Drive, Frankton",-45.0258196,168.7436665,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073030,public
 the-arts-hole,The Arts Hole,shopping,,,"26 Hansen Road, Country Lane",-45.0129327,168.737326,Mo 11:00-16:00; We 11:00-16:00; Th-Sa 10:00-17:00; Su 11:00-16:00,+64 27 333 5033,https://theartshole.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/13176276287,public
-the-bead-shop,The Bead Shop,shopping,,,Queenstown,-45.0299692,168.6621316,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11957797318,public
-the-gift-centre,THE Gift CENTRE,shopping,,,Queenstown,-45.0315433,168.6602754,Mo-Su 09:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/13542442765,public
-the-landing,The Landing,shopping,,,Queenstown,-45.0247675,168.7425689,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1312164329,public
-the-north-face,The North Face,shopping,,,Queenstown,-45.0316081,168.6596426,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863851007,public
+the-bead-shop,The Bead Shop,shopping,,,"Shotover Street, Queenstown",-45.0299692,168.6621316,,,,,OpenStreetMap,https://www.openstreetmap.org/node/11957797318,public
+the-gift-centre,THE Gift CENTRE,shopping,,,"Beach Street, Queenstown",-45.0315433,168.6602754,Mo-Su 09:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/13542442765,public
+the-landing,The Landing,shopping,,,"Hawthorne Drive, Frankton",-45.0247675,168.7425689,,,,,OpenStreetMap,https://www.openstreetmap.org/way/1312164329,public
+the-north-face,The North Face,shopping,,,"Shotover Street, Queenstown",-45.0316081,168.6596426,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863851007,public
 the-outpost,The Outpost,shopping,,,"3 Beach Street, Queenstown",-45.0312859,168.6606898,Mo-Fr 10:00-18:00,+64 3 441 3222,https://outpostnz.com/,,OpenStreetMap,https://www.openstreetmap.org/node/12035002173,public
-the-remarkable-sweet-shop,The Remarkable Sweet shop,shopping,,,Queenstown,-45.031976,168.6596062,,,,,OpenStreetMap,https://www.openstreetmap.org/node/2630961940,public
+the-remarkable-sweet-shop,The Remarkable Sweet shop,shopping,,,"Beach Street, Queenstown",-45.031976,168.6596062,,,,,OpenStreetMap,https://www.openstreetmap.org/node/2630961940,public
 the-salvation-army-family-store,The Salvation Army Family Store,shopping,,,71 Gorge Road,-45.0229626,168.6624591,Mo-Sa 10:00-17:00,+64 3 442 9661,https://www.salvationarmy.org.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4879718521,public
-the-shepherd,The Shepherd,shopping,,,Queenstown,-45.0324949,168.6585776,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007322,public
-the-shotover-store,The Shotover Store,shopping,,,Queenstown,-45.0297842,168.6616299,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12335969117,public
+the-shepherd,The Shepherd,shopping,,,"Beach Street, Queenstown",-45.0324949,168.6585776,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007322,public
+the-shotover-store,The Shotover Store,shopping,,,"Shotover Street, Queenstown",-45.0297842,168.6616299,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12335969117,public
 the-station-building,The Station Building,shopping,,,48 Camp Street,-45.03091,168.6596531,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5544007621,public
 the-warehouse,The Warehouse,shopping,,,"2/24 Grant Road, Frankton",-45.013095,168.7401989,Mo-Su 07:00-24:00,+64 3 441 4400,https://www.thewarehouse.co.nz/stores/store-details?StoreID=179,,OpenStreetMap,https://www.openstreetmap.org/node/4808547221,public
-the-winery,The Winery,shopping,,,Queenstown,-45.0325449,168.6607318,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8912826142,public
-toad,Toad,shopping,,,Queenstown,-45.0308831,168.6622643,,+64 3 442 5311,https://www.greentoad.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/8934310776,public
-torpedo7,Torpedo7,shopping,,,Queenstown,-45.030701,168.6609627,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4853787329,public
-torpedo7-2,Torpedo7,shopping,,,Queenstown,-45.0272804,168.7428805,Mo-Su 09:00-18:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/6451074985,public
-toyota,Toyota,shopping,,,Queenstown,-45.0261333,168.7386366,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072913,public
-triton-hearing,Triton Hearing,shopping,,,Queenstown,-45.0272152,168.7442985,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145130808,public
-true-south-flights,True South Flights,shopping,,,Queenstown,-45.025563,168.7427969,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073039,public
-ugg,UGG,shopping,,,Queenstown,-45.0319318,168.659396,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782003324,public
+the-winery,The Winery,shopping,,,"Queenstown Mall, Queenstown",-45.0325449,168.6607318,,,,,OpenStreetMap,https://www.openstreetmap.org/node/8912826142,public
+toad,Toad,shopping,,,"Stanley Street, Queenstown",-45.0308831,168.6622643,,+64 3 442 5311,https://www.greentoad.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/8934310776,public
+torpedo7,Torpedo7,shopping,,,"Shotover Street, Queenstown",-45.030701,168.6609627,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4853787329,public
+torpedo7-2,Torpedo7,shopping,,,"Elm Tree Avenue, Frankton",-45.0272804,168.7428805,Mo-Su 09:00-18:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/6451074985,public
+toyota,Toyota,shopping,,,"Robertson Street, Frankton",-45.0261333,168.7386366,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072913,public
+triton-hearing,Triton Hearing,shopping,,,"Cherry Blossom Avenue, Frankton",-45.0272152,168.7442985,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145130808,public
+true-south-flights,True South Flights,shopping,,,"Hawthorne Drive, Frankton",-45.025563,168.7427969,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073039,public
+ugg,UGG,shopping,,,"Rees Street, Queenstown",-45.0319318,168.659396,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782003324,public
 vertigo-bikes,Vertigo Bikes,shopping,,,4 Brecon Street,-45.0316188,168.6587309,Tu-Su 09:00-18:00; Mo 11:00-18:00,+64 3 442 8378,https://www.vertigobikes.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/4173444840,public
-vesta-design,Vesta Design,shopping,,,Queenstown,-45.0334596,168.6617968,,+64 3 442 5687,https://www.vestadesign.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/1661793607,public
+vesta-design,Vesta Design,shopping,,,"21 Marine Parade, Queenstown",-45.0334596,168.6617968,,+64 3 442 5687,https://www.vestadesign.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/1661793607,public
 via-ferrata-queenstown,Via Ferrata Queenstown,shopping,,,39 Camp Street,-45.0309142,168.6608242,,+64 3 441 3003,https://viaferrata.co.nz/,,OpenStreetMap,https://www.openstreetmap.org/node/6386896985,public
-vivo,Vivo,shopping,,,Queenstown,-45.0256357,168.7430898,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073035,public
-volkswagen,Volkswagen,shopping,,,Queenstown,-45.0258265,168.7406986,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072916,public
-waka,Waka,shopping,,,Queenstown,-45.0322529,168.6595061,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007522,public
-wallace-cotton,Wallace Cotton,shopping,,,Queenstown,-45.0267966,168.7419968,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072921,public
+vivo,Vivo,shopping,,,"Hawthorne Drive, Frankton",-45.0256357,168.7430898,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073035,public
+volkswagen,Volkswagen,shopping,,,"2 Hawthorne Drive, Frankton",-45.0258265,168.7406986,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072916,public
+waka,Waka,shopping,,,"Beach Street, Queenstown",-45.0322529,168.6595061,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4782007522,public
+wallace-cotton,Wallace Cotton,shopping,,,"Riverside Road, Frankton",-45.0267966,168.7419968,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145072921,public
 warehouse-stationery,Warehouse Stationery,shopping,,,"5/26 Grant Road, Frankton",-45.0133904,168.7404393,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4584907190,public
-washatipu-laundry,Washatipu Laundry,shopping,,,Queenstown,-45.0324227,168.6592201,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5449562718,public
-white-tiger-tattoo,White Tiger Tattoo,shopping,,,Queenstown,-45.0322689,168.6585576,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845622,public
-wholesale-tyres-queenstown,Wholesale Tyres Queenstown,shopping,,,Queenstown,-45.0175162,168.7167512,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863851005,public
-wild-south,Wild South,shopping,,,Queenstown,-45.0264917,168.7434386,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073016,public
-wilther-s-place,Wilther's Place,shopping,,,Queenstown,-45.0335669,168.6563439,,,,,OpenStreetMap,https://www.openstreetmap.org/node/2031124995,public
+washatipu-laundry,Washatipu Laundry,shopping,,,"Beach Street, Queenstown",-45.0324227,168.6592201,,,,,OpenStreetMap,https://www.openstreetmap.org/node/5449562718,public
+white-tiger-tattoo,White Tiger Tattoo,shopping,,,"Shotover Street, Queenstown",-45.0322689,168.6585576,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863845622,public
+wholesale-tyres-queenstown,Wholesale Tyres Queenstown,shopping,,,"Te Kirikiri Frankton Link, Frankton",-45.0175162,168.7167512,,,,,OpenStreetMap,https://www.openstreetmap.org/node/10863851005,public
+wild-south,Wild South,shopping,,,"Hawthorne Drive, Frankton",-45.0264917,168.7434386,,,,,OpenStreetMap,https://www.openstreetmap.org/node/12145073016,public
+wilther-s-place,Wilther's Place,shopping,,,"Beach Street, Queenstown",-45.0335669,168.6563439,,,,,OpenStreetMap,https://www.openstreetmap.org/node/2031124995,public
 woolworths,Woolworths,shopping,,,"30 Grant Road, Frankton",-45.0136555,168.742117,07:00-22:00,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780200721,public
-world,World,shopping,,,Queenstown,-45.0330246,168.6611116,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780412021,public
+world,World,shopping,,,"Church Street, Queenstown",-45.0330246,168.6611116,,,,,OpenStreetMap,https://www.openstreetmap.org/node/4780412021,public

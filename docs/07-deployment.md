@@ -84,7 +84,7 @@ WEB_URL=https://queenstown-web.onrender.com ADMIN_URL=https://queenstown-admin.o
 
 | 한계 | 영향 |
 |---|---|
-| Render 무료 웹 서비스는 15분 동안 요청이 없으면 잠들고, 다음 요청에 깨어나는 데 1분쯤 걸린다 | Web과 API가 둘 다 잠들어 있으면 첫 방문이 느리다 |
+| Render 무료 웹 서비스는 15분 동안 요청이 없으면 잠들고, 다음 요청에 깨어나는 데 1분쯤 걸린다 | Web과 API가 둘 다 잠들어 있으면 첫 방문이 느리다. 그래서 Web 서버는 뜨자마자 API의 `/actuator/health`를 한 번 불러 API도 같이 깨우고(`web/src/instrumentation.ts`), 지도 · Explore · App 상세는 로딩이 5초를 넘으면 "Waking up the server… This can take up to a minute."를 보여 준다 |
 | 0.1 CPU, 512MB 메모리 | API(Spring Boot)가 깨어나는 데 오래 걸린다 |
 | Render 무료 시간은 계정당 월 750시간 | 두 서비스가 잠들지 않고 한 달 내내 돌면 넘는다. 넘으면 다음 달까지 멈춘다 |
 | Neon 무료: 저장 0.5 ~ 1GB, 월 100 CU-시간 | 다 쓰면 다음 달까지 DB가 멈춘다 |

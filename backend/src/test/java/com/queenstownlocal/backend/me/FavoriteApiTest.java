@@ -90,7 +90,7 @@ class FavoriteApiTest {
 		Map<String, Object> first = JsonPath.read(json, "$.items[0]");
 		assertThat(body.keySet()).containsExactly("items");
 		assertThat(first.keySet()).containsExactlyInAnyOrder("slug", "name", "category", "subtype", "address",
-				"imageUrl", "latitude", "longitude", "distanceM");
+				"imageUrl", "latitude", "longitude", "distanceM", "openingHours");
 		assertThat(first.get("distanceM")).isNull();
 	}
 

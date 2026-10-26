@@ -1,9 +1,18 @@
-import { displayUrl, formatDate, httpUrl, type PlaceDetail, telHref } from "@queenstown/shared";
+import {
+  displayUrl,
+  formatDate,
+  formatWeeklyHours,
+  httpUrl,
+  type PlaceDetail,
+  parseOpeningHours,
+  telHref,
+} from "@queenstown/shared";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { type ReactNode, Suspense } from "react";
 import { FavoriteButton } from "@/components/account/FavoriteButton";
 import { BackLink } from "@/components/nav/BackLink";
+import { OpenBadge } from "./OpenBadge";
 import { PlaceActions } from "./PlaceActions";
 import { PlaceImage } from "./PlaceImage";
 import { ViewOnMapLink } from "./ViewOnMapLink";
@@ -37,6 +46,7 @@ export function PlaceDetailView({
   const website = place.website ? httpUrl(place.website) : null;
   const tel = place.phone ? telHref(place.phone) : null;
   const sourceUrl = httpUrl(place.sourceUrl);
+  const weekly = parseOpeningHours(place.openingHours);
   const hasContact = Boolean(place.phone || website);
   const kind =
     place.subtype && place.subtype !== "other"
@@ -92,7 +102,11 @@ export function PlaceDetailView({
 
         {place.openingHours ? (
           <Row title={t("openingHours")} className="order-7">
-            <p>{place.openingHours}</p>
+            <OpenBadge openingHours={place.openingHours} className="self-start" />
+            {/* OpenStreetMap's hours one line per run of days; anything else as written. */}
+            {(weekly ? formatWeeklyHours(weekly) : [place.openingHours]).map((line) => (
+              <p key={line}>{line}</p>
+            ))}
           </Row>
         ) : null}
 
