@@ -42,6 +42,20 @@ Admin은 `/api`를 자기 주소로 부르고, Vite가 Backend로 넘긴다(`vit
 |---|---|
 | `VITE_MAPBOX_TOKEN` | Mapbox 공개 토큰(`pk.`). 폼의 지도에서 핀으로 위치를 정한다. 없으면 위도와 경도를 숫자로 입력한다. |
 
+## 운영
+
+Admin은 `npm run build -w admin`으로 만든 정적 파일(`admin/dist`)이다. 브라우저는 Admin과 같은 주소의 `/api`를 부르고, 앞단이 그것을 API로 넘긴다. 그래서 운영에서도 CORS가 필요 없다.
+
+| 구성 | 정적 파일 | `/api` |
+|---|---|---|
+| 무료(Render, `render.yaml`) | 정적 사이트 `queenstown-admin` | 다시 쓰기 규칙으로 `https://queenstown-api.onrender.com/api/*` |
+| 서버 1대(`deploy/`) | Caddy 이미지 안(`deploy/caddy/Dockerfile`이 빌드) | Caddy가 `api:8080`으로 |
+
+- `VITE_MAPBOX_TOKEN`은 빌드할 때 들어간다(Render는 서비스의 환경 변수, 서버 1대는 `deploy/.env`의 `MAPBOX_TOKEN`). Mapbox에서 토큰의 허용 URL에 Admin 주소를 넣는다.
+- 새로 고친 주소(`/places/12`)도 열리도록 앞단이 모르는 경로는 `index.html`을 준다.
+- 운영 DB의 Admin 계정은 위 "Admin 계정"과 같은 방법으로 만든다. Neon은 SQL Editor에서, 서버 1대는 [deploy/README.md](../deploy/README.md)의 명령으로.
+- 로그인을 너무 많이 시도하면(같은 주소와 이메일로 10분에 20번) 기다리라는 안내가 나온다.
+
 ## 알아 둘 것
 
 - **토큰:** Access Token은 메모리에만, Refresh Token은 `sessionStorage`에 둔다. 새로고침해도 로그인이 남고 탭을 닫으면 끝난다. Access Token이 끝나면(15분) 한 번 재발급해 다시 보낸다.
