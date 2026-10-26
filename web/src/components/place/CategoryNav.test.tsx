@@ -34,3 +34,11 @@ test("marks All when no category is chosen", () => {
   const current = links().filter((link) => link.getAttribute("aria-current") === "page");
   expect(current.map((link) => link.textContent)).toEqual(["All"]);
 });
+
+test("each category carries its colour as a dot; All has none", () => {
+  renderWithMessages(<CategoryNav active={null} />);
+
+  const [all, food] = links();
+  expect(all.querySelector('[data-slot="kind-dot"]')).toBeNull();
+  expect(food.querySelector('[data-slot="kind-dot"]')).toHaveStyle({ backgroundColor: "#c2410c" });
+});

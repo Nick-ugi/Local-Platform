@@ -104,3 +104,11 @@ test("the date filters link to their lists and an empty period offers all events
   expect(screen.getByText("There are no events in this period.")).toBeInTheDocument();
   expect(screen.getByRole("link", { name: "Show all events" })).toHaveAttribute("href", "/events");
 });
+
+test("an event without a picture shows the event colour and a party popper instead", () => {
+  const { container } = renderWithMessages(<EventsScreen when={null} result={page([market])} />);
+
+  const placeholder = container.querySelector('[data-slot="image-placeholder"]') as HTMLElement;
+  expect(placeholder).toHaveTextContent("🎉");
+  expect(placeholder).toHaveAttribute("aria-hidden", "true");
+});

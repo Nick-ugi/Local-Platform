@@ -57,3 +57,14 @@ test("reports the Events and Notices chips by kind", async () => {
 
   expect(onToggle.mock.calls).toEqual([["event"], ["notice"]]);
 });
+
+test("each chip carries the colour of its markers as a dot", () => {
+  renderWithMessages(<FilterChips selected={[]} onToggle={() => {}} />);
+
+  const dot = (name: string) => screen.getByRole("button", { name }).querySelector('[data-slot="kind-dot"]');
+  expect(dot("Cafes")).toHaveStyle({ backgroundColor: "#92400e" });
+  expect(dot("Facilities")).toHaveStyle({ backgroundColor: "#1d4ed8" });
+  expect(dot("Events")).toHaveStyle({ backgroundColor: "#0e7490" });
+  expect(dot("Notices")).toHaveStyle({ backgroundColor: "#b91c1c" });
+  expect(dot("Cafes")).toHaveAttribute("aria-hidden", "true");
+});

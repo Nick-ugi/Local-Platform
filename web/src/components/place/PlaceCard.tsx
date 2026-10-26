@@ -1,6 +1,7 @@
-import { formatDistance, type PlaceSummary } from "@queenstown/shared";
+import { categoryStyle, formatDistance, type PlaceSummary } from "@queenstown/shared";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { KindPlaceholder } from "./KindArt";
 import { OpenBadge } from "./OpenBadge";
 import { PlaceImage } from "./PlaceImage";
 
@@ -25,7 +26,7 @@ export function PlaceCard({ place }: { place: PlaceSummary }) {
         src={place.imageUrl}
         alt=""
         className={imageClass}
-        fallback={<div data-slot="image-placeholder" aria-hidden="true" className={`${imageClass} bg-neutral-200`} />}
+        fallback={<KindPlaceholder look={categoryStyle(place)} className={imageClass} />}
       />
       <div className="min-w-0 flex-1 [overflow-wrap:anywhere] md:p-3">
         <h2 className="font-bold">{place.name}</h2>

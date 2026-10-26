@@ -73,3 +73,20 @@ test("says nothing about opening without hours", () => {
 
   expect(screen.getByRole("link")).not.toHaveTextContent(/Open|Closed/);
 });
+
+test("stands in for a missing photo with the category's colour and picture", () => {
+  const { container } = renderWithMessages(<PlaceCard place={placeSummary({ category: "cafe", imageUrl: null })} />);
+
+  const placeholder = container.querySelector('[data-slot="image-placeholder"]') as HTMLElement;
+  expect(placeholder).toHaveTextContent("☕");
+  expect(placeholder).toHaveAttribute("aria-hidden", "true");
+  expect(placeholder.style.backgroundColor).not.toBe("");
+});
+
+test("a facility's picture follows its kind", () => {
+  const { container } = renderWithMessages(
+    <PlaceCard place={placeSummary({ category: "facility", subtype: "toilet", imageUrl: null })} />,
+  );
+
+  expect(container.querySelector('[data-slot="image-placeholder"]')).toHaveTextContent("🚻");
+});

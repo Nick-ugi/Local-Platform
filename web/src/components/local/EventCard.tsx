@@ -1,5 +1,6 @@
-import { type EventSummary, formatEventWhen } from "@queenstown/shared";
+import { categoryStyle, type EventSummary, formatEventWhen } from "@queenstown/shared";
 import Link from "next/link";
+import { KindPlaceholder } from "@/components/place/KindArt";
 import { PlaceImage } from "@/components/place/PlaceImage";
 
 const imageClass = "h-16 w-24 shrink-0 rounded-lg object-cover";
@@ -16,7 +17,7 @@ export function EventCard({ event }: { event: EventSummary }) {
         src={event.imageUrl}
         alt=""
         className={imageClass}
-        fallback={<div aria-hidden="true" className={`${imageClass} bg-neutral-200`} />}
+        fallback={<KindPlaceholder look={categoryStyle("event")} className={imageClass} />}
       />
       <div className="min-w-0 flex-1">
         <h2 className="font-bold">{event.title}</h2>
