@@ -1,4 +1,5 @@
 import type { MapMarker, MarkerKind } from '../api'
+import { categoryStyle } from '../categoryStyle'
 import type { Category } from '../codes'
 import type { LatLng } from '../geo'
 import { keyOf } from './selection'
@@ -15,6 +16,8 @@ export interface MarkerProperties {
   kind: MarkerKind
   /** The letter drawn inside the marker until the categories get icons. */
   label: string
+  /** The marker's fill: its kind's colour (categoryStyle.ts), the same as its chip's dot. */
+  color: string
 }
 
 interface PointFeature<P> {
@@ -59,6 +62,7 @@ export function toFeatureCollection(markers: readonly MapMarker[]): MarkerCollec
         key: keyOf(marker),
         kind: marker.kind,
         label: marker.kind === 'place' ? LABELS[marker.category] : marker.kind === 'event' ? EVENT_LABEL : NOTICE_LABEL,
+        color: categoryStyle(marker.kind === 'place' ? marker : marker.kind).color,
       },
     })),
   }

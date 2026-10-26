@@ -34,12 +34,12 @@ test('carries what the layers need', () => {
   expect(collection.type).toBe('FeatureCollection')
   expect(collection.features.map((feature) => feature.type)).toEqual(Array(6).fill('Feature'))
   expect(collection.features.map((feature) => feature.properties)).toEqual([
-    { key: 'place:a', kind: 'place', label: 'F' },
-    { key: 'place:b', kind: 'place', label: 'C' },
-    { key: 'place:c', kind: 'place', label: 'B' },
-    { key: 'place:d', kind: 'place', label: 'A' },
-    { key: 'place:e', kind: 'place', label: 'S' },
-    { key: 'place:f', kind: 'place', label: 'P' },
+    { key: 'place:a', kind: 'place', label: 'F', color: '#c2410c' },
+    { key: 'place:b', kind: 'place', label: 'C', color: '#92400e' },
+    { key: 'place:c', kind: 'place', label: 'B', color: '#7c3aed' },
+    { key: 'place:d', kind: 'place', label: 'A', color: '#15803d' },
+    { key: 'place:e', kind: 'place', label: 'S', color: '#be185d' },
+    { key: 'place:f', kind: 'place', label: 'P', color: '#1d4ed8' },
   ])
 })
 
@@ -67,9 +67,9 @@ test('marks events and notices apart from places', () => {
   }
 
   expect(toFeatureCollection([marker('a', 'food'), event, notice]).features.map((f) => f.properties)).toEqual([
-    { key: 'place:a', kind: 'place', label: 'F' },
-    { key: 'event:a', kind: 'event', label: 'E' },
-    { key: 'notice:a', kind: 'notice', label: '!' },
+    { key: 'place:a', kind: 'place', label: 'F', color: '#c2410c' },
+    { key: 'event:a', kind: 'event', label: 'E', color: '#0e7490' },
+    { key: 'notice:a', kind: 'notice', label: '!', color: '#b91c1c' },
   ])
 })
 
