@@ -43,6 +43,7 @@ const coffee: PlaceSummary = {
   latitude: -45.0335,
   longitude: 168.659,
   distanceM: null,
+  openingHours: null,
 };
 
 const signedOut = { status: 401, body: { code: "UNAUTHORIZED", status: 401, detail: "Sign in to continue." } };

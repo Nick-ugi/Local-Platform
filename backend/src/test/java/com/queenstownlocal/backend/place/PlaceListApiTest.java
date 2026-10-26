@@ -70,16 +70,18 @@ class PlaceListApiTest {
 
 	@Test
 	void itemHasExactlyTheListFields() throws Exception {
+		jdbc.sql("update place set opening_hours = 'Mo-Su 10:00-20:30' where slug = 'a'").update();
 		String json = body(get(URL));
 		Map<String, Object> a = item(json, "a");
 
 		assertThat(a.keySet()).containsExactlyInAnyOrder("slug", "name", "category", "subtype", "address", "imageUrl",
-				"latitude", "longitude", "distanceM");
+				"latitude", "longitude", "distanceM", "openingHours");
 		assertThat(a).containsEntry("name", "Lakeside Kitchen")
 			.containsEntry("category", "food")
 			.containsEntry("subtype", null)
 			.containsEntry("address", "12 Beach Street")
-			.containsEntry("imageUrl", null);
+			.containsEntry("imageUrl", null)
+			.containsEntry("openingHours", "Mo-Su 10:00-20:30");
 		assertThat(item(json, "e")).containsEntry("subtype", "toilet");
 	}
 

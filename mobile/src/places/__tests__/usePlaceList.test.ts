@@ -18,6 +18,7 @@ function place(n: number, distanceM: number | null = null): PlaceSummary {
     latitude: -45.03,
     longitude: 168.66,
     distanceM,
+    openingHours: null,
   };
 }
 

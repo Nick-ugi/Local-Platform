@@ -20,6 +20,7 @@ const coffee: PlaceSummary = {
   latitude: -45.0335,
   longitude: 168.659,
   distanceM: null,
+  openingHours: null,
 };
 
 function onePage(items: PlaceSummary[]): Page<PlaceSummary> {

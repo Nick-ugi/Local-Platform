@@ -274,7 +274,7 @@ Marker는 모두 합쳐 500개까지다. Notice(시작의 내림차순), Event(�
 | longitude | number | O | O | 경도 |
 | distanceM | number \| null | O | | 기준 위치에서의 거리(m). 요청에 위치가 없으면 `null` |
 | description | string \| null | | O | 설명 |
-| openingHours | string \| null | | O | 영업시간 |
+| openingHours | string \| null | O | O | 영업시간. OpenStreetMap 표기(`Mo-Su 10:00-20:30`)는 App과 Web이 읽어 "지금 영업 중"을 보인다 |
 | phone | string \| null | | O | 전화번호 |
 | website | string \| null | | O | 웹사이트 |
 | source | string | | O | 출처 이름 |

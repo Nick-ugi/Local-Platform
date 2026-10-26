@@ -44,6 +44,8 @@ export interface PlaceSummary {
   longitude: number
   /** Whole metres from the position the request named, or null when it named none. */
   distanceM: number | null
+  /** As stored; parseOpeningHours (hours.ts) reads the OpenStreetMap forms. */
+  openingHours: string | null
 }
 
 /** An event in the list of GET /events. Times are ISO 8601, UTC. */

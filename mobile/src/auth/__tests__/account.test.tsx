@@ -39,6 +39,7 @@ const coffee: PlaceSummary = {
   latitude: -45.0335,
   longitude: 168.659,
   distanceM: null,
+  openingHours: null,
 };
 
 /** A visitor who signed in earlier: the app restores the session as it starts. */
