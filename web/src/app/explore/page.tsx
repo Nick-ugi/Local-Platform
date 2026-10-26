@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { ExploreScreen } from "@/components/place/ExploreScreen";
+import { Suspense } from "react";
+import { ExploreList } from "@/components/place/ExploreList";
+import { LoadingState } from "@/components/state/LoadingState";
 import { explorePath, parsePage, withPage } from "@/lib/places/listUrl";
-import { loadPlaceList } from "@/lib/places/loadPlaceList";
 
 type Props = { searchParams: Promise<{ page?: string | string[] }> };
 
@@ -20,11 +21,13 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   };
 }
 
+/** Explore. As its categories: a real 404 where it can be one, a loading screen on the first page. */
 export default async function ExplorePage({ searchParams }: Props) {
   const { page } = await searchParams;
-  const list = await loadPlaceList({ category: null, q: null }, page);
-  if (!list) {
+  const pageNumber = parsePage(page);
+  if (pageNumber === null) {
     notFound();
   }
-  return <ExploreScreen query={list.query} result={list.result} />;
+  const list = <ExploreList category={null} page={page} />;
+  return pageNumber === 1 ? <Suspense fallback={<LoadingState />}>{list}</Suspense> : list;
 }
