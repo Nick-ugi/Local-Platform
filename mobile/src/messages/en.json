@@ -44,6 +44,7 @@
   },
   "State": {
     "loading": "Loading…",
+    "waking": "Waking up the server… This can take up to a minute.",
     "errorTitle": "Something went wrong",
     "retry": "Try again",
     "notFoundTitle": "Page not found",

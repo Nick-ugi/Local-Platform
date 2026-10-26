@@ -25,6 +25,7 @@ import { getPlace } from "@/lib/api/places";
 import { useVisitorPosition } from "@/lib/geo/useVisitorPosition";
 import { type Camera, hasSavedCamera, loadCamera, PLACE_ZOOM, saveCamera } from "@/lib/map/camera";
 import { useMarkers } from "@/lib/map/useMarkers";
+import { useSlow } from "@/lib/useSlow";
 import { FilterChips } from "./FilterChips";
 import { LocateButton } from "./LocateButton";
 import { MapView } from "./MapView";
@@ -119,6 +120,7 @@ async function lookUp({ kind, slug }: Selection): Promise<MapMarker | null> {
  */
 export function MapScreen() {
   const t = useTranslations("Map");
+  const tState = useTranslations("State");
   const searchParams = useSearchParams();
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -130,6 +132,8 @@ export function MapScreen() {
   const [bounds, setBounds] = useState<MapBounds | null>(null);
   const [unavailable, setUnavailable] = useState(false);
   const { status, markers, truncated, retry } = useMarkers(bounds, filter);
+  // A sleeping backend takes up to a minute to answer its first request (docs/07-deployment.md).
+  const slow = useSlow(status === "loading");
 
   const {
     position: userLocation,
@@ -271,6 +275,7 @@ export function MapScreen() {
             className="pointer-events-none absolute inset-x-0 top-3 flex flex-col items-center gap-2 px-4 md:items-end"
           >
             {status === "error" ? <Notice text={t("loadFailed")} action={{ label: t("retry"), onClick: retry }} /> : null}
+            {slow ? <Notice text={tState("waking")} /> : null}
             {status === "ready" && markers.length === 0 ? (
               <Notice text={t("empty")} action={filter.length > 0 ? clearFilters : undefined} />
             ) : null}

@@ -45,6 +45,7 @@
   },
   "State": {
     "loading": "Loading…",
+    "waking": "Waking up the server… This can take up to a minute.",
     "errorTitle": "Something went wrong",
     "errorBody": "We couldn't load this page. Please try again.",
     "retry": "Try again",

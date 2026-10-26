@@ -65,7 +65,7 @@ docker run -p 3010:3000 -e API_BASE_URL=http://host.docker.internal:8080 -e SITE
 | 값 | 언제 | 뜻 |
 |---|---|---|
 | `NEXT_PUBLIC_MAPBOX_TOKEN` | 빌드 인자 | 지도 토큰. 브라우저 코드에 들어간다. |
-| `API_BASE_URL` | 실행 | Backend 주소. 서버만 쓴다(브라우저는 이 사이트의 `/api/v1`을 부른다). |
+| `API_BASE_URL` | 실행 | Backend 주소. 서버만 쓴다(브라우저는 이 사이트의 `/api/v1`을 부른다). 서버가 뜰 때 이 주소의 `/actuator/health`를 한 번 불러 잠든 Backend를 깨운다(`src/instrumentation.ts`). |
 | `SITE_URL` | 실행 | 사이트의 공개 주소(canonical, `og:url`, sitemap). |
 | `PORT` | 실행 | 기본 3000. |
 

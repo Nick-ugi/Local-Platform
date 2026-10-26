@@ -1,4 +1,5 @@
 import { useTranslations } from "use-intl";
+import { LoadingMessage } from "@/ui/LoadingMessage";
 import { StateMessage } from "@/ui/StateMessage";
 
 type Props = {
@@ -16,7 +17,7 @@ export function DetailStateView({ status, retry, onGoToMap, onGoToExplore }: Pro
   const t = useTranslations("State");
 
   if (status === "loading") {
-    return <StateMessage loading text={t("loading")} />;
+    return <LoadingMessage text={t("loading")} />;
   }
   if (status === "error") {
     return (

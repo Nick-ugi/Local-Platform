@@ -304,6 +304,24 @@ test("does not call an area empty while it is still loading", () => {
   expect(screen.queryByText("No places in this area.")).not.toBeInTheDocument();
 });
 
+test("a load that takes over five seconds says the server is waking up, and the message goes when it ends", () => {
+  vi.useFakeTimers();
+  try {
+    markersAre({ status: "loading", markers: [] });
+    const view = openMap();
+    expect(screen.queryByText(/Waking up the server/)).not.toBeInTheDocument();
+
+    act(() => vi.advanceTimersByTime(5000));
+    expect(screen.getByText("Waking up the server… This can take up to a minute.")).toBeInTheDocument();
+
+    markersAre({});
+    view.rerender(<MapScreen />);
+    expect(screen.queryByText(/Waking up the server/)).not.toBeInTheDocument();
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
 test("explains a failed load and offers a retry", async () => {
   const state = markersAre({ status: "error" });
   openMap();

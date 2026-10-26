@@ -119,6 +119,21 @@ test("a failed list offers to try again", async () => {
   expect(screen.getByText("Harbour Coffee")).toBeOnTheScreen();
 });
 
+test("a list that takes over five seconds says the server is waking up", async () => {
+  jest.useFakeTimers();
+  try {
+    getPlacesMock.mockReturnValue(new Promise(() => {}));
+    await openExplore({ status: "denied" });
+    expect(screen.queryByText(/Waking up the server/)).toBeNull();
+
+    act(() => jest.advanceTimersByTime(5000));
+
+    expect(screen.getByText("Waking up the server… This can take up to a minute.")).toBeOnTheScreen();
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
 test("the search box opens Search", async () => {
   await openExplore({ status: "denied" });
 

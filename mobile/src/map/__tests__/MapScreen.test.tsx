@@ -187,6 +187,24 @@ test("a failed load says so and offers to try again", async () => {
   expect(retry).toHaveBeenCalledTimes(1);
 });
 
+test("markers that take over five seconds say the server is waking up", async () => {
+  jest.useFakeTimers();
+  try {
+    mockMarkers.state = { status: "loading", markers: [], truncated: false, retry: jest.fn() };
+    const view = await openMap({ status: "denied" });
+    expect(screen.queryByText(/Waking up the server/)).toBeNull();
+
+    act(() => jest.advanceTimersByTime(5000));
+    expect(screen.getByText("Waking up the server… This can take up to a minute.")).toBeOnTheScreen();
+
+    mockMarkers.state = { status: "ready", markers: [kitchen], truncated: false, retry: jest.fn() };
+    view.rerender(screenWith());
+    expect(screen.queryByText(/Waking up the server/)).toBeNull();
+  } finally {
+    jest.useRealTimers();
+  }
+});
+
 test("an empty area says so", async () => {
   mockMarkers.state = { status: "ready", markers: [], truncated: false, retry: jest.fn() };
 
