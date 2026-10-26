@@ -79,6 +79,9 @@ test("a category chip narrows the list; All is on at first", async () => {
   await openExplore({ status: "denied" });
   expect(screen.getByRole("button", { name: "All" })).toBeSelected();
 
+  // Each category has a dot of its colour; All has none.
+  expect(screen.getAllByTestId("kind-dot", { includeHiddenElements: true })).toHaveLength(6);
+
   fireEvent.press(screen.getByRole("button", { name: "Cafes" }));
   await act(async () => {});
 

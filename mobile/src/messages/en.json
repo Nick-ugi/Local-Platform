@@ -157,5 +157,13 @@
     "remove": "Remove {name} from favorites",
     "loadFailed": "We couldn't load your favorites.",
     "retry": "Try again"
+  },
+  "Hours": {
+    "openUntil": "Open now · until {time}",
+    "closesSoon": "Closes soon · {time}",
+    "opensAt": "Closed · opens {time}",
+    "opensOn": "Closed · opens {day} {time}",
+    "closed": "Closed",
+    "always": "Open 24 hours"
   }
 }

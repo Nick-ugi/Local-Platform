@@ -1,4 +1,5 @@
 import {
+  categoryStyle,
   distanceMeters,
   FILTER_KEYS,
   type FilterKey,
@@ -148,7 +149,12 @@ export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch }: Prop
         <SearchBar onPress={onSearch} />
         <Chips
           label={t("filters")}
-          items={FILTER_KEYS.map((key) => ({ key, label: label(key), selected: filter.includes(key) }))}
+          items={FILTER_KEYS.map((key) => ({
+            key,
+            label: label(key),
+            selected: filter.includes(key),
+            color: categoryStyle(key === "event" || key === "notice" ? key : { category: key, subtype: null }).color,
+          }))}
           onPress={toggle}
         />
       </View>

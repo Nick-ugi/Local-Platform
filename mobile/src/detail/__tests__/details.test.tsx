@@ -89,6 +89,25 @@ describe("Place", () => {
     expect(screen.getByText("Updated 2 Oct 2026")).toBeOnTheScreen();
   });
 
+  test("OpenStreetMap hours read a line per run of days, with whether it is open now in New Zealand", async () => {
+    jest.useFakeTimers();
+    try {
+      // Saturday 10 am in Queenstown.
+      jest.setSystemTime(new Date("2026-10-24T10:00:00+13:00"));
+      show(<PlaceDetailView place={{ ...coffee, openingHours: "Mo-Fr 07:00-16:00; Sa 08:00-14:00" }} onViewOnMap={jest.fn()} />);
+      await act(async () => {
+        jest.advanceTimersByTime(0);
+      });
+
+      expect(screen.getByText("Open now · until 2:00 pm")).toBeOnTheScreen();
+      expect(screen.getByText("Mon - Fri · 7:00 am - 4:00 pm")).toBeOnTheScreen();
+      expect(screen.getByText("Sat · 8:00 am - 2:00 pm")).toBeOnTheScreen();
+      expect(screen.getByText("Sun · Closed")).toBeOnTheScreen();
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
   test("the quick actions call, open the website, give directions and share the web address", async () => {
     show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
 

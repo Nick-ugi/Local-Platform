@@ -11,8 +11,9 @@ const mockSdk = {
   setCamera: jest.fn(),
   setAccessToken: jest.fn(),
   puck: false,
-  shape: null as unknown,
-  source: null as Record<string, unknown> | null,
+  /** Each ShapeSource's props, by id. */
+  sources: {} as Record<string, Record<string, unknown>>,
+  expansionZoom: jest.fn(async (_feature: unknown) => 16),
   layers: [] as string[],
   layerProps: {} as Record<string, Record<string, unknown>>,
 };
@@ -36,11 +37,14 @@ jest.mock("@rnmapbox/maps", () => {
       mockSdk.puck = true;
       return null;
     },
-    ShapeSource: (props: { shape: unknown; children?: unknown }) => {
-      mockSdk.shape = props.shape;
-      mockSdk.source = props;
+    ShapeSource: forwardRef(function ShapeSource(
+      props: { id: string; shape: unknown; children?: unknown },
+      ref: unknown,
+    ) {
+      mockSdk.sources[props.id] = props;
+      useImperativeHandle(ref, () => ({ getClusterExpansionZoom: mockSdk.expansionZoom }));
       return <View>{props.children as never}</View>;
-    },
+    }),
     CircleLayer: (props: { id: string }) => {
       mockSdk.layers.push(props.id);
       mockSdk.layerProps[props.id] = props;
@@ -76,8 +80,8 @@ function renderMap(overrides: Partial<Props> = {}) {
 beforeEach(() => {
   mockSdk.map = null;
   mockSdk.puck = false;
-  mockSdk.shape = null;
-  mockSdk.source = null;
+  mockSdk.sources = {};
+  mockSdk.expansionZoom.mockClear();
   mockSdk.layers = [];
   mockSdk.layerProps = {};
   mockSdk.setCamera.mockClear();
@@ -153,36 +157,78 @@ const kitchen: MapMarker = {
   subtype: null,
 };
 
-test("draws the markers as circles with their letters", () => {
+const bakery: MapMarker = { ...kitchen, slug: "beach-street-bakery", latitude: -45.0331, longitude: 168.6597 };
+
+/** The keys in one of the two sources. */
+function keysIn(id: "markers" | "selected-marker") {
+  return (mockSdk.sources[id].shape as ReturnType<typeof toFeatureCollection>).features.map(
+    (feature) => feature.properties.key,
+  );
+}
+
+test("draws the markers in their kind's colour with their letters, clustered when zoomed out", () => {
   const { update } = renderMap();
-  expect(mockSdk.shape).toEqual(toFeatureCollection([]));
+  expect(mockSdk.sources.markers.shape).toEqual(toFeatureCollection([]));
 
   update({ markers: [kitchen] });
 
-  expect(mockSdk.shape).toEqual(toFeatureCollection([kitchen]));
-  expect(new Set(mockSdk.layers)).toEqual(new Set(["marker-circles", "marker-selected", "marker-labels"]));
+  expect(mockSdk.sources.markers.shape).toEqual(toFeatureCollection([kitchen]));
+  const { cluster, clusterRadius, clusterMaxZoomLevel } = mockSdk.sources.markers;
+  expect({ cluster, clusterRadius, clusterMaxZoomLevel }).toEqual({ cluster: true, clusterRadius: 44, clusterMaxZoomLevel: 15 });
+  expect(new Set(mockSdk.layers)).toEqual(
+    new Set([
+      "marker-clusters",
+      "marker-cluster-counts",
+      "marker-circles",
+      "marker-labels",
+      "marker-selected",
+      "marker-selected-label",
+    ]),
+  );
+  const circles = mockSdk.layerProps["marker-circles"].style as { circleColor: unknown };
+  expect(circles.circleColor).toEqual(["get", "color"]);
 });
 
-test("draws the selected marker filled, and no marker without a selection", () => {
-  const { update } = renderMap({ markers: [kitchen] });
-  expect(mockSdk.layerProps["marker-selected"].filter).toEqual(["==", ["get", "key"], ""]);
+test("draws the selected marker on its own, outside the clusters", () => {
+  const { update } = renderMap({ markers: [kitchen, bakery] });
+  expect(keysIn("markers")).toEqual(["place:lakeside-kitchen", "place:beach-street-bakery"]);
+  expect(keysIn("selected-marker")).toEqual([]);
 
-  update({ markers: [kitchen], selectedKey: "place:lakeside-kitchen" });
+  update({ markers: [kitchen, bakery], selectedKey: "place:lakeside-kitchen" });
 
-  expect(mockSdk.layerProps["marker-selected"].filter).toEqual(["==", ["get", "key"], "place:lakeside-kitchen"]);
-  const label = mockSdk.layerProps["marker-labels"].style as { textColor: unknown };
-  expect(label.textColor).toEqual(["case", ["==", ["get", "key"], "place:lakeside-kitchen"], "#ffffff", "#171717"]);
+  expect(keysIn("markers")).toEqual(["place:beach-street-bakery"]);
+  expect(keysIn("selected-marker")).toEqual(["place:lakeside-kitchen"]);
+  expect(mockSdk.sources["selected-marker"].cluster).toBeUndefined();
 });
 
 test("a press on a marker selects it, with a 44 pt target", () => {
   const { props } = renderMap({ markers: [kitchen] });
 
-  expect(mockSdk.source?.hitbox).toEqual({ width: 44, height: 44 });
-  (mockSdk.source?.onPress as (event: unknown) => void)({
+  expect(mockSdk.sources.markers.hitbox).toEqual({ width: 44, height: 44 });
+  (mockSdk.sources.markers.onPress as (event: unknown) => void)({
     features: [{ properties: { key: "place:lakeside-kitchen", kind: "place", label: "F" } }],
   });
 
   expect(props.onSelect).toHaveBeenCalledWith("place:lakeside-kitchen");
+});
+
+test("a press on a cluster moves in to where it comes apart, and selects nothing", async () => {
+  const { props } = renderMap({ markers: [kitchen, bakery] });
+  const cluster = {
+    type: "Feature",
+    geometry: { type: "Point", coordinates: [168.66, -45.032] },
+    properties: { cluster: true, cluster_id: 7, point_count: 2 },
+  };
+
+  await (mockSdk.sources.markers.onPress as (event: unknown) => Promise<void>)({ features: [cluster] });
+
+  expect(mockSdk.expansionZoom).toHaveBeenCalledWith(cluster);
+  expect(mockSdk.setCamera).toHaveBeenCalledWith({
+    centerCoordinate: [168.66, -45.032],
+    zoomLevel: 16,
+    animationDuration: 800,
+  });
+  expect(props.onSelect).not.toHaveBeenCalled();
 });
 
 test("a press beside every marker clears the selection", () => {

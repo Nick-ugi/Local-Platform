@@ -254,6 +254,8 @@ test("the chips are the six categories, then Events and Notices, none on", async
   for (const name of ["Food", "Cafes", "Bars", "Activities", "Shopping", "Facilities", "Events", "Notices"]) {
     expect(chip(name)).not.toBeSelected();
   }
+  // Each with a dot of its markers' colour.
+  expect(screen.getAllByTestId("kind-dot", { includeHiddenElements: true })).toHaveLength(8);
 });
 
 test("a chip narrows the markers, and pressing it again shows everything", async () => {
