@@ -1,6 +1,7 @@
 import { formatDistance, type PlaceSummary } from "@queenstown/shared";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { OpenBadge } from "./OpenBadge";
 import { PlaceImage } from "./PlaceImage";
 
 // A small picture at the left on a phone, a wide one on top from 768px (m-explore, d-explore).
@@ -38,6 +39,7 @@ export function PlaceCard({ place }: { place: PlaceSummary }) {
           ) : null}
         </p>
         <p className="text-sm text-neutral-600">{place.address}</p>
+        <OpenBadge openingHours={place.openingHours} className="mt-1" />
       </div>
     </Link>
   );

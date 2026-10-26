@@ -59,6 +59,22 @@ test("shows every part of a complete place", () => {
   expect(screen.getByText("Updated 2 Oct 2026")).toBeInTheDocument();
 });
 
+test("reads OpenStreetMap hours into one line per run of days", () => {
+  renderWithMessages(<PlaceDetailView place={{ ...full, openingHours: "Mo-Fr 08:00-17:00; Sa off" }} />);
+
+  const hours = screen.getByRole("heading", { name: "Opening hours" }).parentElement!;
+  expect(hours).toHaveTextContent("Mon - Fri · 8:00 am - 5:00 pm");
+  expect(hours).toHaveTextContent("Sat - Sun · Closed");
+  expect(hours).not.toHaveTextContent("Mo-Fr");
+});
+
+test("shows hours it cannot read as written", () => {
+  renderWithMessages(<PlaceDetailView place={{ ...full, openingHours: "Tu-Su 16:00+" }} />);
+
+  const hours = screen.getByRole("heading", { name: "Opening hours" }).parentElement!;
+  expect(hours).toHaveTextContent(/^Opening hoursTu-Su 16:00\+$/);
+});
+
 test("offers Suggest an edit when the site has a contact address", () => {
   renderWithMessages(<PlaceDetailView place={full} suggestEditHref="mailto:hello@queenstownlocal.example?subject=x" />);
 
