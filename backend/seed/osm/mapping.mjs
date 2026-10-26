@@ -147,6 +147,71 @@ export function toCsv(rows) {
   return [header, ...lines].join("\n") + "\n";
 }
 
+/** The rows of places.csv as toCsv takes them; an empty cell is null. Reads back what toCsv wrote. */
+export function fromCsv(csvText) {
+  return csvText
+    .split(/\r?\n/)
+    .slice(1)
+    .filter((line) => line !== "")
+    .map((line) => {
+      const fields = parseCsvLine(line);
+      return Object.fromEntries(COLUMNS.map(([, key], i) => [key, fields[i] === "" || fields[i] === undefined ? null : fields[i]]));
+    });
+}
+
+// Nominatim's reverse lookup (https://nominatim.org/release-docs/latest/api/Reverse/) fills in the
+// street of places whose OpenStreetMap object has no address tags (backend/seed/osm/reverse.mjs).
+
+/** The parts of an address that make ours; the rest of an answer is not kept. */
+const REVERSE_PARTS = ["house_number", "road", "suburb", "town", "city", "village"];
+
+/** How far the object Nominatim found may be from the place for its road to count as the place's. */
+const NEAR_M = 50;
+
+/** What reverse-cache.json keeps of a Nominatim answer, or null when it found nothing. */
+export function pickReverse(answer) {
+  if (!answer || answer.error || !answer.address) return null;
+  const address = {};
+  for (const part of REVERSE_PARTS) {
+    if (answer.address[part]) address[part] = answer.address[part];
+  }
+  return { lat: answer.lat, lon: answer.lon, address };
+}
+
+/** Metres between two points on the Earth (haversine). */
+function metresBetween(lat1, lon1, lat2, lon2) {
+  const rad = Math.PI / 180;
+  const dLat = (lat2 - lat1) * rad;
+  const dLon = (lon2 - lon1) * rad;
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLon / 2) ** 2;
+  return 2 * 6371000 * Math.asin(Math.sqrt(a));
+}
+
+/**
+ * "12 Beach Street, Queenstown" from a cached Nominatim answer: number and road, then the town, city
+ * or village, or the suburb where there is none. The town comes first because Nominatim calls central
+ * Queenstown "Boydtown", which visitors would not know. Null without a road, or when what Nominatim
+ * found is more than 50 m from the place, since its road may then be another place's.
+ */
+export function addressFromReverse(result, place) {
+  const parts = result?.address;
+  if (!parts?.road) return null;
+  const distance = metresBetween(Number(place.latitude), Number(place.longitude), Number(result.lat), Number(result.lon));
+  if (!(distance <= NEAR_M)) return null;
+  const street = clean([parts.house_number, parts.road].filter(Boolean).join(" "));
+  const locality = clean(parts.town ?? parts.city ?? parts.village ?? parts.suburb);
+  return (locality ? `${street}, ${locality}` : street).slice(0, 255);
+}
+
+/** The rows with the addresses that only say "Queenstown" filled in from the cache where it can. */
+export function fillAddresses(rows, cache) {
+  return rows.map((row) => {
+    if (row.address !== "Queenstown") return row;
+    const address = addressFromReverse(cache[row.sourceUrl], row);
+    return address ? { ...row, address } : row;
+  });
+}
+
 /** source_url → slug from the current places.csv, so a new import keeps the published slugs. */
 export function existingSlugs(csvText) {
   const map = new Map();
