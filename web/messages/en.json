@@ -212,7 +212,7 @@
     "locationTitle": "Your location",
     "location": "Only if you press the location button, your browser shares your position with the page. It is used to show where you are and to sort places by distance, and it is sent with those requests. It is not stored.",
     "cookiesTitle": "Cookies and storage",
-    "cookies": "Cookies are used only to keep you signed in, and the page's scripts cannot read them. Your browser also keeps the map position for the current tab. There are no advertising or tracking cookies.",
+    "cookies": "Cookies keep you signed in. The ones that hold your sign-in cannot be read by the page's scripts; one more, which holds nothing but the fact that you are signed in, can be. Your browser also keeps the map position for the current tab. There are no advertising or tracking cookies.",
     "providersTitle": "Who else is involved",
     "providers": "The website and its database run with hosting providers (currently Render and Neon). Maps come from Mapbox, which receives the map requests from your browser, including your IP address. Each provider has its own privacy policy.",
     "keepTitle": "How long we keep it",
