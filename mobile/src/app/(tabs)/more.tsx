@@ -2,6 +2,7 @@ import { Link, useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { useAuth } from "@/auth/AuthProvider";
+import { openWebsite, webUrl } from "@/links/actions";
 import { colors } from "@/ui/theme";
 
 function Chevron() {
@@ -12,15 +13,28 @@ function Chevron() {
   );
 }
 
+/** Marks a row that leaves the app for the browser. */
+function Outward() {
+  return (
+    <Text style={styles.chevron} accessibilityElementsHidden importantForAccessibility="no">
+      ↗
+    </Text>
+  );
+}
+
 /**
- * More (wireframe m-more): About, then Log in or the account with Log out (USER-02), and
- * Favorites (FAV-02).
+ * More (wireframe m-more): About, then Log in or the account with Log out (USER-02), Favorites
+ * (FAV-02), and the web app's Privacy Policy and Terms of Use (MORE-03), which open in the browser.
  */
 export default function MoreTab() {
   const t = useTranslations("Pages");
   const tAccount = useTranslations("Account");
   const auth = useAuth();
   const router = useRouter();
+  const legal = [
+    { label: t("privacy"), path: "/privacy" },
+    { label: t("terms"), path: "/terms" },
+  ];
 
   return (
     <View style={styles.container}>
@@ -56,6 +70,18 @@ export default function MoreTab() {
           <Chevron />
         </Pressable>
       </Link>
+      {legal.map(({ label, path }) => (
+        <Pressable
+          key={path}
+          accessibilityRole="link"
+          accessibilityHint={t("opensInBrowser")}
+          onPress={() => void openWebsite(webUrl(path))}
+          style={styles.row}
+        >
+          <Text style={styles.label}>{label}</Text>
+          <Outward />
+        </Pressable>
+      ))}
     </View>
   );
 }

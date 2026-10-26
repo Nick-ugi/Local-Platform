@@ -1,5 +1,5 @@
 import { Linking, Platform, Share } from "react-native";
-import { call, openDirections, openWebsite, shareLink, webUrl } from "../actions";
+import { call, contactEmail, emailOperator, openDirections, openWebsite, shareLink, webUrl } from "../actions";
 
 const openURL = jest.spyOn(Linking, "openURL");
 const share = jest.spyOn(Share, "share");
@@ -18,6 +18,27 @@ test("the web address comes from EXPO_PUBLIC_SITE_URL, or the local web app", ()
 
   process.env.EXPO_PUBLIC_SITE_URL = "https://queenstownlocal.example/";
   expect(webUrl("/places/harbour-coffee")).toBe("https://queenstownlocal.example/places/harbour-coffee");
+});
+
+test("the operator's address is one usable address from EXPO_PUBLIC_CONTACT_EMAIL, or none", async () => {
+  try {
+    delete process.env.EXPO_PUBLIC_CONTACT_EMAIL;
+    expect(contactEmail()).toBeNull();
+    expect(await emailOperator("Hi", "There")).toBe(false);
+    expect(openURL).not.toHaveBeenCalled();
+
+    for (const unusable of ["", "  ", "hello", "hello@localhost", "two words@queenstown.example", "a@b@c.nz"]) {
+      process.env.EXPO_PUBLIC_CONTACT_EMAIL = unusable;
+      expect(contactEmail()).toBeNull();
+    }
+
+    process.env.EXPO_PUBLIC_CONTACT_EMAIL = " hello@queenstown.example ";
+    expect(contactEmail()).toBe("hello@queenstown.example");
+    expect(await emailOperator("Hi there", "A & B")).toBe(true);
+    expect(openURL).toHaveBeenCalledWith("mailto:hello@queenstown.example?subject=Hi%20there&body=A%20%26%20B");
+  } finally {
+    delete process.env.EXPO_PUBLIC_CONTACT_EMAIL;
+  }
 });
 
 test("calls a number that can be dialled, and not one that cannot", async () => {

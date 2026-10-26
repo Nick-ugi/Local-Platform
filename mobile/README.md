@@ -46,7 +46,8 @@ npm install
 |---|---|---|
 | `EXPO_PUBLIC_API_BASE_URL` | `http://10.0.2.2:8080` | Backend 주소. 에뮬레이터 안의 `localhost`는 에뮬레이터 자신이고, `10.0.2.2`가 PC다. |
 | `EXPO_PUBLIC_MAPBOX_TOKEN` | 없음 | Mapbox 공개 토큰(`pk.`). Web과 같은 것을 쓴다. 없으면 지도 자리에 "The map isn't available right now."가 나온다. |
-| `EXPO_PUBLIC_SITE_URL` | `http://localhost:3001` | Web의 주소. 상세의 Share는 App이 아니라 이 주소의 Web 페이지를 공유한다. |
+| `EXPO_PUBLIC_SITE_URL` | `http://localhost:3001` | Web의 주소. 상세의 Share는 App이 아니라 이 주소의 Web 페이지를 공유하고, More의 Privacy Policy와 Terms of Use는 이 주소의 `/privacy`, `/terms`를 브라우저로 연다. |
+| `EXPO_PUBLIC_CONTACT_EMAIL` | 없음 | 운영자 이메일. Place 상세의 "Suggest an edit"가 이 주소로 메일을 쓴다. 없거나 주소 모양이 아니면 링크를 숨긴다. |
 
 - 값은 JS를 묶을 때 들어간다. 바꾸면 `npm start`를 다시 띄운다.
 - `EXPO_PUBLIC_`으로 시작하는 값은 앱 안에 그대로 보인다. 비밀 값을 넣지 않는다.

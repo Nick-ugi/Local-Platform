@@ -71,6 +71,7 @@ beforeEach(() => {
   share.mockReset();
   share.mockResolvedValue({ action: Share.sharedAction });
   delete process.env.EXPO_PUBLIC_SITE_URL;
+  delete process.env.EXPO_PUBLIC_CONTACT_EMAIL;
   // The app is checked on Android (docs/plans/2026-10-15-week10-app-core.md).
   Platform.OS = "android";
 });
@@ -106,6 +107,39 @@ describe("Place", () => {
     } finally {
       jest.useRealTimers();
     }
+  });
+
+  test("Suggest an edit starts an email to the operator about the place, as on the web", async () => {
+    process.env.EXPO_PUBLIC_CONTACT_EMAIL = "hello@queenstown.example";
+    process.env.EXPO_PUBLIC_SITE_URL = "https://queenstown.example";
+    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+
+    await act(async () => fireEvent.press(screen.getByRole("link", { name: "Suggest an edit" })));
+
+    expect(openURL).toHaveBeenCalledWith(
+      "mailto:hello@queenstown.example" +
+        "?subject=Suggest%20an%20edit%3A%20Harbour%20Coffee" +
+        "&body=Place%3A%20https%3A%2F%2Fqueenstown.example%2Fplaces%2Fharbour-coffee%0A%0AWhat%20should%20change%3F%0A",
+    );
+  });
+
+  test("without a usable contact address there is no Suggest an edit", () => {
+    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+    expect(screen.queryByText("Suggest an edit")).toBeNull();
+
+    process.env.EXPO_PUBLIC_CONTACT_EMAIL = "not an address";
+    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+    expect(screen.queryByText("Suggest an edit")).toBeNull();
+  });
+
+  test("a phone without a mail app says so", async () => {
+    process.env.EXPO_PUBLIC_CONTACT_EMAIL = "hello@queenstown.example";
+    openURL.mockRejectedValue(new Error("No Activity found"));
+    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+
+    await act(async () => fireEvent.press(screen.getByRole("link", { name: "Suggest an edit" })));
+
+    expect(screen.getByText("Couldn't open this on your phone.")).toBeOnTheScreen();
   });
 
   test("the quick actions call, open the website, give directions and share the web address", async () => {

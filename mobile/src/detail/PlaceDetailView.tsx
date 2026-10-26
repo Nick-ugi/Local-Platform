@@ -10,7 +10,7 @@ import {
 import { type ReactNode, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
-import { call, openDirections, openWebsite, shareLink } from "@/links/actions";
+import { call, contactEmail, emailOperator, openDirections, openWebsite, shareLink, webUrl } from "@/links/actions";
 import { OpenBadge } from "@/ui/OpenBadge";
 import { PlaceImage } from "@/ui/PlaceImage";
 import { colors, TOUCH } from "@/ui/theme";
@@ -19,8 +19,9 @@ import { ActionProblem, DetailRow, DetailText, detailStyles, SideButton } from "
 /**
  * Place detail (wireframe m-place, PLACE-04 ~ PLACE-06): picture, name and category, the quick
  * actions right under them, description, address with "View on map", opening hours with whether it
- * is open now (PLACE-07), contact, and the source with the date it was updated. Rows the place has no
- * value for are left out.
+ * is open now (PLACE-07), contact, and the source with the date it was updated, then "Suggest an
+ * edit" (MORE-02) when the app has the operator's address. Rows the place has no value for are left
+ * out.
  */
 export function PlaceDetailView({
   place,
@@ -120,6 +121,22 @@ export function PlaceDetailView({
           <Text style={styles.footerText}>{t("source", { source: place.source })}</Text>
         )}
         <Text style={styles.footerText}>{t("updated", { date: formatDate(place.updatedAt) })}</Text>
+        {contactEmail() ? (
+          <Pressable
+            accessibilityRole="link"
+            onPress={() =>
+              void run(() =>
+                emailOperator(
+                  t("suggestEditSubject", { name: place.name }),
+                  t("suggestEditBody", { url: webUrl(`/places/${encodeURIComponent(place.slug)}`) }),
+                ),
+              )
+            }
+            style={styles.sourceLink}
+          >
+            <Text style={styles.suggest}>{t("suggestEdit")}</Text>
+          </Pressable>
+        ) : null}
       </View>
     </ScrollView>
   );
@@ -152,4 +169,5 @@ const styles = StyleSheet.create({
   footer: { borderTopWidth: StyleSheet.hairlineWidth, borderColor: colors.line, paddingTop: 8, gap: 4 },
   sourceLink: { minHeight: TOUCH, justifyContent: "center", alignSelf: "flex-start" },
   footerText: { fontSize: 14, color: colors.faint },
+  suggest: { fontSize: 14, color: colors.link, textDecorationLine: "underline" },
 });
