@@ -1,4 +1,5 @@
 import type { MapBounds } from '../api'
+import type { LatLng } from '../geo'
 
 /** The same longitude within -180 (included) to 180 (not included). */
 export function wrapLongitude(longitude: number): number {
@@ -31,4 +32,19 @@ export function toMapBounds(west: number, south: number, east: number, north: nu
   const right = left === west ? east : left + width
   // The part beyond the antimeridian is left out. Queenstown is at 168 degrees east.
   return { west: left, south: bottom, east: Math.min(right, 180), north: top }
+}
+
+/** The smallest box that holds every point, for a map to fit them (search results), or null for none. */
+export function boundsOf(points: readonly LatLng[]): MapBounds | null {
+  if (points.length === 0) {
+    return null
+  }
+  const latitudes = points.map((point) => point.latitude)
+  const longitudes = points.map((point) => point.longitude)
+  return {
+    west: Math.min(...longitudes),
+    south: Math.min(...latitudes),
+    east: Math.max(...longitudes),
+    north: Math.max(...latitudes),
+  }
 }

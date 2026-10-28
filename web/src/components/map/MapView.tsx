@@ -39,6 +39,8 @@ type Props = {
   onSelect: (key: string | null) => void;
   /** Called when no map can be shown: no WebGL, or Mapbox refused the token. */
   onUnavailable: () => void;
+  /** A box to show whole, such as search results. A box with other edges moves the map again. */
+  fit?: MapBounds | null;
 };
 
 const STYLE = "mapbox://styles/mapbox/standard";
@@ -54,7 +56,10 @@ const SELECTED_LABEL = "marker-selected-label";
 
 // Markers closer than this on screen are drawn as one numbered cluster (MAP-09), up to this zoom.
 const CLUSTER_RADIUS_PX = 44;
-const CLUSTER_MAX_ZOOM = 15;
+const CLUSTER_MAX_ZOOM = 17;
+// Room round a fitted box, and no closer than a street, so one result is not shown at zoom 22.
+const FIT_PADDING = 64;
+const FIT_MAX_ZOOM = 16;
 const NOT_A_CLUSTER: FilterSpecification = ["!", ["has", "point_count"]];
 
 const VISITOR = "visitor";
@@ -233,6 +238,7 @@ export function MapView({
   onMove,
   onSelect,
   onUnavailable,
+  fit = null,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   // Set once the style has loaded, which is when sources and layers can be changed.
@@ -338,6 +344,20 @@ export function MapView({
       map.flyTo({ center: toLngLat(camera), zoom: camera.zoom });
     }
   }, [map, camera, startCamera]);
+
+  // Keyed by the edges, so the same box given again as a new object does not move the map back.
+  const { west, south, east, north } = fit ?? {};
+  useEffect(() => {
+    if (map && west !== undefined && south !== undefined && east !== undefined && north !== undefined) {
+      map.fitBounds(
+        [
+          [west, south],
+          [east, north],
+        ],
+        { padding: FIT_PADDING, maxZoom: FIT_MAX_ZOOM },
+      );
+    }
+  }, [map, west, south, east, north]);
 
   // Mapbox's stylesheet makes the container position: relative, so the box that fills the
   // parent has to be a separate element.
