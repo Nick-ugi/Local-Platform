@@ -870,6 +870,7 @@ Citizen / Resident / Tourist
 - [ ] 12주차 Integration / Release (운영 이미지와 보안 설정, 로그인 시도 제한, Privacy Policy · Terms · 정보 수정 요청, OpenStreetMap의 첫 Place 498곳, 서버 1대 구성, 무료 배포 설정, 통합 테스트 S1 ~ S5) — 코드와 테스트, 로컬 서버 구성 확인 완료, 무료 배포(Render + Neon) 전
   - Privacy Policy와 Terms는 법률 검토를 받지 않은 문안이다. 운영 전에 검토한다.
 - [x] 13주차 UX Polish (영업시간을 요일별로 읽고 지금 영업 중인지 표시, 사진 없는 곳의 종류별 색과 그림, 종류별 색 Marker와 묶음, 주소가 "Queenstown"뿐인 장소의 도로 이름 보완, 서버가 깨는 동안의 안내, App의 Privacy Policy · Terms · 정보 수정 요청, Android 에뮬레이터에서 확인)
+- [x] 14주차 Planned Features (App의 Local 탭(Notices · Events), 상세의 주변 장소, 검색 결과를 지도로 보기, 지도 카드의 영업 중 표시, App의 최근 본 장소, 줌 17까지 Marker 묶음, Android 에뮬레이터에서 확인)
 
 ### Next
 
