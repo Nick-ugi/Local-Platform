@@ -105,6 +105,7 @@
   },
   "Place": {
     "breadcrumb": "Breadcrumb",
+    "nearby": "Nearby",
     "address": "Address",
     "openingHours": "Opening hours",
     "contact": "Contact",

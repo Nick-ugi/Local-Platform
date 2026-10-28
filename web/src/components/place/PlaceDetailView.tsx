@@ -4,6 +4,7 @@ import {
   formatWeeklyHours,
   httpUrl,
   type PlaceDetail,
+  type PlaceSummary,
   parseOpeningHours,
   telHref,
 } from "@queenstown/shared";
@@ -12,6 +13,7 @@ import { useTranslations } from "next-intl";
 import { type ReactNode, Suspense } from "react";
 import { FavoriteButton } from "@/components/account/FavoriteButton";
 import { BackLink } from "@/components/nav/BackLink";
+import { NearbyList } from "./NearbyList";
 import { OpenBadge } from "./OpenBadge";
 import { PlaceActions } from "./PlaceActions";
 import { PlaceImage } from "./PlaceImage";
@@ -29,14 +31,16 @@ const externalLinkClass = "text-blue-700 underline underline-offset-2";
  * `order` puts the quick actions right under the name.
  *
  * "Suggest an edit" (MORE-02) is a mailto: link to the operator, given by the page when the site has
- * a contact address.
+ * a contact address. "Nearby" (PLACE-08) lists the places the page found close by, if any.
  */
 export function PlaceDetailView({
   place,
   suggestEditHref = null,
+  nearby = [],
 }: {
   place: PlaceDetail;
   suggestEditHref?: string | null;
+  nearby?: readonly PlaceSummary[];
 }) {
   const t = useTranslations("Place");
   const tNav = useTranslations("Nav");
@@ -131,7 +135,9 @@ export function PlaceDetailView({
           </Row>
         ) : null}
 
-        <footer className="order-9 flex flex-col gap-1 border-t border-neutral-200 pt-4 text-sm text-neutral-500 md:order-none">
+        <NearbyList places={nearby} className="order-9" />
+
+        <footer className="order-10 flex flex-col gap-1 border-t border-neutral-200 pt-4 text-sm text-neutral-500 md:order-none">
           <p>
             {t.rich("source", {
               source: place.source,

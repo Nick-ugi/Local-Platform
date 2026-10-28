@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { NEARBY_FETCH, pickNearby } from "@queenstown/shared";
 import { getTranslations } from "next-intl/server";
 import { cache } from "react";
 import { PlaceDetailView } from "@/components/place/PlaceDetailView";
-import { getPlace } from "@/lib/api/places";
+import { getPlace, getPlaces } from "@/lib/api/places";
 import { contactEmail, mailtoHref } from "@/lib/contact";
 import { placeMetadata } from "@/lib/seo/placeMetadata";
 import { siteUrl } from "@/lib/site";
@@ -36,5 +37,10 @@ export default async function PlacePage({ params }: Props) {
     t("suggestEditSubject", { name: place.name }),
     t("suggestEditBody", { url }),
   );
-  return <PlaceDetailView place={place} suggestEditHref={suggestEditHref} />;
+  // The page stands without its neighbours: a failed list leaves "Nearby" out.
+  const nearby = await getPlaces({ position: place, size: NEARBY_FETCH }).then(
+    (page) => pickNearby(page.items, place),
+    () => [],
+  );
+  return <PlaceDetailView place={place} suggestEditHref={suggestEditHref} nearby={nearby} />;
 }
