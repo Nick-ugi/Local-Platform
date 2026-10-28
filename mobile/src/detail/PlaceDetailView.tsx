@@ -27,11 +27,14 @@ export function PlaceDetailView({
   place,
   onViewOnMap,
   favorite,
+  nearby,
 }: {
   place: PlaceDetail;
   onViewOnMap: () => void;
   /** The heart beside the name (FAV-01). */
   favorite?: ReactNode;
+  /** The places close by (PLACE-08), above the source. */
+  nearby?: ReactNode;
 }) {
   const t = useTranslations("Place");
   const tCategory = useTranslations("Category");
@@ -111,6 +114,8 @@ export function PlaceDetailView({
           {website ? <LinkText text={displayUrl(website)} onPress={() => void run(() => openWebsite(website))} /> : null}
         </DetailRow>
       ) : null}
+
+      {nearby}
 
       <View style={styles.footer}>
         {source ? (

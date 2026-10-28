@@ -22,6 +22,8 @@ type Props = {
   header?: ReactNode;
   /** "12 results", for a list that says how long it is. */
   countText?: (total: number) => string;
+  /** Beside the count, once there are places: such as "Show on map". */
+  countAction?: ReactNode;
   /** Instead of the list when it has no places. */
   empty: ReactNode;
   onOpen: (place: PlaceSummary) => void;
@@ -33,7 +35,7 @@ type Props = {
  * from the centre of Queenstown, and a line says why (COMMON-01). Scrolling to the end loads the
  * next page.
  */
-export function PlaceList({ query, header, countText, empty, onOpen }: Props) {
+export function PlaceList({ query, header, countText, countAction, empty, onOpen }: Props) {
   const t = useTranslations("Nearby");
   const { position, problem } = useVisitorPosition();
   const list = usePlaceList(query, position);
@@ -47,7 +49,10 @@ export function PlaceList({ query, header, countText, empty, onOpen }: Props) {
       </View>
       {problem ? <Text style={styles.problem}>{t(LOCATION_PROBLEMS[problem])}</Text> : null}
       {countText && list.status === "ready" && list.total > 0 ? (
-        <Text style={styles.count}>{countText(list.total)}</Text>
+        <View style={styles.countRow}>
+          <Text style={styles.count}>{countText(list.total)}</Text>
+          {countAction}
+        </View>
       ) : null}
     </View>
   );
@@ -110,6 +115,7 @@ const styles = StyleSheet.create({
   },
   orderText: { fontSize: 14, color: colors.muted },
   problem: { fontSize: 14, color: colors.text, paddingHorizontal: 16, paddingVertical: 8 },
+  countRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingRight: 8 },
   count: { fontSize: 14, color: colors.muted, paddingHorizontal: 16, paddingTop: 8 },
   footer: { paddingVertical: 16 },
   footerRow: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 12 },

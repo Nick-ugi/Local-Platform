@@ -57,3 +57,17 @@ test("pages keep a keyword that needs escaping", () => {
   expect(screen.getByRole("link", { name: "Previous" })).toHaveAttribute("href", "/search?q=fish+%26+chips");
   expect(screen.getByRole("link", { name: "Next" })).toHaveAttribute("href", "/search?q=fish+%26+chips&page=3");
 });
+
+test("offers the results on the map, keeping the keyword", () => {
+  renderWithMessages(
+    <SearchResults query={{ category: null, q: "fish & chips", page: 1 }} result={pageOf(places)} />,
+  );
+
+  expect(screen.getByRole("link", { name: "Show on map" })).toHaveAttribute("href", "/?q=fish+%26+chips");
+});
+
+test("has nothing to show on the map when nothing matches", () => {
+  renderWithMessages(<SearchResults query={pizza} result={pageOf([])} />);
+
+  expect(screen.queryByRole("link", { name: "Show on map" })).toBeNull();
+});

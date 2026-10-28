@@ -205,7 +205,7 @@ Marker의 공통 필드
 
 | kind | 필드 |
 |---|---|
-| place | `name`, `category`, `subtype` |
+| place | `name`, `category`, `subtype`, `openingHours`(OpenStreetMap 표기 그대로, 없으면 `null`. 카드의 "Open now", PLACE-07) |
 | event | `title`, `startsAt`, `endsAt`, `venueName` |
 | notice | `title`, `type`, `isOfficial`, `startsAt`, `endsAt` |
 
@@ -223,7 +223,8 @@ Marker는 모두 합쳐 500개까지다. Notice(시작의 내림차순), Event(�
       "longitude": 168.661,
       "name": "Lakeside Kitchen",
       "category": "food",
-      "subtype": null
+      "subtype": null,
+      "openingHours": "Mo-Su 08:00-16:00"
     },
     {
       "kind": "event",

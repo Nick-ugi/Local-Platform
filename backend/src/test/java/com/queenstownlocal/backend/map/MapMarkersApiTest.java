@@ -74,11 +74,12 @@ class MapMarkersApiTest {
 
 	@Test
 	void markerHasExactlyTheDocumentedFields() throws Exception {
+		jdbc.sql("update place set opening_hours = 'Mo-Su 09:00-17:00' where slug = 'b'").update();
 		String json = body(markers());
 		Map<String, Object> b = marker(json, "b");
 
 		assertThat(b.keySet()).containsExactlyInAnyOrder("kind", "slug", "latitude", "longitude", "name", "category",
-				"subtype");
+				"subtype", "openingHours");
 		assertThat(b).containsEntry("kind", "place")
 			.containsEntry("slug", "b")
 			.containsEntry("name", "b")
@@ -86,7 +87,10 @@ class MapMarkersApiTest {
 		assertThat(((Number) b.get("latitude")).doubleValue()).isCloseTo(-45.0322, within(1e-6));
 		assertThat(((Number) b.get("longitude")).doubleValue()).isCloseTo(168.6610, within(1e-6));
 		assertThat(b.get("subtype")).isNull();
-		assertThat(marker(json, "e")).containsEntry("category", "facility").containsEntry("subtype", "toilet");
+		assertThat(b).containsEntry("openingHours", "Mo-Su 09:00-17:00");
+		assertThat(marker(json, "e")).containsEntry("category", "facility")
+			.containsEntry("subtype", "toilet")
+			.containsEntry("openingHours", null);
 	}
 
 	// A map zoomed far out asks for a box like these. Read as a shape on the globe, its long edges

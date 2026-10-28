@@ -1,5 +1,5 @@
 import type { PlaceMarker } from "@queenstown/shared";
-import { screen } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { expect, test, vi } from "vitest";
 import { renderWithMessages } from "@/test/render";
@@ -13,6 +13,7 @@ const marker: PlaceMarker = {
   name: "Lakeside Kitchen",
   category: "food",
   subtype: null,
+  openingHours: null,
 };
 
 test("shows the name, category label and distance", () => {
@@ -21,6 +22,29 @@ test("shows the name, category label and distance", () => {
   expect(screen.getByRole("heading", { name: "Lakeside Kitchen" })).toBeInTheDocument();
   expect(screen.getByText("Food")).toBeInTheDocument();
   expect(screen.getByText("350 m")).toBeInTheDocument();
+});
+
+test("a place with readable hours says whether it is open now, in New Zealand time", async () => {
+  vi.useFakeTimers();
+  try {
+    vi.setSystemTime(new Date("2026-10-20T10:00:00+13:00"));
+    renderWithMessages(
+      <MarkerPreview marker={{ ...marker, openingHours: "Mo-Su 09:00-17:00" }} distanceText={null} onClose={() => {}} />,
+    );
+    await act(async () => {
+      vi.advanceTimersByTime(0);
+    });
+
+    expect(screen.getByText("Open now · until 5:00 pm")).toBeInTheDocument();
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
+test("a place without hours has no badge", () => {
+  renderWithMessages(<MarkerPreview marker={marker} distanceText={null} onClose={() => {}} />);
+
+  expect(screen.queryByText(/Open now|Closed|Closes soon|Open 24 hours/)).not.toBeInTheDocument();
 });
 
 test("links to the place", () => {

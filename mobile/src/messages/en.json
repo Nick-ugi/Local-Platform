@@ -3,6 +3,7 @@
     "brand": "Queenstown Local",
     "map": "Map",
     "explore": "Explore",
+    "local": "Local",
     "more": "More",
     "back": "Back"
   },
@@ -55,6 +56,8 @@
   },
   "Map": {
     "filters": "Filters",
+    "searchResults": "Results for “{q}”",
+    "searchTruncated": "Showing the first {count} results.",
     "locate": "Show my location",
     "empty": "No places in this area.",
     "clearFilters": "Clear filters",
@@ -91,9 +94,13 @@
     "title": "Search",
     "hint": "Search for a place by name or keyword.",
     "count": "{count, plural, one {# result} other {# results}}",
-    "empty": "No places match “{q}”."
+    "empty": "No places match “{q}”.",
+    "showOnMap": "Show on map",
+    "recent": "Recently viewed",
+    "clearRecent": "Clear"
   },
   "Place": {
+    "nearby": "Nearby",
     "address": "Address",
     "openingHours": "Opening hours",
     "contact": "Contact",
@@ -111,8 +118,26 @@
     "suggestEditBody": "Place: {url}\n\nWhat should change?\n"
   },
   "Local": {
+    "sections": "Local",
+    "notices": "Notices",
+    "events": "Events",
+    "noticeTypes": "Notice types",
+    "eventPeriods": "Dates",
+    "allTypes": "All types",
+    "all": "All",
+    "today": "Today",
+    "week": "This Week",
+    "month": "This Month",
     "official": "Official",
-    "from": "From {date}"
+    "from": "From {date}",
+    "noNotices": "There are no current notices.",
+    "noNoticesOfType": "There are no current notices of this type.",
+    "showAllTypes": "Show all types",
+    "noEvents": "There are no upcoming events.",
+    "noEventsInPeriod": "There are no events in this period.",
+    "showAllEvents": "Show all events",
+    "loadFailed": "We couldn't load the list.",
+    "loadMoreFailed": "We couldn't load more."
   },
   "Detail": {
     "period": "Period",

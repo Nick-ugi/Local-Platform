@@ -9,6 +9,7 @@ const mockSdk = {
   map: null as Record<string, (...args: never[]) => void> | null,
   defaultSettings: null as unknown,
   setCamera: jest.fn(),
+  fitBounds: jest.fn(),
   setAccessToken: jest.fn(),
   puck: false,
   /** Each ShapeSource's props, by id. */
@@ -30,7 +31,7 @@ jest.mock("@rnmapbox/maps", () => {
     },
     Camera: forwardRef(function Camera(props: { defaultSettings: unknown }, ref: unknown) {
       mockSdk.defaultSettings = props.defaultSettings;
-      useImperativeHandle(ref, () => ({ setCamera: mockSdk.setCamera }));
+      useImperativeHandle(ref, () => ({ setCamera: mockSdk.setCamera, fitBounds: mockSdk.fitBounds }));
       return null;
     }),
     LocationPuck: () => {
@@ -85,6 +86,7 @@ beforeEach(() => {
   mockSdk.layers = [];
   mockSdk.layerProps = {};
   mockSdk.setCamera.mockClear();
+  mockSdk.fitBounds.mockClear();
   mockSdk.setAccessToken.mockClear();
 });
 
@@ -104,6 +106,32 @@ test("moves to a new camera", () => {
   expect(mockSdk.setCamera).toHaveBeenCalledWith({
     centerCoordinate: [168.661, -45.0322],
     zoomLevel: 15,
+    animationDuration: 800,
+  });
+});
+
+test("fits a box it is given once, with room round it", () => {
+  const box = { west: 168.65, south: -45.04, east: 168.67, north: -45.02 };
+  const { update } = renderMap();
+  expect(mockSdk.fitBounds).not.toHaveBeenCalled();
+
+  update({ fit: box });
+  expect(mockSdk.fitBounds).toHaveBeenCalledWith([168.67, -45.02], [168.65, -45.04], 64, 800);
+
+  // The same box again, as a new object, is not a new fit.
+  update({ fit: { ...box } });
+  expect(mockSdk.fitBounds).toHaveBeenCalledTimes(1);
+});
+
+test("a box round a single place centres on it at street level instead of zooming all the way in", () => {
+  const { update } = renderMap();
+
+  update({ fit: { west: 168.659, south: -45.0335, east: 168.659, north: -45.0335 } });
+
+  expect(mockSdk.fitBounds).not.toHaveBeenCalled();
+  expect(mockSdk.setCamera).toHaveBeenCalledWith({
+    centerCoordinate: [168.659, -45.0335],
+    zoomLevel: 16,
     animationDuration: 800,
   });
 });
@@ -155,6 +183,7 @@ const kitchen: MapMarker = {
   name: "Lakeside Kitchen",
   category: "food",
   subtype: null,
+  openingHours: null,
 };
 
 const bakery: MapMarker = { ...kitchen, slug: "beach-street-bakery", latitude: -45.0331, longitude: 168.6597 };
@@ -166,7 +195,7 @@ function keysIn(id: "markers" | "selected-marker") {
   );
 }
 
-test("draws the markers in their kind's colour with their letters, clustered when zoomed out", () => {
+test("draws the markers in their kind's colour with their letters, clustered when zoomed out, up to zoom 17", () => {
   const { update } = renderMap();
   expect(mockSdk.sources.markers.shape).toEqual(toFeatureCollection([]));
 
@@ -174,7 +203,7 @@ test("draws the markers in their kind's colour with their letters, clustered whe
 
   expect(mockSdk.sources.markers.shape).toEqual(toFeatureCollection([kitchen]));
   const { cluster, clusterRadius, clusterMaxZoomLevel } = mockSdk.sources.markers;
-  expect({ cluster, clusterRadius, clusterMaxZoomLevel }).toEqual({ cluster: true, clusterRadius: 44, clusterMaxZoomLevel: 15 });
+  expect({ cluster, clusterRadius, clusterMaxZoomLevel }).toEqual({ cluster: true, clusterRadius: 44, clusterMaxZoomLevel: 17 });
   expect(new Set(mockSdk.layers)).toEqual(
     new Set([
       "marker-clusters",

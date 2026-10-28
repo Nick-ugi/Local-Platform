@@ -16,6 +16,7 @@ export default function SearchRoute() {
       onSubmit={(next) => router.setParams({ q: next })}
       onOpen={(place) => router.push(`/places/${encodeURIComponent(place.slug)}`)}
       onExplore={() => router.navigate("/explore")}
+      onShowOnMap={(shown) => router.navigate({ pathname: "/", params: { q: shown } })}
     />
   );
 }

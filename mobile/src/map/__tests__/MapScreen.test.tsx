@@ -1,4 +1,4 @@
-import type { MapMarker, Selection } from "@queenstown/shared";
+import { boundsOf, type MapMarker, type PlaceMarker, type Selection } from "@queenstown/shared";
 import { act, fireEvent, screen } from "@testing-library/react-native";
 import type { ComponentProps } from "react";
 import { type LocationResult, locate } from "@/geo/location";
@@ -7,6 +7,7 @@ import { lookUp } from "../lookUp";
 import { MapScreen } from "../MapScreen";
 import type { MapView } from "../MapView";
 import { type MarkersState, useMarkers } from "../useMarkers";
+import { type SearchMarkersState, useSearchMarkers } from "../useSearchMarkers";
 
 // The real map needs the native SDK. This stand-in keeps the props it was given so a test can read
 // them and call the map's callbacks.
@@ -18,6 +19,7 @@ const kitchen: MapMarker = {
   name: "Lakeside Kitchen",
   category: "food",
   subtype: null,
+  openingHours: null,
 };
 
 const map: { props: ComponentProps<typeof MapView> | null } = { props: null };
@@ -36,13 +38,18 @@ const mockMarkers: { state: MarkersState } = {
 };
 jest.mock("../useMarkers", () => ({ useMarkers: jest.fn(() => mockMarkers.state) }));
 
+const mockSearch: { state: SearchMarkersState } = {
+  state: { status: "idle", markers: [], total: 0, retry: jest.fn() },
+};
+jest.mock("../useSearchMarkers", () => ({ SEARCH_MARKERS: 50, useSearchMarkers: jest.fn(() => mockSearch.state) }));
+
 const locateMock = jest.mocked(locate);
 const lookUpMock = jest.mocked(lookUp);
 
-const handlers = { onTargetDone: jest.fn(), onOpenDetail: jest.fn(), onSearch: jest.fn() };
+const handlers = { onTargetDone: jest.fn(), onOpenDetail: jest.fn(), onSearch: jest.fn(), onSearchClear: jest.fn() };
 
-function screenWith(target: Selection | null = null) {
-  return <MapScreen target={target} {...handlers} />;
+function screenWith(target: Selection | null = null, search: string | null = null) {
+  return <MapScreen target={target} search={search} {...handlers} />;
 }
 
 function mapProps() {
@@ -53,9 +60,9 @@ function mapProps() {
 }
 
 /** Opens the screen and lets the position asked for on arrival come back. */
-async function openMap(result: LocationResult, target: Selection | null = null) {
+async function openMap(result: LocationResult, target: Selection | null = null, search: string | null = null) {
   locateMock.mockResolvedValue(result);
-  const view = renderScreen(screenWith(target));
+  const view = renderScreen(screenWith(target, search));
   await act(async () => {});
   return view;
 }
@@ -68,6 +75,8 @@ beforeEach(() => {
   Object.values(handlers).forEach((handler) => handler.mockReset());
   mockMarkers.state = { status: "idle", markers: [], truncated: false, retry: jest.fn() };
   jest.mocked(useMarkers).mockClear();
+  mockSearch.state = { status: "idle", markers: [], total: 0, retry: jest.fn() };
+  jest.mocked(useSearchMarkers).mockClear();
 });
 
 test("without a token there is a notice instead of a map", async () => {
@@ -237,6 +246,7 @@ const harbourCoffee: MapMarker = {
   name: "Harbour Coffee",
   category: "cafe",
   subtype: null,
+  openingHours: null,
 };
 
 const nightMarket: MapMarker = {
@@ -400,7 +410,7 @@ test("View on map looks up a marker the map is not showing, and a chip that hide
   fireEvent.press(chip("Food"));
 
   view.rerender(
-    <MapScreen target={{ kind: "event", slug: "lakefront-night-market" }} {...handlers} />,
+    <MapScreen target={{ kind: "event", slug: "lakefront-night-market" }} search={null} {...handlers} />,
   );
   await act(async () => {});
 
@@ -419,4 +429,61 @@ test("View on map for something the map cannot show opens no card", async () => 
   expect(mapProps().selectedKey).toBeNull();
   expect(mapProps().camera).toEqual({ latitude: -45.0312, longitude: 168.6626, zoom: 14 });
   expect(handlers.onTargetDone).toHaveBeenCalledTimes(1);
+});
+
+describe("search results on the map (SEARCH-03)", () => {
+  const coffee = { ...kitchen, slug: "harbour-coffee", name: "Harbour Coffee", category: "cafe", latitude: -45.0335 } as PlaceMarker;
+  const bean = { ...coffee, slug: "bean-around", name: "Bean Around", latitude: -45.0309, longitude: 168.6618 };
+
+  function searchIs(state: Partial<SearchMarkersState>) {
+    mockSearch.state = { status: "ready", markers: [], total: 0, retry: jest.fn(), ...state };
+    return mockSearch.state;
+  }
+
+  test("search words show only the places that match, fitted on the map, with no chips and no area requests", async () => {
+    searchIs({ markers: [coffee, bean], total: 2 });
+    await openMap({ status: "denied" }, null, "coffee");
+
+    expect(jest.mocked(useSearchMarkers).mock.lastCall?.[0]).toBe("coffee");
+    expect(mapProps().markers).toEqual([coffee, bean]);
+    expect(mapProps().fit).toEqual(boundsOf([coffee, bean]));
+    act(() => mapProps().onIdle({ west: 168.65, south: -45.04, east: 168.67, north: -45.02 }, { latitude: -45.03, longitude: 168.66, zoom: 14 }));
+    expect(jest.mocked(useMarkers).mock.lastCall?.[0]).toBeNull();
+    expect(screen.queryByLabelText("Filters")).toBeNull();
+    expect(screen.getByText("Results for “coffee”")).toBeOnTheScreen();
+
+    fireEvent.press(screen.getByRole("button", { name: "Clear search" }));
+    expect(handlers.onSearchClear).toHaveBeenCalledTimes(1);
+  });
+
+  test("a search that matches nothing says so and fits nothing", async () => {
+    searchIs({ markers: [], total: 0 });
+    await openMap({ status: "denied" }, null, "sushi");
+
+    expect(screen.getByText("No places match “sushi”.")).toBeOnTheScreen();
+    expect(mapProps().fit).toBeNull();
+  });
+
+  test("more than fifty matches say that only the first fifty are shown", async () => {
+    searchIs({ markers: [coffee], total: 60 });
+    await openMap({ status: "denied" }, null, "shop");
+
+    expect(screen.getByText("Showing the first 50 results.")).toBeOnTheScreen();
+  });
+
+  test("a failed search offers to try again", async () => {
+    const state = searchIs({ status: "error" });
+    await openMap({ status: "denied" }, null, "coffee");
+
+    fireEvent.press(screen.getByRole("button", { name: "Try again" }));
+
+    expect(state.retry).toHaveBeenCalledTimes(1);
+  });
+
+  test("View on map leaves the search for the whole map", async () => {
+    searchIs({ markers: [coffee], total: 1 });
+    await openMap({ status: "denied" }, { kind: "place", slug: "harbour-coffee" }, "coffee");
+
+    expect(handlers.onSearchClear).toHaveBeenCalled();
+  });
 });

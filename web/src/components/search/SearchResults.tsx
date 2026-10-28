@@ -12,8 +12,9 @@ type Props = {
 };
 
 /**
- * The results of a search (wireframe m-search): how many places match, the places, and the way
- * to the other pages. When nothing matches it says so and points to Explore.
+ * The results of a search (wireframe m-search): how many places match, the way to see them on the
+ * map (SEARCH-03), the places, and the way to the other pages. When nothing matches it says so and
+ * points to Explore.
  */
 export function SearchResults({ query, result }: Props) {
   const t = useTranslations("Search");
@@ -33,7 +34,15 @@ export function SearchResults({ query, result }: Props) {
 
   return (
     <>
-      <p className="px-4 pt-2 text-sm text-neutral-600 md:px-8">{t("count", { count: result.total })}</p>
+      <div className="flex items-center justify-between gap-3 px-4 pt-2 md:px-8">
+        <p className="text-sm text-neutral-600">{t("count", { count: result.total })}</p>
+        <Link
+          href={`/?${new URLSearchParams({ q })}`}
+          className="flex min-h-11 items-center text-sm font-semibold underline underline-offset-2"
+        >
+          {t("showOnMap")}
+        </Link>
+      </div>
       <NearbyPlaces query={query} initial={result} emptyText={t("empty", { q })} />
       <Pagination path={searchPath(q)} page={query.page} pages={pageCount(result.total, result.size)} />
     </>

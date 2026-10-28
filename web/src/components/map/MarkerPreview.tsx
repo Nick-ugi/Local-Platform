@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useId } from "react";
 import { NoticeBadges } from "@/components/local/NoticeBadges";
 import { NoticePeriodText } from "@/components/local/NoticePeriodText";
+import { OpenBadge } from "@/components/place/OpenBadge";
 
 type Props = {
   marker: MapMarker;
@@ -38,10 +39,13 @@ export function MarkerPreview({ marker, distanceText, onClose }: Props) {
           {marker.kind === "place" ? marker.name : marker.title}
         </h2>
         {marker.kind === "place" ? (
-          <p className="text-sm text-neutral-600">
-            <span>{tCategory(marker.category)}</span>
-            {distance}
-          </p>
+          <>
+            <p className="text-sm text-neutral-600">
+              <span>{tCategory(marker.category)}</span>
+              {distance}
+            </p>
+            <OpenBadge openingHours={marker.openingHours} className="mt-1" />
+          </>
         ) : null}
         {marker.kind === "event" ? (
           <>

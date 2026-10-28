@@ -1,4 +1,4 @@
-import type { PlaceDetail } from "@queenstown/shared";
+import type { PlaceDetail, PlaceSummary } from "@queenstown/shared";
 import { screen, within } from "@testing-library/react";
 import { expect, test, vi } from "vitest";
 import { renderWithMessages } from "@/test/render";
@@ -188,4 +188,35 @@ test("shows a phone it cannot dial as text", () => {
 
   expect(screen.getByText("call us")).toBeInTheDocument();
   expect(screen.queryByRole("link", { name: "call us" })).toBeNull();
+});
+
+const cafe: PlaceSummary = {
+  slug: "harbour-coffee",
+  name: "Harbour Coffee",
+  category: "cafe",
+  subtype: null,
+  address: "5 Marine Parade, Queenstown",
+  imageUrl: null,
+  latitude: -45.0335,
+  longitude: 168.659,
+  distanceM: 120,
+  openingHours: null,
+};
+
+test("lists nearby places at the foot, each with its kind and distance and a link", () => {
+  const bar: PlaceSummary = { ...cafe, slug: "pub-on-wharf", name: "Pub on Wharf", category: "bar", distanceM: 1500 };
+  renderWithMessages(<PlaceDetailView place={full} nearby={[cafe, { ...bar, distanceM: 450 }]} />);
+
+  const section = screen.getByRole("region", { name: "Nearby" });
+  const links = within(section).getAllByRole("link");
+  expect(links.map((link) => link.getAttribute("href"))).toEqual(["/places/harbour-coffee", "/places/pub-on-wharf"]);
+  expect(within(links[0]).getByText("Harbour Coffee")).toBeInTheDocument();
+  expect(within(links[0]).getByText("Cafes · 120 m")).toBeInTheDocument();
+  expect(within(links[1]).getByText("Bars · 450 m")).toBeInTheDocument();
+});
+
+test("has no Nearby section when there is nothing near", () => {
+  renderWithMessages(<PlaceDetailView place={full} nearby={[]} />);
+
+  expect(screen.queryByRole("region", { name: "Nearby" })).not.toBeInTheDocument();
 });

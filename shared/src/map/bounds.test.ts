@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { toMapBounds, wrapLongitude } from './bounds'
+import { boundsOf, toMapBounds, wrapLongitude } from './bounds'
 
 test('passes an ordinary box through', () => {
   expect(toMapBounds(168.65, -45.04, 168.67, -45.02)).toEqual({
@@ -48,4 +48,21 @@ test('wraps a longitude into -180 to 180', () => {
   expect(wrapLongitude(180)).toBe(-180)
   expect(wrapLongitude(528.5)).toBeCloseTo(168.5, 9)
   expect(wrapLongitude(-191.5)).toBeCloseTo(168.5, 9)
+})
+
+test('the box around some points is the smallest that holds them all, and there is none for no points', () => {
+  expect(boundsOf([])).toBeNull()
+  expect(boundsOf([{ latitude: -45.03, longitude: 168.66 }])).toEqual({
+    west: 168.66,
+    south: -45.03,
+    east: 168.66,
+    north: -45.03,
+  })
+  expect(
+    boundsOf([
+      { latitude: -45.03, longitude: 168.66 },
+      { latitude: -44.94, longitude: 168.83 },
+      { latitude: -45.05, longitude: 168.73 },
+    ]),
+  ).toEqual({ west: 168.66, south: -45.05, east: 168.83, north: -44.94 })
 })

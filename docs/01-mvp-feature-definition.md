@@ -96,7 +96,7 @@ Queenstown에 가져가서 사람들에게 직접 보여주고 써 보게 할 �
 | ID | Feature | 화면 | 사용자 행동 | 우선순위 | 플랫폼 |
 |---|---|---|---|---|---|
 | NAV-01 | Web 내비게이션 | 전체 | Map / Explore / Local / More 사이를 이동한다. (모바일은 하단 탭, 데스크톱은 상단 메뉴) | Must | Web |
-| NAV-02 | App 내비게이션 | 전체 | Map / Explore / More 탭 사이를 이동한다. | Must | App |
+| NAV-02 | App 내비게이션 | 전체 | Map / Explore / More 탭 사이를 이동한다. (14주차부터 Local 탭이 더해져 Map / Explore / Local / More, APP-01) | Must | App |
 | COMMON-01 | 위치 권한 처리 | Map, Explore | 위치 권한을 거부하거나 서비스 지역 밖에 있어도 Queenstown 중심을 기준으로 지도와 목록을 본다. | Must | Web · App |
 | COMMON-02 | 상태 안내 | 전체 | 로딩 중, 결과 없음, 오류를 안내받고 다시 시도한다. | Must | Web · App |
 | COMMON-03 | 반응형 화면 | 전체 | 모바일 브라우저에서 데스크톱과 같은 기능을 사용한다. | Must | Web |
@@ -251,6 +251,7 @@ MVP에서 만들지 않는다.
 | 11 | User / Favorite / Admin | USER-01 ~ USER-02, FAV-01 ~ FAV-02, ADMIN-01 ~ ADMIN-04 |
 | 12 | Integration / Release | 통합 테스트, 남은 Should |
 | 13 | UX Polish | PLACE-07, MAP-09 (Web · App), MORE-02 ~ MORE-03 (App) |
+| 14 | Planned Features | APP-01, PLACE-07(지도 카드), PLACE-08, SEARCH-03 (Web · App), 최근 본 장소(App, README의 Later) |
 
 10주차의 작업량이 가장 많다. 13주차는 12주 MVP 뒤에 남은 Should를 Web과 App에 마저 넣고 사용성을 다듬는 주다([계획](plans/2026-10-27-week13-ux-polish.md)).
 

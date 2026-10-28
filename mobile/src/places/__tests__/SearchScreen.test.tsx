@@ -3,6 +3,7 @@ import { act, fireEvent, screen } from "@testing-library/react-native";
 import { getPlaces } from "@/api/places";
 import { locate } from "@/geo/location";
 import { renderScreen } from "@/test/render";
+import { clearRecentPlaces, loadRecentPlaces, rememberPlace } from "../recentPlaces";
 import { SearchScreen } from "../SearchScreen";
 
 jest.mock("@/api/places", () => ({ getPlaces: jest.fn() }));
@@ -21,14 +22,15 @@ const coffee: PlaceSummary = {
   openingHours: null,
 };
 
-const handlers = { onSubmit: jest.fn(), onOpen: jest.fn(), onExplore: jest.fn() };
+const handlers = { onSubmit: jest.fn(), onOpen: jest.fn(), onExplore: jest.fn(), onShowOnMap: jest.fn() };
 
 async function openSearch(q: string) {
   renderScreen(<SearchScreen q={q} {...handlers} />);
   await act(async () => {});
 }
 
-beforeEach(() => {
+beforeEach(async () => {
+  await clearRecentPlaces();
   jest.mocked(locate).mockResolvedValue({ status: "denied" });
   jest.mocked(getPlaces).mockReset();
   jest.mocked(getPlaces).mockResolvedValue({ items: [coffee], page: 1, size: 20, total: 1 });
@@ -40,6 +42,31 @@ test("before a search there is a hint and nothing is asked for", async () => {
 
   expect(screen.getByText("Search for a place by name or keyword.")).toBeOnTheScreen();
   expect(getPlaces).not.toHaveBeenCalled();
+});
+
+test("before a search the places seen lately are there to open again, and Clear forgets them", async () => {
+  await rememberPlace({ slug: "lakeside-kitchen", name: "Lakeside Kitchen", category: "food", subtype: null });
+  await rememberPlace({ slug: "harbour-coffee", name: "Harbour Coffee", category: "cafe", subtype: null });
+  await openSearch("");
+
+  expect(screen.getByRole("header", { name: "Recently viewed" })).toBeOnTheScreen();
+  // Latest first.
+  expect(screen.getAllByText(/Harbour Coffee|Lakeside Kitchen/).map((text) => text.props.children)).toEqual([
+    "Harbour Coffee",
+    "Lakeside Kitchen",
+  ]);
+  fireEvent.press(screen.getByRole("link", { name: /Harbour Coffee/ }));
+  expect(handlers.onOpen).toHaveBeenCalledWith(expect.objectContaining({ slug: "harbour-coffee" }));
+
+  await act(async () => fireEvent.press(screen.getByRole("button", { name: "Clear" })));
+  expect(screen.queryByText("Recently viewed")).toBeNull();
+  expect(await loadRecentPlaces()).toEqual([]);
+});
+
+test("without places seen lately there is only the hint", async () => {
+  await openSearch("");
+
+  expect(screen.queryByText("Recently viewed")).toBeNull();
 });
 
 test("submitting sends the tidied words; blank words stay on the screen", async () => {
@@ -69,6 +96,14 @@ test("the results say how many there are and open the place", async () => {
   expect(handlers.onOpen).toHaveBeenCalledWith(coffee);
 });
 
+test("results can be seen on the map", async () => {
+  await openSearch("coffee");
+
+  fireEvent.press(screen.getByRole("button", { name: "Show on map" }));
+
+  expect(handlers.onShowOnMap).toHaveBeenCalledWith("coffee");
+});
+
 test("no match says so and leads to Explore", async () => {
   jest.mocked(getPlaces).mockResolvedValue({ items: [], page: 1, size: 20, total: 0 });
   await openSearch("sushi");
@@ -76,6 +111,7 @@ test("no match says so and leads to Explore", async () => {
   expect(screen.getByText("No places match “sushi”.")).toBeOnTheScreen();
   fireEvent.press(screen.getByRole("button", { name: "Go to Explore" }));
   expect(handlers.onExplore).toHaveBeenCalledTimes(1);
+  expect(screen.queryByRole("button", { name: "Show on map" })).toBeNull();
 });
 
 test("the clear button empties the box", async () => {

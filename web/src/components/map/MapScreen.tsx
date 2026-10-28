@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  boundsOf,
   distanceMeters,
   type FilterKey,
   filterHides,
@@ -8,6 +9,7 @@ import {
   keyOf,
   type MapBounds,
   type MapMarker,
+  normalizeQuery,
   parseFilter,
   parseKey,
   readSelection,
@@ -25,6 +27,7 @@ import { getPlace } from "@/lib/api/places";
 import { useVisitorPosition } from "@/lib/geo/useVisitorPosition";
 import { type Camera, hasSavedCamera, loadCamera, PLACE_ZOOM, saveCamera } from "@/lib/map/camera";
 import { useMarkers } from "@/lib/map/useMarkers";
+import { SEARCH_MARKERS, useSearchMarkers } from "@/lib/map/useSearchMarkers";
 import { useSlow } from "@/lib/useSlow";
 import { FilterChips } from "./FilterChips";
 import { LocateButton } from "./LocateButton";
@@ -85,8 +88,8 @@ async function lookUp({ kind, slug }: Selection): Promise<MapMarker | null> {
     if (!place) {
       return null;
     }
-    const { latitude, longitude, name, category, subtype } = place;
-    return { kind, slug, latitude, longitude, name, category, subtype };
+    const { latitude, longitude, name, category, subtype, openingHours } = place;
+    return { kind, slug, latitude, longitude, name, category, subtype, openingHours };
   }
   if (kind === "event") {
     const event = await getEvent(slug);
@@ -110,6 +113,8 @@ async function lookUp({ kind, slug }: Selection): Promise<MapMarker | null> {
  *
  * The filter and the selection live in the URL, as ?filter=food,event&event=slug (or ?place=,
  * ?notice=), so the screen can be shared and comes back the same after a visit to a detail page.
+ * Search words (?q=, from "Show on map" on Search, SEARCH-03) put the map in a mode of their own:
+ * only the places that match, fitted on the map, no chips and no markers by area.
  * Changing them replaces the current history entry. The map's position is kept for the tab in
  * session storage.
  *
@@ -121,6 +126,7 @@ async function lookUp({ kind, slug }: Selection): Promise<MapMarker | null> {
 export function MapScreen() {
   const t = useTranslations("Map");
   const tState = useTranslations("State");
+  const tSearch = useTranslations("Search");
   const searchParams = useSearchParams();
   const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -131,7 +137,12 @@ export function MapScreen() {
   const [camera, setCamera] = useState(loadCamera);
   const [bounds, setBounds] = useState<MapBounds | null>(null);
   const [unavailable, setUnavailable] = useState(false);
-  const { status, markers, truncated, retry } = useMarkers(bounds, filter);
+  const q = normalizeQuery(searchParams.get("q") ?? undefined) || null;
+  const search = useSearchMarkers(q);
+  const area = useMarkers(q === null ? bounds : null, filter);
+  const { status, markers, retry } = q === null ? area : search;
+  const truncated = q === null ? area.truncated : search.total > SEARCH_MARKERS;
+  const fit = q !== null && search.status === "ready" ? boundsOf(search.markers) : null;
   // A sleeping backend takes up to a minute to answer its first request (docs/07-deployment.md).
   const slow = useSlow(status === "loading");
 
@@ -253,10 +264,25 @@ export function MapScreen() {
   }
 
   const clearFilters = { label: t("clearFilters"), onClick: () => writeUrl((params) => params.delete("filter")) };
+  const clearSearch = () => writeUrl((params) => params.delete("q"));
 
   return (
     <div className="flex flex-1 flex-col">
-      <FilterChips selected={filter} onToggle={toggle} />
+      {q === null ? (
+        <FilterChips selected={filter} onToggle={toggle} />
+      ) : (
+        <div className="flex shrink-0 items-center gap-2 px-4 py-1 md:px-8">
+          <p className="min-w-0 flex-1 truncate font-semibold">{t("searchResults", { q })}</p>
+          <button
+            type="button"
+            aria-label={tSearch("clear")}
+            onClick={clearSearch}
+            className="flex size-11 shrink-0 items-center justify-center rounded-full text-2xl text-neutral-600 hover:bg-neutral-100"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+      )}
       <div className="relative flex flex-1 flex-col">
         <div className="relative min-h-48 flex-1 bg-neutral-200">
           <MapView
@@ -268,6 +294,7 @@ export function MapScreen() {
             onMove={moved}
             onSelect={select}
             onUnavailable={() => setUnavailable(true)}
+            fit={fit}
           />
           {/* Messages sit at the top, clear of the preview: centred on a phone, to the right on a desktop. */}
           <div
@@ -277,9 +304,15 @@ export function MapScreen() {
             {status === "error" ? <Notice text={t("loadFailed")} action={{ label: t("retry"), onClick: retry }} /> : null}
             {slow ? <Notice text={tState("waking")} /> : null}
             {status === "ready" && markers.length === 0 ? (
-              <Notice text={t("empty")} action={filter.length > 0 ? clearFilters : undefined} />
+              q === null ? (
+                <Notice text={t("empty")} action={filter.length > 0 ? clearFilters : undefined} />
+              ) : (
+                <Notice text={tSearch("empty", { q })} />
+              )
             ) : null}
-            {status !== "error" && truncated ? <Notice text={t("truncated")} /> : null}
+            {status !== "error" && truncated ? (
+              <Notice text={q === null ? t("truncated") : t("searchTruncated", { count: SEARCH_MARKERS })} />
+            ) : null}
             {locationProblem ? <Notice text={t(LOCATION_PROBLEMS[locationProblem])} /> : null}
           </div>
           {/* Bottom right (wireframe m-map), above Mapbox's attribution line. */}

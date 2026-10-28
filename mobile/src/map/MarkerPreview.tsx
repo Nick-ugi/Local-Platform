@@ -4,6 +4,7 @@ import { Animated, PanResponder, Pressable, StyleSheet, Text, View } from "react
 import { useTranslations } from "use-intl";
 import { NoticeBadges } from "@/local/NoticeBadges";
 import { useNoticePeriodText } from "@/local/useNoticePeriod";
+import { OpenBadge } from "@/ui/OpenBadge";
 import { colors, TOUCH } from "@/ui/theme";
 
 type Props = {
@@ -19,9 +20,9 @@ const CLOSE_PULL = 60;
 
 /**
  * The card of the marker selected on the map (wireframe a-map, 2): a sheet at the bottom with the
- * way on to the detail screen. A place shows its name, category and distance, an event its title,
- * time and venue, a notice its type, Official mark, title and period. Pulling it down or the close
- * button closes it.
+ * way on to the detail screen. A place shows its name, category and distance, and whether it is open
+ * now (PLACE-07); an event its title, time and venue; a notice its type, Official mark, title and
+ * period. Pulling it down or the close button closes it.
  */
 export function MarkerPreview({ marker, distanceText, onOpen, onClose }: Props) {
   const t = useTranslations("Map");
@@ -77,6 +78,7 @@ export function MarkerPreview({ marker, distanceText, onOpen, onClose }: Props) 
               {line}
             </Text>
           ))}
+          {marker.kind === "place" ? <OpenBadge openingHours={marker.openingHours} /> : null}
         </View>
         <Pressable
           accessibilityRole="button"

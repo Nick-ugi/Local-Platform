@@ -1,4 +1,5 @@
 import {
+  boundsOf,
   categoryStyle,
   distanceMeters,
   FILTER_KEYS,
@@ -12,13 +13,13 @@ import {
   toggleFilter,
 } from "@queenstown/shared";
 import { useEffect, useEffectEvent, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
 import type { LocationResult } from "@/geo/location";
 import { type LocationProblem, useVisitorPosition } from "@/geo/VisitorPosition";
 import { Chips } from "@/ui/Chips";
 import { SearchBar } from "@/ui/SearchBar";
-import { colors } from "@/ui/theme";
+import { colors, TOUCH } from "@/ui/theme";
 import { useSlow } from "@/ui/useSlow";
 import { type Camera, DEFAULT_CAMERA, LOCATE_ZOOM, PLACE_ZOOM } from "./camera";
 import { LocateButton } from "./LocateButton";
@@ -27,6 +28,7 @@ import { MapNotice } from "./MapNotice";
 import { MapView } from "./MapView";
 import { MarkerPreview } from "./MarkerPreview";
 import { useMarkers } from "./useMarkers";
+import { SEARCH_MARKERS, useSearchMarkers } from "./useSearchMarkers";
 
 /** The message for each way of not getting a usable position (docs/03-user-flow.md, UF-01). */
 const LOCATION_PROBLEMS = {
@@ -44,6 +46,10 @@ type Props = {
   onOpenDetail: (marker: MapMarker) => void;
   /** Opens the Search screen. */
   onSearch: () => void;
+  /** Search words whose results the map shows instead of its markers (SEARCH-03), or null. */
+  search: string | null;
+  /** Leaves the search results for the whole map. */
+  onSearchClear: () => void;
 };
 
 /**
@@ -56,17 +62,24 @@ type Props = {
  * The tab stays alive while detail screens open on top of it, so the filter, the selection and
  * the map's position are kept in the screen's state; the web app keeps them in its URL.
  */
-export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch }: Props) {
+export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch, search, onSearchClear }: Props) {
   const t = useTranslations("Map");
   const tCategory = useTranslations("Category");
   const tPages = useTranslations("Pages");
   const tState = useTranslations("State");
+  const tSearch = useTranslations("Search");
   const token = process.env.EXPO_PUBLIC_MAPBOX_TOKEN;
 
   const [camera, setCamera] = useState<Camera>(DEFAULT_CAMERA);
   const [bounds, setBounds] = useState<MapBounds | null>(null);
   const [filter, setFilter] = useState<FilterKey[]>([]);
-  const { status, markers, truncated, retry } = useMarkers(bounds, filter);
+  // Search words put the map in a mode of their own: only the places that match, fitted on the
+  // map, no chips and no markers by area.
+  const results = useSearchMarkers(search);
+  const area = useMarkers(search === null ? bounds : null, filter);
+  const { status, markers, retry } = search === null ? area : results;
+  const truncated = search === null ? area.truncated : results.total > SEARCH_MARKERS;
+  const fit = search !== null && results.status === "ready" ? boundsOf(results.markers) : null;
   // A sleeping backend takes up to a minute to answer its first request (docs/07-deployment.md).
   const slow = useSlow(status === "loading");
   const [selected, setSelected] = useState<MapMarker | null>(null);
@@ -92,6 +105,10 @@ export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch }: Prop
   // "View on map": the marker is selected and the map goes to it. One the map is not showing is
   // asked for on its own; one that has ended or has no location opens nothing.
   const show = useEffectEvent((wanted: Selection, done: () => void) => {
+    // The visitor asked for one marker: the whole map, not the search results, shows it.
+    if (search !== null) {
+      onSearchClear();
+    }
     const key = keyOf(wanted);
     const onMap = markers.find((marker) => keyOf(marker) === key);
     (onMap ? Promise.resolve(onMap) : lookUp(wanted)).then(
@@ -151,7 +168,22 @@ export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch }: Prop
     <View style={styles.container}>
       <View style={styles.top}>
         <SearchBar onPress={onSearch} />
-        <Chips
+        {search !== null ? (
+          <View style={styles.results}>
+            <Text style={styles.resultsText} numberOfLines={1}>
+              {t("searchResults", { q: search })}
+            </Text>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={tSearch("clear")}
+              onPress={onSearchClear}
+              style={styles.clear}
+            >
+              <Text style={styles.clearText}>×</Text>
+            </Pressable>
+          </View>
+        ) : (
+          <Chips
           label={t("filters")}
           items={FILTER_KEYS.map((key) => ({
             key,
@@ -160,7 +192,8 @@ export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch }: Prop
             color: categoryStyle(key === "event" || key === "notice" ? key : { category: key, subtype: null }).color,
           }))}
           onPress={toggle}
-        />
+          />
+        )}
       </View>
       <View style={styles.mapArea}>
         <MapView
@@ -173,6 +206,7 @@ export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch }: Prop
           onIdle={(box) => setBounds(box)}
           onGesture={() => setProblem(null)}
           onUnavailable={() => setUnavailable(true)}
+          fit={fit}
         />
         <View accessibilityLiveRegion="polite" pointerEvents="box-none" style={styles.notices}>
           {status === "error" ? (
@@ -180,9 +214,15 @@ export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch }: Prop
           ) : null}
           {slow ? <MapNotice text={tState("waking")} /> : null}
           {status === "ready" && markers.length === 0 ? (
-            <MapNotice text={t("empty")} action={filter.length > 0 ? clearFilters : undefined} />
+            search === null ? (
+              <MapNotice text={t("empty")} action={filter.length > 0 ? clearFilters : undefined} />
+            ) : (
+              <MapNotice text={tSearch("empty", { q: search })} />
+            )
           ) : null}
-          {status !== "error" && truncated ? <MapNotice text={t("truncated")} /> : null}
+          {status !== "error" && truncated ? (
+            <MapNotice text={search === null ? t("truncated") : t("searchTruncated", { count: SEARCH_MARKERS })} />
+          ) : null}
           {problem ? <MapNotice text={t(LOCATION_PROBLEMS[problem])} /> : null}
         </View>
         {/* The location button sits at the bottom right, above Mapbox's attribution or the card. */}
@@ -207,6 +247,10 @@ export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch }: Prop
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.paper },
   top: { backgroundColor: colors.paper },
+  results: { flexDirection: "row", alignItems: "center", gap: 8, paddingLeft: 16, paddingRight: 8 },
+  resultsText: { flex: 1, fontSize: 16, fontWeight: "600", color: colors.text },
+  clear: { width: TOUCH, height: TOUCH, alignItems: "center", justifyContent: "center" },
+  clearText: { fontSize: 24, color: colors.muted },
   mapArea: { flex: 1 },
   centred: { flex: 1, alignItems: "center", justifyContent: "center", padding: 32 },
   message: { fontSize: 16, color: colors.muted, textAlign: "center" },

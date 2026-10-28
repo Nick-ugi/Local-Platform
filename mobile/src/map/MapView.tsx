@@ -40,6 +40,8 @@ type Props = {
   onGesture: () => void;
   /** Called when no map can be shown: the style failed to load, usually a refused token. */
   onUnavailable: () => void;
+  /** A box to show whole, such as search results. A box with other edges moves the map again. */
+  fit?: MapBounds | null;
 };
 
 /** The same style as the web app's map (README, "Map"). */
@@ -50,13 +52,18 @@ const MOVE_MS = 800;
 
 // The markers look as they do on the web (web/src/components/map/MapView.tsx): a circle in their
 // kind's colour (shared/src/categoryStyle.ts) with a white ring and a white letter. Markers close
-// together become a numbered dark cluster up to zoom 15 (MAP-09). Full emissive strength keeps them
+// together become a numbered dark cluster up to zoom 17 (MAP-09). Full emissive strength keeps them
 // bright in the Standard style's lighting.
 const INK = "#171717";
 const PAPER = "#ffffff";
 const RADIUS = 14;
 const CLUSTER_RADIUS = 44;
-const CLUSTER_MAX_ZOOM = 15;
+const CLUSTER_MAX_ZOOM = 17;
+// Room round a fitted box. A box this small or smaller (about 100 m) is one spot: the map centres
+// on it at street level, since fitting it would zoom all the way in.
+const FIT_PADDING = 64;
+const SPOT_DEGREES = 0.001;
+const SPOT_ZOOM = 16;
 
 type Filter = ComponentProps<typeof CircleLayer>["filter"];
 const CLUSTERED: Filter = ["has", "point_count"];
@@ -120,6 +127,7 @@ export function MapView({
   onIdle,
   onGesture,
   onUnavailable,
+  fit = null,
 }: Props) {
   const cameraRef = useRef<MapboxCamera>(null);
   const markersRef = useRef<ShapeSource>(null);
@@ -167,6 +175,23 @@ export function MapView({
       });
     }
   }, [camera, startCamera]);
+
+  // Keyed by the edges, so the same box given again as a new object does not move the map back.
+  const { west, south, east, north } = fit ?? {};
+  useEffect(() => {
+    if (west === undefined || south === undefined || east === undefined || north === undefined) {
+      return;
+    }
+    if (east - west <= SPOT_DEGREES && north - south <= SPOT_DEGREES) {
+      cameraRef.current?.setCamera({
+        centerCoordinate: [(west + east) / 2, (south + north) / 2],
+        zoomLevel: SPOT_ZOOM,
+        animationDuration: MOVE_MS,
+      });
+    } else {
+      cameraRef.current?.fitBounds([east, north], [west, south], FIT_PADDING, MOVE_MS);
+    }
+  }, [west, south, east, north]);
 
   function idle(state: MapState) {
     const { bounds, center, zoom } = state.properties;

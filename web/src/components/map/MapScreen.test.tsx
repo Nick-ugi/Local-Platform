@@ -1,14 +1,15 @@
-import type { EventDetail, MapMarker, NoticeDetail, PlaceDetail } from "@queenstown/shared";
+import { boundsOf, type EventDetail, type MapMarker, type NoticeDetail, type PlaceDetail, type PlaceMarker } from "@queenstown/shared";
 import { act, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { ComponentProps } from "react";
-import { afterEach, beforeEach, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { getEvent } from "@/lib/api/events";
 import { getNotice } from "@/lib/api/notices";
 import { getPlace } from "@/lib/api/places";
 import { type LocationResult, locate, wasLocationGranted } from "@/lib/geo/location";
 import type { MarkersState } from "@/lib/map/useMarkers";
 import { useMarkers } from "@/lib/map/useMarkers";
+import { type SearchMarkersState, useSearchMarkers } from "@/lib/map/useSearchMarkers";
 import { renderWithMessages } from "@/test/render";
 import { MapScreen } from "./MapScreen";
 import type { MapView } from "./MapView";
@@ -25,6 +26,12 @@ vi.mock("./MapView", () => ({
 
 const markersState = vi.hoisted(() => ({ current: null as MarkersState | null }));
 vi.mock("@/lib/map/useMarkers", () => ({ useMarkers: vi.fn(() => markersState.current) }));
+
+const searchState = vi.hoisted(() => ({ current: null as SearchMarkersState | null }));
+vi.mock("@/lib/map/useSearchMarkers", () => ({
+  SEARCH_MARKERS: 50,
+  useSearchMarkers: vi.fn(() => searchState.current),
+}));
 
 vi.mock("@/lib/geo/location", () => ({ locate: vi.fn(), wasLocationGranted: vi.fn() }));
 
@@ -64,9 +71,15 @@ const kitchen: MapMarker = {
   name: "Lakeside Kitchen",
   category: "food",
   subtype: null,
+  openingHours: null,
 };
 
 const queenstownBox = { west: 168.65, south: -45.04, east: 168.67, north: -45.02 };
+
+function searchIs(state: Partial<SearchMarkersState>) {
+  searchState.current = { status: "ready", markers: [], total: 0, retry: vi.fn(), ...state };
+  return searchState.current;
+}
 
 function markersAre(state: Partial<MarkersState>) {
   markersState.current = { status: "ready", markers: [kitchen], truncated: false, retry: vi.fn(), ...state };
@@ -97,6 +110,8 @@ beforeEach(() => {
   map.props = null;
   markersAre({});
   vi.mocked(useMarkers).mockClear();
+  searchIs({ status: "idle" });
+  vi.mocked(useSearchMarkers).mockClear();
   // A first visit: the browser has not been asked for the position yet.
   vi.mocked(wasLocationGranted).mockReset().mockResolvedValue(false);
   vi.mocked(locate).mockReset().mockResolvedValue({ status: "unavailable" });
@@ -816,4 +831,67 @@ test("a notice without a location leaves the URL", async () => {
   openMap("/?filter=notice&notice=lake-esplanade-closure");
 
   await waitFor(() => expect(window.location.search).toBe("?filter=notice"));
+});
+
+describe("search results on the map (SEARCH-03)", () => {
+  const coffee = { ...kitchen, slug: "harbour-coffee", name: "Harbour Coffee", category: "cafe", latitude: -45.0335 } as PlaceMarker;
+  const bean = { ...coffee, slug: "bean-around", name: "Bean Around", latitude: -45.0309, longitude: 168.6618 };
+
+  test("search words show only the places that match, fitted on the map, with no chips and no area requests", () => {
+    searchIs({ markers: [coffee, bean], total: 2 });
+    openMap("/?q=coffee");
+
+    expect(vi.mocked(useSearchMarkers).mock.lastCall?.[0]).toBe("coffee");
+    expect(mapProps().markers).toEqual([coffee, bean]);
+    expect(mapProps().fit).toEqual(boundsOf([coffee, bean]));
+    act(() => mapProps().onMove(queenstownBox, { latitude: -45.03, longitude: 168.66, zoom: 14 }));
+    expect(vi.mocked(useMarkers).mock.lastCall?.[0]).toBeNull();
+    expect(screen.queryByRole("group", { name: "Filters" })).not.toBeInTheDocument();
+    expect(screen.getByText("Results for “coffee”")).toBeInTheDocument();
+  });
+
+  test("Clear search goes back to the whole map and keeps the selected place", async () => {
+    searchIs({ markers: [coffee], total: 1 });
+    openMap("/?q=coffee&place=harbour-coffee");
+
+    await userEvent.click(screen.getByRole("button", { name: "Clear search" }));
+
+    expect(window.location.search).toBe("?place=harbour-coffee");
+    expect(vi.mocked(useSearchMarkers).mock.lastCall?.[0]).toBeNull();
+    expect(screen.getByRole("group", { name: "Filters" })).toBeInTheDocument();
+  });
+
+  test("a search that matches nothing says so and fits nothing", () => {
+    searchIs({ markers: [], total: 0 });
+    openMap("/?q=sushi");
+
+    expect(screen.getByText("No places match “sushi”.")).toBeInTheDocument();
+    expect(mapProps().fit).toBeNull();
+  });
+
+  test("more than fifty matches say that only the first fifty are shown", () => {
+    searchIs({ markers: [coffee], total: 60 });
+    openMap("/?q=shop");
+
+    expect(screen.getByText("Showing the first 50 results.")).toBeInTheDocument();
+  });
+
+  test("a failed search offers to try again", async () => {
+    const state = searchIs({ status: "error" });
+    openMap("/?q=coffee");
+
+    await userEvent.click(screen.getByRole("button", { name: "Try again" }));
+
+    expect(state.retry).toHaveBeenCalledTimes(1);
+  });
+
+  test("a result's marker opens its card", () => {
+    searchIs({ markers: [coffee], total: 1 });
+    openMap("/?q=coffee");
+
+    act(() => mapProps().onSelect("place:harbour-coffee"));
+
+    expect(window.location.search).toBe("?q=coffee&place=harbour-coffee");
+    expect(screen.getByRole("heading", { name: "Harbour Coffee" })).toBeInTheDocument();
+  });
 });

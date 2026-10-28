@@ -1,26 +1,30 @@
-import { MAX_QUERY_LENGTH, normalizeQuery, type PlaceSummary } from "@queenstown/shared";
+import { MAX_QUERY_LENGTH, normalizeQuery } from "@queenstown/shared";
 import { useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { StateMessage } from "@/ui/StateMessage";
 import { colors, TOUCH } from "@/ui/theme";
 import { PlaceList } from "./PlaceList";
+import { RecentlyViewed } from "./RecentlyViewed";
 
 type Props = {
   /** The search words the route names, already normalised, or "" before a search. */
   q: string;
   /** Called with new search words, normalised and not empty. */
   onSubmit: (q: string) => void;
-  onOpen: (place: PlaceSummary) => void;
+  /** Opens a place: a result, or one seen lately. */
+  onOpen: (place: { slug: string }) => void;
   onExplore: () => void;
+  /** Shows the results on the map (SEARCH-03). */
+  onShowOnMap: (q: string) => void;
 };
 
 /**
  * Search (SEARCH-01 ~ SEARCH-02, wireframe m-search): a box to type in at the top, then how many
- * places match and the places, nearest first. When nothing matches it says so and points to
- * Explore.
+ * places match, "Show on map" (SEARCH-03) and the places, nearest first. When nothing matches it says
+ * so and points to Explore. Before a search it shows the places seen lately.
  */
-export function SearchScreen({ q, onSubmit, onOpen, onExplore }: Props) {
+export function SearchScreen({ q, onSubmit, onOpen, onExplore, onShowOnMap }: Props) {
   const t = useTranslations("Search");
   const tState = useTranslations("State");
   const [value, setValue] = useState(q);
@@ -65,11 +69,19 @@ export function SearchScreen({ q, onSubmit, onOpen, onExplore }: Props) {
         ) : null}
       </View>
       {q === "" ? (
-        <StateMessage text={t("hint")} />
+        <ScrollView keyboardShouldPersistTaps="handled">
+          <RecentlyViewed onOpen={onOpen} />
+          <StateMessage text={t("hint")} />
+        </ScrollView>
       ) : (
         <PlaceList
           query={{ category: null, q }}
           countText={(count) => t("count", { count })}
+          countAction={
+            <Pressable accessibilityRole="button" onPress={() => onShowOnMap(q)} style={styles.showOnMap}>
+              <Text style={styles.showOnMapText}>{t("showOnMap")}</Text>
+            </Pressable>
+          }
           empty={
             <StateMessage
               text={t("empty", { q })}
@@ -99,4 +111,6 @@ const styles = StyleSheet.create({
   input: { flex: 1, fontSize: 16, color: colors.text, paddingVertical: 8 },
   clear: { width: TOUCH, height: TOUCH, alignItems: "center", justifyContent: "center" },
   clearText: { fontSize: 20, color: colors.muted },
+  showOnMap: { minHeight: TOUCH, justifyContent: "center", paddingHorizontal: 8, paddingTop: 8 },
+  showOnMapText: { fontSize: 14, fontWeight: "600", color: colors.text, textDecorationLine: "underline" },
 });

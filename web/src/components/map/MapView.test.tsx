@@ -132,6 +132,13 @@ const { FakeMap } = vi.hoisted(() => {
       this.flights.push(options);
     }
 
+    fits: unknown[][] = [];
+
+    fitBounds(...args: unknown[]) {
+      this.mustBeAlive();
+      this.fits.push(args);
+    }
+
     remove() {
       this.removed = true;
     }
@@ -143,7 +150,7 @@ const { FakeMap } = vi.hoisted(() => {
 vi.mock("mapbox-gl", () => ({ default: { Map: FakeMap } }));
 
 function place(slug: string, latitude: number, longitude: number): MapMarker {
-  return { kind: "place", slug, latitude, longitude, name: slug, category: "food", subtype: null };
+  return { kind: "place", slug, latitude, longitude, name: slug, category: "food", subtype: null, openingHours: null };
 }
 
 const kitchen = place("lakeside-kitchen", -45.0322, 168.661);
@@ -284,6 +291,39 @@ test("goes to a camera that changed while the map was still loading", async () =
   act(() => map.fire("load"));
 
   expect(map.flights).toEqual([{ center: [168.732, -45.0195], zoom: 15 }]);
+});
+
+test("fits a box it is given once, with room round it and no closer than zoom 16", async () => {
+  const box = { west: 168.65, south: -45.04, east: 168.67, north: -45.02 };
+  const { update } = renderMap();
+  const map = await loadedMap();
+  expect(map.fits).toEqual([]);
+
+  update({ fit: box });
+  expect(map.fits).toEqual([
+    [
+      [
+        [168.65, -45.04],
+        [168.67, -45.02],
+      ],
+      { padding: 64, maxZoom: 16 },
+    ],
+  ]);
+
+  // The same box again, as a new object, is not a new fit.
+  update({ fit: { ...box } });
+  expect(map.fits).toHaveLength(1);
+});
+
+test("fits a box given while the map was still loading once it has loaded", async () => {
+  const { update } = renderMap();
+  const map = await createdMap();
+
+  update({ fit: { west: 168.65, south: -45.04, east: 168.67, north: -45.02 } });
+  expect(map.fits).toEqual([]);
+  act(() => map.fire("load"));
+
+  expect(map.fits).toHaveLength(1);
 });
 
 test("goes back to the same camera when it is given again", async () => {
@@ -481,11 +521,11 @@ test("draws each marker in its kind's colour", async () => {
   expect(circles?.paint?.["circle-color"]).toEqual(["get", "color"]);
 });
 
-test("groups markers that are close together into numbered clusters until zoom 15", async () => {
+test("groups markers that are close together into numbered clusters until zoom 17", async () => {
   renderMap({ markers: [kitchen, bakery] });
   const map = await loadedMap();
 
-  expect(map.sources.markers.options).toMatchObject({ cluster: true, clusterMaxZoom: 15, clusterRadius: 44 });
+  expect(map.sources.markers.options).toMatchObject({ cluster: true, clusterMaxZoom: 17, clusterRadius: 44 });
   expect(map.layers.map((layer) => layer.id)).toEqual(expect.arrayContaining(["marker-clusters", "marker-cluster-counts"]));
 });
 

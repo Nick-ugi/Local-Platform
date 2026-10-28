@@ -22,6 +22,7 @@ const answer: MarkersResponse = {
       name: "Lakeside Kitchen",
       category: "food",
       subtype: null,
+      openingHours: null,
     },
   ],
   truncated: false,

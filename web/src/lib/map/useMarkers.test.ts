@@ -22,6 +22,7 @@ function answer(...slugs: string[]): MarkersResponse {
       name: slug,
       category: "food",
       subtype: null,
+      openingHours: null,
     })),
     truncated: false,
   };
