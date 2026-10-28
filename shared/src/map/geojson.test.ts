@@ -12,6 +12,7 @@ function marker(slug: string, category: Category): MapMarker {
     name: slug,
     category,
     subtype: category === 'facility' ? 'toilet' : null,
+    openingHours: null,
   }
 }
 

@@ -143,7 +143,7 @@ const { FakeMap } = vi.hoisted(() => {
 vi.mock("mapbox-gl", () => ({ default: { Map: FakeMap } }));
 
 function place(slug: string, latitude: number, longitude: number): MapMarker {
-  return { kind: "place", slug, latitude, longitude, name: slug, category: "food", subtype: null };
+  return { kind: "place", slug, latitude, longitude, name: slug, category: "food", subtype: null, openingHours: null };
 }
 
 const kitchen = place("lakeside-kitchen", -45.0322, 168.661);

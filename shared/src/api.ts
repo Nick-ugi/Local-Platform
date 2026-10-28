@@ -125,6 +125,8 @@ export interface PlaceMarker {
   name: string
   category: Category
   subtype: FacilitySubtype | null
+  /** OpenStreetMap opening_hours as written, for "Open now" on the map's card (PLACE-07). */
+  openingHours: string | null
 }
 
 /** An event among the markers of GET /map/markers. */

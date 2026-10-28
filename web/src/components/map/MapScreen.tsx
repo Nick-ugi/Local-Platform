@@ -85,8 +85,8 @@ async function lookUp({ kind, slug }: Selection): Promise<MapMarker | null> {
     if (!place) {
       return null;
     }
-    const { latitude, longitude, name, category, subtype } = place;
-    return { kind, slug, latitude, longitude, name, category, subtype };
+    const { latitude, longitude, name, category, subtype, openingHours } = place;
+    return { kind, slug, latitude, longitude, name, category, subtype, openingHours };
   }
   if (kind === "event") {
     const event = await getEvent(slug);

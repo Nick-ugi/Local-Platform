@@ -64,6 +64,7 @@ const kitchen: MapMarker = {
   name: "Lakeside Kitchen",
   category: "food",
   subtype: null,
+  openingHours: null,
 };
 
 const queenstownBox = { west: 168.65, south: -45.04, east: 168.67, north: -45.02 };

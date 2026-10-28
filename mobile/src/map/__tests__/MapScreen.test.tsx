@@ -18,6 +18,7 @@ const kitchen: MapMarker = {
   name: "Lakeside Kitchen",
   category: "food",
   subtype: null,
+  openingHours: null,
 };
 
 const map: { props: ComponentProps<typeof MapView> | null } = { props: null };
@@ -237,6 +238,7 @@ const harbourCoffee: MapMarker = {
   name: "Harbour Coffee",
   category: "cafe",
   subtype: null,
+  openingHours: null,
 };
 
 const nightMarket: MapMarker = {

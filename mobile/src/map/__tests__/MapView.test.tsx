@@ -155,6 +155,7 @@ const kitchen: MapMarker = {
   name: "Lakeside Kitchen",
   category: "food",
   subtype: null,
+  openingHours: null,
 };
 
 const bakery: MapMarker = { ...kitchen, slug: "beach-street-bakery", latitude: -45.0331, longitude: 168.6597 };
