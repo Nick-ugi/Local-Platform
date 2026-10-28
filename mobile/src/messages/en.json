@@ -95,7 +95,9 @@
     "hint": "Search for a place by name or keyword.",
     "count": "{count, plural, one {# result} other {# results}}",
     "empty": "No places match “{q}”.",
-    "showOnMap": "Show on map"
+    "showOnMap": "Show on map",
+    "recent": "Recently viewed",
+    "clearRecent": "Clear"
   },
   "Place": {
     "nearby": "Nearby",

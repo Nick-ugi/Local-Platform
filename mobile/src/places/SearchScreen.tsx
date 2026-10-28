@@ -1,17 +1,19 @@
-import { MAX_QUERY_LENGTH, normalizeQuery, type PlaceSummary } from "@queenstown/shared";
+import { MAX_QUERY_LENGTH, normalizeQuery } from "@queenstown/shared";
 import { useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { StateMessage } from "@/ui/StateMessage";
 import { colors, TOUCH } from "@/ui/theme";
 import { PlaceList } from "./PlaceList";
+import { RecentlyViewed } from "./RecentlyViewed";
 
 type Props = {
   /** The search words the route names, already normalised, or "" before a search. */
   q: string;
   /** Called with new search words, normalised and not empty. */
   onSubmit: (q: string) => void;
-  onOpen: (place: PlaceSummary) => void;
+  /** Opens a place: a result, or one seen lately. */
+  onOpen: (place: { slug: string }) => void;
   onExplore: () => void;
   /** Shows the results on the map (SEARCH-03). */
   onShowOnMap: (q: string) => void;
@@ -19,8 +21,8 @@ type Props = {
 
 /**
  * Search (SEARCH-01 ~ SEARCH-02, wireframe m-search): a box to type in at the top, then how many
- * places match and the places, nearest first. When nothing matches it says so and points to
- * Explore.
+ * places match, "Show on map" (SEARCH-03) and the places, nearest first. When nothing matches it says
+ * so and points to Explore. Before a search it shows the places seen lately.
  */
 export function SearchScreen({ q, onSubmit, onOpen, onExplore, onShowOnMap }: Props) {
   const t = useTranslations("Search");
@@ -67,7 +69,10 @@ export function SearchScreen({ q, onSubmit, onOpen, onExplore, onShowOnMap }: Pr
         ) : null}
       </View>
       {q === "" ? (
-        <StateMessage text={t("hint")} />
+        <ScrollView keyboardShouldPersistTaps="handled">
+          <RecentlyViewed onOpen={onOpen} />
+          <StateMessage text={t("hint")} />
+        </ScrollView>
       ) : (
         <PlaceList
           query={{ category: null, q }}

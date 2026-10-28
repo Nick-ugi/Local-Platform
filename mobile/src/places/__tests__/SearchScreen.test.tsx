@@ -3,6 +3,7 @@ import { act, fireEvent, screen } from "@testing-library/react-native";
 import { getPlaces } from "@/api/places";
 import { locate } from "@/geo/location";
 import { renderScreen } from "@/test/render";
+import { clearRecentPlaces, loadRecentPlaces, rememberPlace } from "../recentPlaces";
 import { SearchScreen } from "../SearchScreen";
 
 jest.mock("@/api/places", () => ({ getPlaces: jest.fn() }));
@@ -28,7 +29,8 @@ async function openSearch(q: string) {
   await act(async () => {});
 }
 
-beforeEach(() => {
+beforeEach(async () => {
+  await clearRecentPlaces();
   jest.mocked(locate).mockResolvedValue({ status: "denied" });
   jest.mocked(getPlaces).mockReset();
   jest.mocked(getPlaces).mockResolvedValue({ items: [coffee], page: 1, size: 20, total: 1 });
@@ -40,6 +42,31 @@ test("before a search there is a hint and nothing is asked for", async () => {
 
   expect(screen.getByText("Search for a place by name or keyword.")).toBeOnTheScreen();
   expect(getPlaces).not.toHaveBeenCalled();
+});
+
+test("before a search the places seen lately are there to open again, and Clear forgets them", async () => {
+  await rememberPlace({ slug: "lakeside-kitchen", name: "Lakeside Kitchen", category: "food", subtype: null });
+  await rememberPlace({ slug: "harbour-coffee", name: "Harbour Coffee", category: "cafe", subtype: null });
+  await openSearch("");
+
+  expect(screen.getByRole("header", { name: "Recently viewed" })).toBeOnTheScreen();
+  // Latest first.
+  expect(screen.getAllByText(/Harbour Coffee|Lakeside Kitchen/).map((text) => text.props.children)).toEqual([
+    "Harbour Coffee",
+    "Lakeside Kitchen",
+  ]);
+  fireEvent.press(screen.getByRole("link", { name: /Harbour Coffee/ }));
+  expect(handlers.onOpen).toHaveBeenCalledWith(expect.objectContaining({ slug: "harbour-coffee" }));
+
+  await act(async () => fireEvent.press(screen.getByRole("button", { name: "Clear" })));
+  expect(screen.queryByText("Recently viewed")).toBeNull();
+  expect(await loadRecentPlaces()).toEqual([]);
+});
+
+test("without places seen lately there is only the hint", async () => {
+  await openSearch("");
+
+  expect(screen.queryByText("Recently viewed")).toBeNull();
 });
 
 test("submitting sends the tidied words; blank words stay on the screen", async () => {

@@ -15,6 +15,7 @@ import SignupRoute from "@/app/signup";
 import NoticeRoute from "@/app/notices/[slug]";
 import PlaceRoute from "@/app/places/[slug]";
 import SearchRoute from "@/app/search";
+import { clearRecentPlaces, loadRecentPlaces } from "@/places/recentPlaces";
 
 // The Map tab asks for the position when it opens. Here that question is never answered, so the
 // map's state does not change under the navigation being tested.
@@ -90,7 +91,12 @@ const routes = {
   favorites: FavoritesRoute,
 };
 
-/** The tab bar's buttons. React Navigation labels each one like "Map, tab, 1 of 3". */
+// Each test starts with no places seen lately; Search shows them before a search.
+beforeEach(async () => {
+  await clearRecentPlaces();
+});
+
+/** The tab bar's buttons. React Navigation labels each one like "Map, tab, 1 of 4". */
 function tabs() {
   return screen.getAllByRole("button", { name: /, tab, \d of \d$/ });
 }
@@ -165,6 +171,17 @@ test("More lists About, Log in, Favorites, then Privacy Policy and Terms of Use,
     openURL.mockRestore();
     delete process.env.EXPO_PUBLIC_SITE_URL;
   }
+});
+
+test("a place's screen is remembered among the places seen lately", async () => {
+  renderRouter(routes, { initialUrl: "/places/harbour-coffee" });
+
+  expect(await screen.findByRole("header", { name: "Harbour Coffee" })).toBeOnTheScreen();
+  await waitFor(async () =>
+    expect(await loadRecentPlaces()).toEqual([
+      { slug: "harbour-coffee", name: "Harbour Coffee", category: "cafe", subtype: null },
+    ]),
+  );
 });
 
 test("the search box on the Map leads to Search, and a search names its words", async () => {
