@@ -55,6 +55,8 @@
   },
   "Map": {
     "filters": "Filters",
+    "searchResults": "Results for “{q}”",
+    "searchTruncated": "Showing the first {count} results.",
     "locate": "Show my location",
     "empty": "No places in this area.",
     "clearFilters": "Clear filters",
@@ -91,7 +93,8 @@
     "title": "Search",
     "hint": "Search for a place by name or keyword.",
     "count": "{count, plural, one {# result} other {# results}}",
-    "empty": "No places match “{q}”."
+    "empty": "No places match “{q}”.",
+    "showOnMap": "Show on map"
   },
   "Place": {
     "nearby": "Nearby",

@@ -13,6 +13,8 @@ type Props = {
   onSubmit: (q: string) => void;
   onOpen: (place: PlaceSummary) => void;
   onExplore: () => void;
+  /** Shows the results on the map (SEARCH-03). */
+  onShowOnMap: (q: string) => void;
 };
 
 /**
@@ -20,7 +22,7 @@ type Props = {
  * places match and the places, nearest first. When nothing matches it says so and points to
  * Explore.
  */
-export function SearchScreen({ q, onSubmit, onOpen, onExplore }: Props) {
+export function SearchScreen({ q, onSubmit, onOpen, onExplore, onShowOnMap }: Props) {
   const t = useTranslations("Search");
   const tState = useTranslations("State");
   const [value, setValue] = useState(q);
@@ -70,6 +72,11 @@ export function SearchScreen({ q, onSubmit, onOpen, onExplore }: Props) {
         <PlaceList
           query={{ category: null, q }}
           countText={(count) => t("count", { count })}
+          countAction={
+            <Pressable accessibilityRole="button" onPress={() => onShowOnMap(q)} style={styles.showOnMap}>
+              <Text style={styles.showOnMapText}>{t("showOnMap")}</Text>
+            </Pressable>
+          }
           empty={
             <StateMessage
               text={t("empty", { q })}
@@ -99,4 +106,6 @@ const styles = StyleSheet.create({
   input: { flex: 1, fontSize: 16, color: colors.text, paddingVertical: 8 },
   clear: { width: TOUCH, height: TOUCH, alignItems: "center", justifyContent: "center" },
   clearText: { fontSize: 20, color: colors.muted },
+  showOnMap: { minHeight: TOUCH, justifyContent: "center", paddingHorizontal: 8, paddingTop: 8 },
+  showOnMapText: { fontSize: 14, fontWeight: "600", color: colors.text, textDecorationLine: "underline" },
 });

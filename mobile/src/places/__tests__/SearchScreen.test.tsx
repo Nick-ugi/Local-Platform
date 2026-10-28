@@ -21,7 +21,7 @@ const coffee: PlaceSummary = {
   openingHours: null,
 };
 
-const handlers = { onSubmit: jest.fn(), onOpen: jest.fn(), onExplore: jest.fn() };
+const handlers = { onSubmit: jest.fn(), onOpen: jest.fn(), onExplore: jest.fn(), onShowOnMap: jest.fn() };
 
 async function openSearch(q: string) {
   renderScreen(<SearchScreen q={q} {...handlers} />);
@@ -69,6 +69,14 @@ test("the results say how many there are and open the place", async () => {
   expect(handlers.onOpen).toHaveBeenCalledWith(coffee);
 });
 
+test("results can be seen on the map", async () => {
+  await openSearch("coffee");
+
+  fireEvent.press(screen.getByRole("button", { name: "Show on map" }));
+
+  expect(handlers.onShowOnMap).toHaveBeenCalledWith("coffee");
+});
+
 test("no match says so and leads to Explore", async () => {
   jest.mocked(getPlaces).mockResolvedValue({ items: [], page: 1, size: 20, total: 0 });
   await openSearch("sushi");
@@ -76,6 +84,7 @@ test("no match says so and leads to Explore", async () => {
   expect(screen.getByText("No places match “sushi”.")).toBeOnTheScreen();
   fireEvent.press(screen.getByRole("button", { name: "Go to Explore" }));
   expect(handlers.onExplore).toHaveBeenCalledTimes(1);
+  expect(screen.queryByRole("button", { name: "Show on map" })).toBeNull();
 });
 
 test("the clear button empties the box", async () => {
