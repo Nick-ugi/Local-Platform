@@ -42,14 +42,28 @@ async function openLocal() {
   await act(async () => {});
 }
 
+async function openEvents() {
+  await openLocal();
+  fireEvent.press(screen.getByRole("tab", { name: "Events" }));
+  await act(async () => {});
+}
+
 beforeEach(() => {
   onOpen.mockReset();
   getEventsMock.mockReset().mockResolvedValue(onePage([market]));
   getNoticesMock.mockReset().mockResolvedValue(onePage([works]));
 });
 
-test("opens on Events, all of them, each with its time in New Zealand and its place, leading to the event", async () => {
+test("Notices come first and Local opens on them, as on the web", async () => {
   await openLocal();
+
+  expect(screen.getAllByRole("tab").map((tab) => tab.props.accessibilityState?.selected)).toEqual([true, false]);
+  expect(screen.getByRole("tab", { name: "Notices" })).toBeSelected();
+  expect(getEventsMock).not.toHaveBeenCalled();
+});
+
+test("Events, all of them, each with its time in New Zealand and its place, leading to the event", async () => {
+  await openEvents();
 
   expect(screen.getByRole("tab", { name: "Events" })).toBeSelected();
   expect(getEventsMock.mock.lastCall?.[0]).toEqual({ when: null, page: 1 });
@@ -63,7 +77,7 @@ test("opens on Events, all of them, each with its time in New Zealand and its pl
 });
 
 test("the date chips narrow the events", async () => {
-  await openLocal();
+  await openEvents();
 
   for (const name of ["Today", "This Week", "This Month"]) {
     expect(screen.getByRole("button", { name })).not.toBeSelected();
@@ -77,8 +91,6 @@ test("the date chips narrow the events", async () => {
 
 test("Notices list the current notices with type, Official and period, narrowed by type, leading to the notice", async () => {
   await openLocal();
-  fireEvent.press(screen.getByRole("tab", { name: "Notices" }));
-  await act(async () => {});
 
   expect(screen.getByRole("tab", { name: "Notices" })).toBeSelected();
   expect(getNoticesMock.mock.lastCall?.[0]).toEqual({ type: null, page: 1 });
@@ -97,7 +109,7 @@ test("Notices list the current notices with type, Official and period, narrowed 
 
 test("an empty period says so and offers all the events", async () => {
   getEventsMock.mockResolvedValue(onePage([]));
-  await openLocal();
+  await openEvents();
   expect(screen.getByText("There are no upcoming events.")).toBeOnTheScreen();
 
   fireEvent.press(screen.getByRole("button", { name: "Today" }));
@@ -110,12 +122,12 @@ test("an empty period says so and offers all the events", async () => {
 });
 
 test("a list that fails says so and tries again", async () => {
-  getEventsMock.mockRejectedValueOnce(new Error("offline"));
+  getNoticesMock.mockRejectedValueOnce(new Error("offline"));
   await openLocal();
   expect(screen.getByText("We couldn't load the list.")).toBeOnTheScreen();
 
   fireEvent.press(screen.getByRole("button", { name: "Try again" }));
   await act(async () => {});
 
-  expect(screen.getByText("Lakefront Night Market")).toBeOnTheScreen();
+  expect(screen.getByText("Shotover Street resurfacing")).toBeOnTheScreen();
 });

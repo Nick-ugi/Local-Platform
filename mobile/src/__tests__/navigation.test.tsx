@@ -130,7 +130,7 @@ test("the tabs lead to Explore, Local and More", async () => {
 
   fireEvent.press(tab("Local"));
   expect(screen).toHavePathname("/local");
-  expect(await screen.findByText("There are no upcoming events.")).toBeOnTheScreen();
+  expect(await screen.findByText("There are no current notices.")).toBeOnTheScreen();
 
   fireEvent.press(tab("More"));
   expect(screen).toHavePathname("/more");

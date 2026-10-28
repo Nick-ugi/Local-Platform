@@ -23,19 +23,19 @@ import { NoticeRow } from "./NoticeRow";
 type Section = "events" | "notices";
 
 /**
- * The Local tab (APP-01, wireframes m-events and m-notices): Events and Notices, one at a time.
- * Events are those on or to come, earliest first, narrowed to today, this week or this month
- * (EVENT-01, EVENT-02); notices are the current ones, latest first, narrowed to a type (NOTICE-01,
- * NOTICE-06). The web app has the same lists on its Local pages.
+ * The Local tab (APP-01, wireframes m-notices and m-events): Notices and Events, one at a time,
+ * opening on Notices (docs/02-information-architecture.md, as the web's Local). Notices are the
+ * current ones, latest first, narrowed to a type (NOTICE-01, NOTICE-06); events are those on or to
+ * come, earliest first, narrowed to today, this week or this month (EVENT-01, EVENT-02).
  */
 export function LocalScreen({ onOpen }: { onOpen: (path: string) => void }) {
   const t = useTranslations("Local");
-  const [section, setSection] = useState<Section>("events");
+  const [section, setSection] = useState<Section>("notices");
 
   return (
     <View style={styles.container}>
       <View accessibilityRole="tablist" accessibilityLabel={t("sections")} style={styles.sections}>
-        {(["events", "notices"] as const).map((key) => (
+        {(["notices", "events"] as const).map((key) => (
           <Pressable
             key={key}
             accessibilityRole="tab"
@@ -47,7 +47,7 @@ export function LocalScreen({ onOpen }: { onOpen: (path: string) => void }) {
           </Pressable>
         ))}
       </View>
-      {section === "events" ? <EventList onOpen={onOpen} /> : <NoticeList onOpen={onOpen} />}
+      {section === "notices" ? <NoticeList onOpen={onOpen} /> : <EventList onOpen={onOpen} />}
     </View>
   );
 }
