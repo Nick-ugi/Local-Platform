@@ -94,6 +94,7 @@
     "empty": "No places match “{q}”."
   },
   "Place": {
+    "nearby": "Nearby",
     "address": "Address",
     "openingHours": "Opening hours",
     "contact": "Contact",

@@ -15,6 +15,8 @@ export interface PlaceListQuery {
   /** Where "nearest" is measured from. Without it the list runs from the centre of Queenstown. */
   position?: LatLng | null;
   page?: number;
+  /** Places a page; 20 unless given, at most 50. */
+  size?: number;
 }
 
 /** How many decimals of a position are sent: about 11 m, enough to order places by distance. */
@@ -28,6 +30,7 @@ export function getPlaces(query: PlaceListQuery, options?: { signal?: AbortSigna
     lat: query.position?.latitude.toFixed(POSITION_DECIMALS),
     lng: query.position?.longitude.toFixed(POSITION_DECIMALS),
     page: query.page !== undefined && query.page > 1 ? query.page : null,
+    size: query.size,
   });
   return apiGet<Page<PlaceSummary>>(`/places${search}`, options);
 }

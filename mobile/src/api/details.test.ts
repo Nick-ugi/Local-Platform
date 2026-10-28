@@ -49,6 +49,14 @@ test("a list names its category, words, position and page", async () => {
   );
 });
 
+test("a list can ask for more places a page, for the map's search results and Nearby", async () => {
+  answer(200, emptyPage);
+
+  await getPlaces({ q: "coffee", size: 50 });
+
+  expect(calledUrl()).toBe("http://10.0.2.2:8080/api/v1/places?q=coffee&size=50");
+});
+
 test("the first page is not named", async () => {
   answer(200, emptyPage);
 
