@@ -2,8 +2,8 @@ import { Tabs } from "expo-router";
 import { useTranslations } from "use-intl";
 
 /**
- * Map, Explore and More (NAV-02, wireframe a-map). Local is a Should for the app. The tabs have
- * labels only until the app gets its icons.
+ * Map, Explore, Local and More (NAV-02, APP-01, wireframe a-map), the order of the web app's menu.
+ * The tabs have labels only until the app gets its icons.
  */
 export default function TabsLayout() {
   const t = useTranslations("Nav");
@@ -19,6 +19,7 @@ export default function TabsLayout() {
     >
       <Tabs.Screen name="index" options={{ title: t("map"), headerShown: false }} />
       <Tabs.Screen name="explore" options={{ title: t("explore"), headerShown: false }} />
+      <Tabs.Screen name="local" options={{ title: t("local"), headerShown: false }} />
       <Tabs.Screen name="more" options={{ title: t("more") }} />
     </Tabs>
   );

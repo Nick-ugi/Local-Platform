@@ -3,6 +3,7 @@
     "brand": "Queenstown Local",
     "map": "Map",
     "explore": "Explore",
+    "local": "Local",
     "more": "More",
     "back": "Back"
   },
@@ -115,8 +116,26 @@
     "suggestEditBody": "Place: {url}\n\nWhat should change?\n"
   },
   "Local": {
+    "sections": "Local",
+    "notices": "Notices",
+    "events": "Events",
+    "noticeTypes": "Notice types",
+    "eventPeriods": "Dates",
+    "allTypes": "All types",
+    "all": "All",
+    "today": "Today",
+    "week": "This Week",
+    "month": "This Month",
     "official": "Official",
-    "from": "From {date}"
+    "from": "From {date}",
+    "noNotices": "There are no current notices.",
+    "noNoticesOfType": "There are no current notices of this type.",
+    "showAllTypes": "Show all types",
+    "noEvents": "There are no upcoming events.",
+    "noEventsInPeriod": "There are no events in this period.",
+    "showAllEvents": "Show all events",
+    "loadFailed": "We couldn't load the list.",
+    "loadMoreFailed": "We couldn't load more."
   },
   "Detail": {
     "period": "Period",

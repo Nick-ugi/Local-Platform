@@ -5,6 +5,7 @@ import RootLayout from "@/app/_layout";
 import TabsLayout from "@/app/(tabs)/_layout";
 import ExploreTab from "@/app/(tabs)/explore";
 import MapTab from "@/app/(tabs)/index";
+import LocalTab from "@/app/(tabs)/local";
 import MoreTab from "@/app/(tabs)/more";
 import AboutScreen from "@/app/about";
 import EventRoute from "@/app/events/[slug]";
@@ -18,6 +19,16 @@ import SearchRoute from "@/app/search";
 // The Map tab asks for the position when it opens. Here that question is never answered, so the
 // map's state does not change under the navigation being tested.
 jest.mock("@/geo/location", () => ({ locate: () => new Promise(() => {}) }));
+
+// Local lists no events and no notices.
+jest.mock("@/api/events", () => ({
+  getEvent: jest.fn(async () => null),
+  getEvents: jest.fn(async () => ({ items: [], page: 1, size: 20, total: 0 })),
+}));
+jest.mock("@/api/notices", () => ({
+  getNotice: jest.fn(async () => null),
+  getNotices: jest.fn(async () => ({ items: [], page: 1, size: 20, total: 0 })),
+}));
 
 // Explore and Search list one place, which is the only one there is.
 jest.mock("@/api/places", () => ({
@@ -67,6 +78,7 @@ const routes = {
   "(tabs)/_layout": TabsLayout,
   "(tabs)/index": MapTab,
   "(tabs)/explore": ExploreTab,
+  "(tabs)/local": LocalTab,
   "(tabs)/more": MoreTab,
   about: AboutScreen,
   search: SearchRoute,
@@ -87,27 +99,32 @@ function tab(name: string) {
   return screen.getByRole("button", { name: new RegExp(`^${name}, tab,`) });
 }
 
-test("opens on the Map tab with Map, Explore and More in order", async () => {
+test("opens on the Map tab with Map, Explore, Local and More in order", async () => {
   renderRouter(routes, { initialUrl: "/" });
   // The app looks for a stored session as it starts.
   await act(async () => {});
 
   expect(screen).toHavePathname("/");
   expect(tabs().map((button) => button.props.accessibilityLabel)).toEqual([
-    "Map, tab, 1 of 3",
-    "Explore, tab, 2 of 3",
-    "More, tab, 3 of 3",
+    "Map, tab, 1 of 4",
+    "Explore, tab, 2 of 4",
+    "Local, tab, 3 of 4",
+    "More, tab, 4 of 4",
   ]);
   expect(tab("Map")).toBeSelected();
 });
 
-test("the tabs lead to Explore and More", async () => {
+test("the tabs lead to Explore, Local and More", async () => {
   renderRouter(routes, { initialUrl: "/" });
 
   fireEvent.press(tab("Explore"));
   expect(screen).toHavePathname("/explore");
   expect(await screen.findByText("Harbour Coffee")).toBeOnTheScreen();
   expect(screen.getByText("Nearest first")).toBeOnTheScreen();
+
+  fireEvent.press(tab("Local"));
+  expect(screen).toHavePathname("/local");
+  expect(await screen.findByText("There are no upcoming events.")).toBeOnTheScreen();
 
   fireEvent.press(tab("More"));
   expect(screen).toHavePathname("/more");

@@ -1,6 +1,6 @@
 import { ApiError } from "@queenstown/shared";
-import { getEvent } from "./events";
-import { getNotice } from "./notices";
+import { getEvent, getEvents } from "./events";
+import { getNotice, getNotices } from "./notices";
 import { getPlace, getPlaces } from "./places";
 
 const fetchMock = jest.fn();
@@ -84,4 +84,22 @@ test("any other failure is still an error", async () => {
 
   await expect(getNotice("x")).rejects.toBeInstanceOf(ApiError);
   expect(calledUrl()).toBe("http://10.0.2.2:8080/api/v1/notices/x");
+});
+
+test("the events list names its period and page, and nothing for all of them", async () => {
+  answer(200, emptyPage);
+  await getEvents({ when: "week", page: 2 });
+  expect(calledUrl()).toBe("http://10.0.2.2:8080/api/v1/events?when=week&page=2");
+
+  fetchMock.mockClear();
+  await getEvents({ when: null, page: 1 });
+  expect(calledUrl()).toBe("http://10.0.2.2:8080/api/v1/events");
+});
+
+test("the notices list names its type", async () => {
+  answer(200, emptyPage);
+
+  await getNotices({ type: "road-work", page: 1 });
+
+  expect(calledUrl()).toBe("http://10.0.2.2:8080/api/v1/notices?type=road-work");
 });
