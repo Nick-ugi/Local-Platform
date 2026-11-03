@@ -19,7 +19,7 @@ function Chevron() {
 
 /**
  * The account rows of More (wireframe m-more, 2): "Log in" and Favorites for a visitor, the
- * account, Favorites and "Log out" once signed in (USER-02, FAV-02).
+ * account, Favorites, "Log out" and "Delete account" once signed in (USER-02, FAV-02).
  */
 export function AccountMenu() {
   const t = useTranslations("Account");
@@ -71,6 +71,14 @@ export function AccountMenu() {
           <Chevron />
         </Link>
       </li>
+      {account ? (
+        <li>
+          <Link href="/account/delete" className={rowClass}>
+            {t("deleteAccount")}
+            <Chevron />
+          </Link>
+        </li>
+      ) : null}
     </>
   );
 }

@@ -7,7 +7,7 @@ import { callBackend, relay, setSession } from "./server";
  * of X-Forwarded-For. Entries before it come from the visitor and could be anything. Null without a
  * proxy, as on a developer's machine.
  */
-function visitorAddress(request: NextRequest): string | null {
+export function visitorAddress(request: NextRequest): string | null {
   const entries = (request.headers.get("X-Forwarded-For") ?? "")
     .split(",")
     .map((entry) => entry.trim())

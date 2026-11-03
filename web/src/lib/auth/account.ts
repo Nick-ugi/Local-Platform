@@ -46,6 +46,11 @@ export async function logOut(): Promise<void> {
   await post("/api/auth/logout");
 }
 
+/** Deletes the signed-in account, with its password again. The session ends with it. */
+export async function deleteAccount(password: string): Promise<void> {
+  await post("/api/auth/delete-account", { password });
+}
+
 /** The saved places, or null for a visitor who is not signed in. */
 export async function getFavorites(): Promise<FavoritesResponse | null> {
   if (!mayBeSignedIn()) {

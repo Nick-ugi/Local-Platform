@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { LegalPage, LegalSection } from "@/components/legal/LegalPage";
@@ -7,7 +8,7 @@ import { LegalPage, LegalSection } from "@/components/legal/LegalPage";
 export const dynamic = "force-dynamic";
 
 /** The date of this version. Change it with the text. */
-const UPDATED = "2026-10-19T00:00:00+13:00";
+const UPDATED = "2026-11-03T00:00:00+13:00";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [tPages, t] = await Promise.all([getTranslations("Pages"), getTranslations("Privacy")]);
@@ -42,7 +43,15 @@ export default function PrivacyPage() {
         <p>{t("keep")}</p>
       </LegalSection>
       <LegalSection title={t("choicesTitle")}>
-        <p>{t("choices")}</p>
+        <p>
+          {t.rich("choices", {
+            link: (chunks) => (
+              <Link href="/account/delete" className="font-semibold text-blue-700 underline">
+                {chunks}
+              </Link>
+            ),
+          })}
+        </p>
       </LegalSection>
     </LegalPage>
   );
