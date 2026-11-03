@@ -57,3 +57,18 @@ test("a phone whose storage fails reads as none and remembering does not throw",
   jest.mocked(SecureStore.setItemAsync).mockRejectedValueOnce(new Error("locked"));
   await expect(rememberPlace(recent("a"))).resolves.toBeUndefined();
 });
+
+test("the stored list stays within the 2048 bytes secure storage holds on iOS, dropping the oldest places", async () => {
+  // Ten places with the longest names a place can have (120 characters), some of them not ASCII.
+  for (let i = 0; i < 10; i++) {
+    const name = (i % 2 === 0 ? "a" : "新").repeat(120);
+    await rememberPlace({ slug: `place-${i}-${"s".repeat(100)}`, name, category: "food", subtype: null });
+  }
+
+  const stored = (await SecureStore.getItemAsync("recentPlaces")) ?? "";
+  expect(new TextEncoder().encode(stored).length).toBeLessThanOrEqual(2048);
+  const kept = await loadRecentPlaces();
+  expect(kept.length).toBeGreaterThan(0);
+  expect(kept.length).toBeLessThan(10);
+  expect(kept[0].slug.startsWith("place-9-")).toBe(true);
+});
