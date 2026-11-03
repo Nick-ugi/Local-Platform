@@ -1,6 +1,7 @@
 import { type EventDetail, httpUrl, type NoticeDetail } from "@queenstown/shared";
 import type { Metadata } from "next";
 import { shorten } from "./text";
+import { DEFAULT_SHARE_IMAGE } from "./shareImage";
 
 /**
  * The parts every detail page shares: title, description, canonical address, Open Graph and the
@@ -25,9 +26,9 @@ function detailMetadata(page: {
       url: page.path,
       siteName: page.siteName,
       type: "website",
-      ...(page.image ? { images: [{ url: page.image, alt: page.title }] } : {}),
+      images: [page.image ? { url: page.image, alt: page.title } : DEFAULT_SHARE_IMAGE],
     },
-    twitter: { card: page.image ? "summary_large_image" : "summary" },
+    twitter: { card: "summary_large_image" },
     ...(page.ended ? { robots: { index: false, follow: true } } : {}),
   };
 }

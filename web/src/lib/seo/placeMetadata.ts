@@ -1,10 +1,12 @@
 import { httpUrl, type PlaceDetail } from "@queenstown/shared";
 import type { Metadata } from "next";
+import { DEFAULT_SHARE_IMAGE } from "./shareImage";
 import { shorten } from "./text";
 
 /**
  * What a place's detail page tells search engines and the apps a link is shared to (SEO-01): its
- * name, a short description, the canonical address and, when it has a safe one, its picture.
+ * name, a short description, the canonical address and its picture, or the site's when it has no
+ * safe one.
  * Without a description it is described by its category and address.
  */
 export function placeMetadata(place: PlaceDetail, labels: { category: string; siteName: string }): Metadata {
@@ -24,8 +26,8 @@ export function placeMetadata(place: PlaceDetail, labels: { category: string; si
       url: path,
       siteName: labels.siteName,
       type: "website",
-      ...(image ? { images: [{ url: image, alt: place.name }] } : {}),
+      images: [image ? { url: image, alt: place.name } : DEFAULT_SHARE_IMAGE],
     },
-    twitter: { card: image ? "summary_large_image" : "summary" },
+    twitter: { card: "summary_large_image" },
   };
 }

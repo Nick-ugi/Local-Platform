@@ -1,6 +1,7 @@
 import type { EventDetail, NoticeDetail } from "@queenstown/shared";
 import { expect, test } from "vitest";
 import { eventMetadata, noticeMetadata } from "./localMetadata";
+import { DEFAULT_SHARE_IMAGE } from "./shareImage";
 
 const event: EventDetail = {
   slug: "lakefront-night-market",
@@ -61,7 +62,7 @@ test("an event's safe picture is shared with the link", () => {
     { url: "https://nightmarket.example/stalls.jpg", alt: "Lakefront Night Market" },
   ]);
   expect(metadata.twitter).toMatchObject({ card: "summary_large_image" });
-  expect(eventMetadata({ ...event, imageUrl: "javascript:alert(1)" }, labels).openGraph?.images).toBeUndefined();
+  expect(eventMetadata({ ...event, imageUrl: "javascript:alert(1)" }, labels).openGraph?.images).toEqual([DEFAULT_SHARE_IMAGE]);
 });
 
 test("describes a notice by its summary on one line", () => {
@@ -69,7 +70,9 @@ test("describes a notice by its summary on one line", () => {
 
   expect(metadata.description).toBe("Road works on Shotover Street. Expect delays.");
   expect(metadata.alternates?.canonical).toBe("/notices/shotover-street-road-works");
-  expect(metadata.twitter).toMatchObject({ card: "summary" });
+  // A notice has no picture of its own: the link shows the site's.
+  expect(metadata.openGraph?.images).toEqual([DEFAULT_SHARE_IMAGE]);
+  expect(metadata.twitter).toMatchObject({ card: "summary_large_image" });
 });
 
 test("an ended event or notice asks not to be indexed", () => {
