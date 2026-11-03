@@ -35,6 +35,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       monochromeImage: "./assets/android-icon-monochrome.png",
     },
     predictiveBackGestureEnabled: false,
+    // Only location (while the app is in use, expo-location) and the network are needed. The
+    // template's others would each be a question to answer in the Play Console.
+    blockedPermissions: [
+      "android.permission.READ_EXTERNAL_STORAGE",
+      "android.permission.WRITE_EXTERNAL_STORAGE",
+      "android.permission.SYSTEM_ALERT_WINDOW",
+      "android.permission.VIBRATE",
+    ],
   },
   plugins: [
     "expo-router",
