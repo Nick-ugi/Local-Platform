@@ -19,6 +19,7 @@ function RootStack() {
       <Stack.Screen name="login" options={{ title: t("login") }} />
       <Stack.Screen name="signup" options={{ title: t("signup") }} />
       <Stack.Screen name="favorites" options={{ title: t("favorites") }} />
+      <Stack.Screen name="delete-account" options={{ title: t("deleteAccount") }} />
     </Stack>
   );
 }

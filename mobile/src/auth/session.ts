@@ -108,9 +108,16 @@ export async function logout(): Promise<void> {
  * Calls /me as the signed-in visitor. An access token that ran out (15 minutes) is renewed once and
  * the call sent again. Rejects with a 401 ApiError when nobody is signed in.
  */
-async function meRequest<T>(method: "GET" | "PUT" | "DELETE", path: string): Promise<T> {
+async function meRequest<T>(method: "GET" | "PUT" | "DELETE", path: string, body?: unknown): Promise<T> {
   const send = (current: Session) =>
-    requestJson<T>(url(`/me${path}`), { method, headers: { Authorization: `Bearer ${current.accessToken}` } });
+    requestJson<T>(url(`/me${path}`), {
+      method,
+      headers:
+        body === undefined
+          ? { Authorization: `Bearer ${current.accessToken}` }
+          : { Authorization: `Bearer ${current.accessToken}`, "Content-Type": "application/json" },
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
 
   const current = session ?? (await refresh());
   if (current === null) {
@@ -140,6 +147,15 @@ export function saveFavorite(slug: string): Promise<void> {
 
 export function removeFavorite(slug: string): Promise<void> {
   return meRequest("DELETE", `/favorites/${encodeURIComponent(slug)}`);
+}
+
+/**
+ * Deletes the signed-in account with its password again (Google Play asks this of apps with sign
+ * up). Once it is gone the session is forgotten. A wrong password (403 WRONG_PASSWORD) keeps both.
+ */
+export async function deleteAccount(password: string): Promise<void> {
+  await meRequest("DELETE", "", { password });
+  await store(null);
 }
 
 /** For tests: forgets the session in memory, as closing the app does. */

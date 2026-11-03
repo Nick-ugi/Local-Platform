@@ -1,6 +1,16 @@
 import { ApiError } from "@queenstown/shared";
 import * as SecureStore from "expo-secure-store";
-import { getFavorites, login, logout, resetForTests, restore, saveFavorite, signup } from "../session";
+import {
+  deleteAccount,
+  getFavorites,
+  login,
+  logout,
+  onSessionChange,
+  resetForTests,
+  restore,
+  saveFavorite,
+  signup,
+} from "../session";
 
 const items = (SecureStore as unknown as { __items: Map<string, string> }).__items;
 const fetchMock = jest.fn();
@@ -122,4 +132,32 @@ test("logout revokes the refresh token and forgets it", async () => {
   expect(calls[1]).toMatchObject({ url: "/auth/logout", body: { refreshToken: "refresh-1" } });
   expect(items.has("auth.refreshToken")).toBe(false);
   await expect(getFavorites()).rejects.toBeInstanceOf(ApiError);
+});
+
+test("deleting the account sends the password with the access token, then forgets the session", async () => {
+  api(({ url }) => (url === "/auth/login" ? { status: 200, body: tokens(1) } : { status: 204 }));
+  await login("kiri@example.com", "correct horse");
+  const changes: unknown[] = [];
+  onSessionChange((user) => changes.push(user));
+
+  await deleteAccount("correct horse");
+
+  expect(calls[1]).toEqual({ method: "DELETE", url: "/me", auth: "Bearer access-1", body: { password: "correct horse" } });
+  expect(items.has("auth.refreshToken")).toBe(false);
+  expect(changes).toEqual([null]);
+  await expect(getFavorites()).rejects.toBeInstanceOf(ApiError);
+});
+
+test("a wrong password keeps the account and the session", async () => {
+  api(({ url }) =>
+    url === "/auth/login"
+      ? { status: 200, body: tokens(1) }
+      : { status: 403, body: { code: "WRONG_PASSWORD", status: 403, detail: "That password is wrong." } },
+  );
+  await login("kiri@example.com", "correct horse");
+
+  await expect(deleteAccount("not mine")).rejects.toMatchObject({ code: "WRONG_PASSWORD" });
+
+  expect(items.get("auth.refreshToken")).toBe("refresh-1");
+  await expect(restore()).resolves.toEqual({ email: "kiri@example.com", role: "user" });
 });

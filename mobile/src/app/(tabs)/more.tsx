@@ -24,7 +24,8 @@ function Outward() {
 
 /**
  * More (wireframe m-more): About, then Log in or the account with Log out (USER-02), Favorites
- * (FAV-02), and the web app's Privacy Policy and Terms of Use (MORE-03), which open in the browser.
+ * (FAV-02), Delete account once signed in (Google Play), and the web app's Privacy Policy and Terms
+ * of Use (MORE-03), which open in the browser.
  */
 export default function MoreTab() {
   const t = useTranslations("Pages");
@@ -70,6 +71,14 @@ export default function MoreTab() {
           <Chevron />
         </Pressable>
       </Link>
+      {auth.status === "signedIn" ? (
+        <Link href="/delete-account" asChild>
+          <Pressable accessibilityRole="link" style={styles.row}>
+            <Text style={styles.label}>{t("deleteAccount")}</Text>
+            <Chevron />
+          </Pressable>
+        </Link>
+      ) : null}
       {legal.map(({ label, path }) => (
         <Pressable
           key={path}
