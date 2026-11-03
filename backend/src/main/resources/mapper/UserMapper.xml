@@ -21,4 +21,8 @@
 		WHERE id = #{id}
 	</select>
 
+	<delete id="delete">
+		DELETE FROM app_user WHERE id = #{id}
+	</delete>
+
 </mapper>

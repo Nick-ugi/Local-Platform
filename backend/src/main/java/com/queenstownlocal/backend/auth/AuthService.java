@@ -97,9 +97,34 @@ public class AuthService {
 	}
 
 	public TokenResponse.User me(AuthenticatedUser user) {
-		UserAccount account = this.users.findById(user.id())
-			.orElseThrow(() -> new ApiException(ErrorCode.UNAUTHORIZED, "Sign in to continue."));
+		UserAccount account = account(user);
 		return new TokenResponse.User(account.email(), account.role());
+	}
+
+	/**
+	 * The account a token names. An access token outlives a deleted account by up to 15 minutes; with
+	 * no account it is no longer a signed-in visitor.
+	 */
+	public UserAccount account(AuthenticatedUser user) {
+		return this.users.findById(user.id())
+			.orElseThrow(() -> new ApiException(ErrorCode.UNAUTHORIZED, "Sign in to continue."));
+	}
+
+	/**
+	 * Deletes the visitor's own account with its favorites and sessions, once they give the password
+	 * again (Google Play asks apps with sign up to offer this). An admin account is not deleted this
+	 * way: without it nobody could use the Admin.
+	 */
+	@Transactional
+	public void deleteAccount(AuthenticatedUser user, String password) {
+		UserAccount account = account(user);
+		if ("admin".equals(account.role())) {
+			throw new ApiException(ErrorCode.FORBIDDEN, "An admin account is removed by the operator.");
+		}
+		if (!this.passwords.matches(password, account.passwordHash())) {
+			throw new ApiException(ErrorCode.WRONG_PASSWORD, "That password is wrong.");
+		}
+		this.users.delete(account.id());
 	}
 
 	private TokenResponse issue(AuthenticatedUser user) {

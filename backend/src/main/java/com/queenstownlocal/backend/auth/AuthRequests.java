@@ -22,6 +22,10 @@ public final class AuthRequests {
 	public record Login(@NotBlank String email, @NotBlank String password) {
 	}
 
+	/** DELETE /me: the password again, so a phone left signed in cannot delete the account. */
+	public record DeleteAccount(@NotBlank String password) {
+	}
+
 	/** POST /auth/refresh and POST /auth/logout. */
 	public record Refresh(@NotBlank String refreshToken) {
 	}
