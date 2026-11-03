@@ -28,3 +28,12 @@ test("the icon and the splash screen use the brand's blue", () => {
     { image: "./assets/splash-icon.png", imageWidth: 200, resizeMode: "contain", backgroundColor: "#0369a1" },
   ]);
 });
+
+test("the app stays light on a phone in dark mode, and has the icon font for its tabs", () => {
+  const config = configFor();
+
+  expect(config.userInterfaceStyle).toBe("light");
+  expect(config.plugins).toEqual(
+    expect.arrayContaining(["expo-system-ui", "expo-font", "@react-native-vector-icons/ionicons"]),
+  );
+});

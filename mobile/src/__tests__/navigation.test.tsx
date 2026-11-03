@@ -122,6 +122,14 @@ test("opens on the Map tab with Map, Explore, Local and More in order", async ()
     "More, tab, 4 of 4",
   ]);
   expect(tab("Map")).toBeSelected();
+  // Each tab has its icon, filled for the tab that is open.
+  for (const icon of ["icon-map", "icon-list-outline", "icon-calendar-outline", "icon-ellipsis-horizontal-outline"]) {
+    expect(screen.getByTestId(icon)).toBeTruthy();
+  }
+
+  fireEvent.press(tab("Explore"));
+  expect(screen.getByTestId("icon-map-outline")).toBeTruthy();
+  expect(screen.getByTestId("icon-list")).toBeTruthy();
 });
 
 test("the tabs lead to Explore, Local and More", async () => {

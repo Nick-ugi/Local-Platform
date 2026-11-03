@@ -46,6 +46,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     "expo-router",
+    // Keeps the app light (userInterfaceStyle) on a phone set to dark mode; Android's native parts
+    // would otherwise turn dark around the app's light screens.
+    "expo-system-ui",
+    // The tabs' icons (Ionicons), with their font in the build.
+    "expo-font",
+    "@react-native-vector-icons/ionicons",
     ["expo-splash-screen", { image: "./assets/splash-icon.png", imageWidth: 200, resizeMode: "contain", backgroundColor: BRAND_BLUE }],
     "@rnmapbox/maps",
     [
