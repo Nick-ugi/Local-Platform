@@ -4,7 +4,7 @@ Web과 Admin을 실제 브라우저(PC에 설치된 Chrome)로 쓰면서 시나�
 
 | 명령 | 대상 | 하는 일 |
 |---|---|---|
-| `npm run test:local -w e2e` | 이 PC의 서버 구성(`deploy/compose.yaml`) | Admin이 Place, Event, Notice를 등록(S5) → 지도 링크, 상세, 길찾기(S1) → Notice(S2) → 이번 주 Event(S3) → 서버 렌더링과 SEO 태그(S4) → 가입하며 Favorite 저장, 해제, 로그아웃 → 로그인 시도 제한 → Private으로 내리면 사라짐. 끝나면 만든 항목을 모두 Private으로 둔다. |
+| `npm run test:local -w e2e` | 이 PC의 서버 구성(`deploy/compose.yaml`) | Admin이 Place, Event, Notice를 등록(S5) → 지도 링크, 상세, 길찾기(S1) → Notice(S2) → 이번 주 Event(S3) → 서버 렌더링과 SEO 태그(S4) → 가입하며 Favorite 저장, 해제, 로그아웃 → `/account/delete`에서 계정 삭제(틀린 비밀번호, 지운 뒤 로그인 안 됨) → 로그인 시도 제한 → Private으로 내리면 사라짐. 끝나면 만든 항목을 모두 Private으로 둔다. |
 | `npm run test:smoke -w e2e` | 아무 배포(`WEB_URL`, `ADMIN_URL`) | 읽기만: 지도가 그려지는지, Explore와 상세, 목록과 법적 고지 페이지, 없는 주소의 404, Admin의 Log in과 `/api`. 데이터를 바꾸지 않는다. |
 
 ## 로컬

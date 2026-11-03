@@ -871,6 +871,7 @@ Citizen / Resident / Tourist
   - Privacy Policy와 Terms는 법률 검토를 받지 않은 문안이다. 운영 전에 검토한다.
 - [x] 13주차 UX Polish (영업시간을 요일별로 읽고 지금 영업 중인지 표시, 사진 없는 곳의 종류별 색과 그림, 종류별 색 Marker와 묶음, 주소가 "Queenstown"뿐인 장소의 도로 이름 보완, 서버가 깨는 동안의 안내, App의 Privacy Policy · Terms · 정보 수정 요청, Android 에뮬레이터에서 확인)
 - [x] 14주차 Planned Features (App의 Local 탭(Notices · Events), 상세의 주변 장소, 검색 결과를 지도로 보기, 지도 카드의 영업 중 표시, App의 최근 본 장소, 줌 17까지 Marker 묶음, Android 에뮬레이터에서 확인)
+- [x] 15주차 Store Prep, Android (계정 삭제(App의 More, Web의 `/account/delete`), 개인정보 처리방침에 App 내용, 앱 아이콘과 스플래시, 릴리스 빌드 설정 `eas.json`, 쓰지 않는 Android 권한 차단, Android 에뮬레이터에서 확인) — 실제 빌드와 Play Console 등록은 배포 뒤, iOS는 Apple 계정이 생긴 뒤
 
 ### Next
 
