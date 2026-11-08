@@ -1,3 +1,6 @@
+/** Where to reach the project without an address: its issues on GitHub. */
+export const ISSUES_URL = "https://github.com/Nick-ugi/Local-Platform/issues";
+
 // Something that looks like one email address: no spaces, one @, a dot in the domain.
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

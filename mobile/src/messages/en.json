@@ -188,7 +188,12 @@
     "deleted": "Your account has been deleted.",
     "done": "Done",
     "wrongPassword": "That password is wrong.",
-    "deleteFailed": "We couldn't delete your account. Please try again."
+    "deleteFailed": "We couldn't delete your account. Please try again.",
+    "forgotPassword": "Forgot your password?",
+    "forgotEmail": "Email us",
+    "forgotSubject": "Forgotten password",
+    "forgotBody": "The email address of my account: ",
+    "forgotFailed": "Couldn't open a mail app. Email {email} for help."
   },
   "Favorites": {
     "save": "Save to favorites",

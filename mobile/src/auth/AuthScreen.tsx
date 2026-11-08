@@ -2,6 +2,7 @@ import { ApiError } from "@queenstown/shared";
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { contactEmail, emailOperator } from "@/links/actions";
 import { colors, TOUCH } from "@/ui/theme";
 import { useAuth } from "./AuthProvider";
 
@@ -17,7 +18,8 @@ type Props = {
 
 /**
  * Log in and Sign up (wireframe m-login, USER-01, USER-02): the same form, only the button and the
- * line under it change.
+ * line under it change. Log in also offers to email the operator about a forgotten password, as on
+ * the web; without EXPO_PUBLIC_CONTACT_EMAIL it is left out.
  */
 export function AuthScreen({ mode, onDone, onSwitch }: Props) {
   const t = useTranslations("Account");
@@ -26,6 +28,7 @@ export function AuthScreen({ mode, onDone, onSwitch }: Props) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<{ field: "email" | "password" | null; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const operator = mode === "login" ? contactEmail() : null;
 
   async function submit() {
     setBusy(true);
@@ -50,6 +53,13 @@ export function AuthScreen({ mode, onDone, onSwitch }: Props) {
       }
     }
     return { field: null, text: t("failed") };
+  }
+
+  async function askForHelp() {
+    setError(null);
+    if (operator && !(await emailOperator(t("forgotSubject"), t("forgotBody")))) {
+      setError({ field: null, text: t("forgotFailed", { email: operator }) });
+    }
   }
 
   return (
@@ -97,6 +107,14 @@ export function AuthScreen({ mode, onDone, onSwitch }: Props) {
           <Text style={styles.switchText}>{mode === "login" ? t("createAccount") : t("login")}</Text>
         </Pressable>
       </View>
+      {operator ? (
+        <View style={styles.switchRow}>
+          <Text style={styles.hint}>{t("forgotPassword")}</Text>
+          <Pressable accessibilityRole="link" onPress={() => void askForHelp()} style={styles.switch}>
+            <Text style={styles.switchText}>{t("forgotEmail")}</Text>
+          </Pressable>
+        </View>
+      ) : null}
     </ScrollView>
   );
 }

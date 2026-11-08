@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { AuthForm } from "@/components/account/AuthForm";
+import { ForgotPassword } from "@/components/account/ForgotPassword";
 import { BackLink } from "@/components/nav/BackLink";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,6 +26,7 @@ export default function LoginPage() {
       <Suspense>
         <AuthForm mode="login" />
       </Suspense>
+      <ForgotPassword />
     </div>
   );
 }

@@ -198,7 +198,12 @@
     "deleteConfirm": "Delete my account",
     "deleted": "Your account has been deleted.",
     "wrongPassword": "That password is wrong.",
-    "deleteFailed": "We couldn't delete your account. Please try again."
+    "deleteFailed": "We couldn't delete your account. Please try again.",
+    "forgotPassword": "Forgot your password?",
+    "forgotEmail": "Email us",
+    "forgotIssues": "Ask on GitHub Issues",
+    "forgotSubject": "Forgotten password",
+    "forgotBody": "The email address of my account: "
   },
   "Favorites": {
     "save": "Save to favorites",
