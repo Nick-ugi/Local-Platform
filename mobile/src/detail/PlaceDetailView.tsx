@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: colors.brandSoft,
   },
-  actionText: { fontSize: 13, fontWeight: "600", color: colors.text, textAlign: "center" },
+  actionText: { fontSize: 13, fontWeight: "600", color: colors.brand, textAlign: "center" },
   linkPress: { minHeight: TOUCH, justifyContent: "center", alignSelf: "flex-start" },
   link: { fontSize: 16, color: colors.link, textDecorationLine: "underline" },
   footer: { borderTopWidth: StyleSheet.hairlineWidth, borderColor: colors.line, paddingTop: 8, gap: 4 },
