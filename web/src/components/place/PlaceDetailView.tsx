@@ -19,7 +19,7 @@ import { PlaceActions } from "./PlaceActions";
 import { PlaceImage } from "./PlaceImage";
 import { ViewOnMapLink } from "./ViewOnMapLink";
 
-const externalLinkClass = "text-blue-700 underline underline-offset-2";
+const externalLinkClass = "text-brand underline underline-offset-2";
 
 /**
  * Place detail (wireframes m-place and d-place). Rows the place has no value for are left out;
@@ -100,7 +100,7 @@ export function PlaceDetailView({
           <p>{place.address}</p>
           <ViewOnMapLink
             place={place}
-            className="flex min-h-11 items-center self-start font-semibold text-blue-700 underline underline-offset-2"
+            className="flex min-h-11 items-center self-start font-semibold text-brand underline underline-offset-2"
           />
         </Row>
 

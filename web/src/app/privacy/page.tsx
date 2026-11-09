@@ -46,7 +46,7 @@ export default function PrivacyPage() {
         <p>
           {t.rich("choices", {
             link: (chunks) => (
-              <Link href="/account/delete" className="font-semibold text-blue-700 underline">
+              <Link href="/account/delete" className="font-semibold text-brand underline">
                 {chunks}
               </Link>
             ),

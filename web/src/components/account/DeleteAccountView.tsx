@@ -59,7 +59,7 @@ export function DeleteAccountView() {
     return (
       <section className="flex flex-col gap-4">
         <h2 className="text-xl font-bold">{t("deleted")}</h2>
-        <Link href="/" className="font-semibold text-blue-700 underline">
+        <Link href="/" className="font-semibold text-brand underline">
           {tState("goToMap")}
         </Link>
       </section>
@@ -74,7 +74,7 @@ export function DeleteAccountView() {
         <p>{t("deleteLogin")}</p>
         <Link
           href={loginPath("/account/delete")}
-          className="flex h-12 items-center justify-center rounded-lg bg-neutral-950 font-semibold text-white"
+          className="flex h-12 items-center justify-center rounded-lg bg-brand font-semibold text-white"
         >
           {t("login")}
         </Link>

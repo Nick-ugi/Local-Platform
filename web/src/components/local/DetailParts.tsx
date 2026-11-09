@@ -26,7 +26,7 @@ export function DetailRow({
 
 /** A bordered button-like link beside a row's content, 44px tall. */
 export const sideActionClass =
-  "flex min-h-11 shrink-0 items-center rounded-lg border border-neutral-950 px-3 text-sm font-semibold";
+  "flex min-h-11 shrink-0 items-center rounded-lg border border-brand text-brand px-3 text-sm font-semibold";
 
 /** Says that the event or notice is over; its page stays for the links that lead here. */
 export function EndedNotice({ text }: { text: string }) {

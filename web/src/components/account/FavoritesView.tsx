@@ -51,7 +51,7 @@ export function FavoritesView() {
     return (
       <div className="flex flex-col items-center gap-4 px-4 py-10 text-center">
         <p className="text-neutral-600">{t("loginToSee")}</p>
-        <Link href={loginPath("/favorites")} className="rounded-lg bg-neutral-950 px-4 py-2 font-semibold text-white">
+        <Link href={loginPath("/favorites")} className="rounded-lg bg-brand px-4 py-2 font-semibold text-white">
           {tAccount("login")}
         </Link>
       </div>
@@ -71,7 +71,7 @@ export function FavoritesView() {
     return (
       <div className="flex flex-col items-center gap-4 px-4 py-10 text-center">
         <p className="text-neutral-600">{t("empty")}</p>
-        <Link href="/explore" className="rounded-lg border border-neutral-950 px-4 py-2 font-semibold">
+        <Link href="/explore" className="rounded-lg border border-brand text-brand px-4 py-2 font-semibold">
           {tState("goToExplore")}
         </Link>
       </div>

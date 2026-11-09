@@ -64,7 +64,7 @@ export function MarkerPreview({ marker, distanceText, onClose }: Props) {
         ) : null}
         <Link
           href={detailPath(marker)}
-          className="mt-2 flex h-11 items-center justify-center rounded-lg bg-neutral-950 px-4 text-sm font-semibold text-white"
+          className="mt-2 flex h-11 items-center justify-center rounded-lg bg-brand px-4 text-sm font-semibold text-white"
         >
           {t("viewDetails")}
         </Link>

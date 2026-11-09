@@ -69,7 +69,7 @@ export function EventDetailView({ event }: { event: EventDetail }) {
                 href={sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center text-blue-700 underline underline-offset-2"
+                className="inline-flex min-h-11 items-center text-brand underline underline-offset-2"
               >
                 {t("eventPage")}
                 <span aria-hidden="true">&nbsp;↗</span>
@@ -84,7 +84,7 @@ export function EventDetailView({ event }: { event: EventDetail }) {
         <div className="order-10 md:order-none">
           <ShareButton
             title={event.title}
-            className="flex min-h-11 w-full items-center justify-center rounded-lg border border-neutral-950 font-semibold"
+            className="flex min-h-11 w-full items-center justify-center rounded-lg border border-brand text-brand font-semibold"
           />
         </div>
       </div>

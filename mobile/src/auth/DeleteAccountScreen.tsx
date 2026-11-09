@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
   invalid: { borderColor: DANGER },
   error: { fontSize: 14, color: DANGER },
-  primary: { minHeight: 48, borderRadius: 8, backgroundColor: colors.ink, alignItems: "center", justifyContent: "center" },
+  primary: { minHeight: 48, borderRadius: 8, backgroundColor: colors.brand, alignItems: "center", justifyContent: "center" },
   danger: { minHeight: 48, borderRadius: 8, backgroundColor: DANGER, alignItems: "center", justifyContent: "center" },
   dim: { opacity: 0.6 },
   primaryText: { color: colors.paper, fontSize: 16, fontWeight: "600" },

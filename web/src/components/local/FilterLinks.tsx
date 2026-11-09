@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const linkClass =
-  "flex h-11 shrink-0 items-center whitespace-nowrap rounded-full border border-neutral-400 px-4 text-sm font-medium aria-[current=page]:border-neutral-950 aria-[current=page]:bg-neutral-950 aria-[current=page]:text-white";
+  "flex h-11 shrink-0 items-center whitespace-nowrap rounded-full border border-neutral-400 px-4 text-sm font-medium aria-[current=page]:border-brand aria-[current=page]:bg-brand aria-[current=page]:text-white";
 
 type Item = { key: string; label: string; href: string; active: boolean };
 

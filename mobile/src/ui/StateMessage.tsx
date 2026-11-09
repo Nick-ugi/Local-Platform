@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: colors.ink,
+    borderColor: colors.brand,
   },
-  buttonText: { fontSize: 16, fontWeight: "600", color: colors.ink },
+  buttonText: { fontSize: 16, fontWeight: "600", color: colors.brand },
 });

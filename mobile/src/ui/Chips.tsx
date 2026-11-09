@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     backgroundColor: colors.paper,
   },
-  selected: { backgroundColor: colors.ink, borderColor: colors.ink },
+  selected: { backgroundColor: colors.brand, borderColor: colors.brand },
   text: { fontSize: 14, fontWeight: "500", color: colors.text },
   selectedText: { color: colors.paper },
 });

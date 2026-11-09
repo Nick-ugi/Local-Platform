@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   invalid: { borderColor: "#b91c1c" },
   hint: { fontSize: 14, color: colors.muted },
   error: { fontSize: 14, color: "#b91c1c" },
-  submit: { minHeight: 48, borderRadius: 8, backgroundColor: colors.ink, alignItems: "center", justifyContent: "center" },
+  submit: { minHeight: 48, borderRadius: 8, backgroundColor: colors.brand, alignItems: "center", justifyContent: "center" },
   busy: { opacity: 0.6 },
   submitText: { color: colors.paper, fontSize: 16, fontWeight: "600" },
   switchRow: { flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 6 },

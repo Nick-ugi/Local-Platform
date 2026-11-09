@@ -22,7 +22,7 @@ export function TopNav() {
             key={item.key}
             href={item.href}
             aria-current={item.key === active ? "page" : undefined}
-            className="flex h-full items-center border-b-[3px] border-transparent pt-[3px] font-semibold text-neutral-500 aria-[current=page]:border-neutral-950 aria-[current=page]:text-neutral-950"
+            className="flex h-full items-center border-b-[3px] border-transparent pt-[3px] font-semibold text-neutral-500 aria-[current=page]:border-brand aria-[current=page]:text-brand"
           >
             {t(item.key)}
           </Link>

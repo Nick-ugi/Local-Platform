@@ -3,6 +3,7 @@ import { Tabs } from "expo-router";
 import type { ComponentProps } from "react";
 import type { ColorValue } from "react-native";
 import { useTranslations } from "use-intl";
+import { colors } from "@/ui/theme";
 
 type IconName = ComponentProps<typeof Ionicons>["name"];
 
@@ -21,8 +22,8 @@ export default function TabsLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#0a0a0a",
-        tabBarInactiveTintColor: "#737373",
+        tabBarActiveTintColor: colors.brand,
+        tabBarInactiveTintColor: colors.faint,
         tabBarLabelStyle: { fontSize: 14, fontWeight: "600" },
       }}
     >

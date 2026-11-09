@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: TOUCH / 2,
     borderWidth: 1,
-    borderColor: colors.ink,
+    borderColor: colors.brand,
   },
   input: { flex: 1, fontSize: 16, color: colors.text, paddingVertical: 8 },
   clear: { width: TOUCH, height: TOUCH, alignItems: "center", justifyContent: "center" },

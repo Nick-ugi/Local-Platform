@@ -23,7 +23,7 @@ export function BottomNav() {
           key={item.key}
           href={item.href}
           aria-current={item.key === active ? "page" : undefined}
-          className="flex h-14 flex-1 items-center justify-center whitespace-nowrap border-t-[3px] border-transparent text-sm font-semibold text-neutral-500 aria-[current=page]:border-neutral-950 aria-[current=page]:text-neutral-950"
+          className="flex h-14 flex-1 items-center justify-center whitespace-nowrap border-t-[3px] border-transparent text-sm font-semibold text-neutral-500 aria-[current=page]:border-brand aria-[current=page]:text-brand"
         >
           {t(item.key)}
         </Link>

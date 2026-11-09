@@ -20,8 +20,8 @@ export function LocateButton({ onClick, busy }: Props) {
       className="flex size-12 items-center justify-center rounded-full border border-neutral-400 bg-white shadow-md disabled:opacity-60"
     >
       {/* A ring with a dot: the usual sign for "my position". */}
-      <span aria-hidden="true" className="flex size-5 items-center justify-center rounded-full border-2 border-neutral-950">
-        <span className="size-1.5 rounded-full bg-neutral-950" />
+      <span aria-hidden="true" className="flex size-5 items-center justify-center rounded-full border-2 border-brand">
+        <span className="size-1.5 rounded-full bg-brand" />
       </span>
     </button>
   );

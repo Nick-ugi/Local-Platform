@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { colors } from "@/ui/theme";
 
 type Props = {
   onPress: () => void;
@@ -45,9 +46,9 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: "#0a0a0a",
+    borderColor: colors.brand,
     alignItems: "center",
     justifyContent: "center",
   },
-  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: "#0a0a0a" },
+  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.brand },
 });

@@ -36,7 +36,7 @@ function SearchForm({ initial }: { initial: string }) {
       action="/search"
       method="get"
       onSubmit={submit}
-      className="flex h-11 items-center rounded-full border border-neutral-400 bg-white pl-4 focus-within:border-neutral-950"
+      className="flex h-11 items-center rounded-full border border-neutral-400 bg-white pl-4 focus-within:border-brand"
     >
       <input
         ref={input}

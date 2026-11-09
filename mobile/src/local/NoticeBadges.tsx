@@ -21,5 +21,5 @@ const badge = { fontSize: 12, fontWeight: "600", paddingHorizontal: 8, paddingVe
 const styles = StyleSheet.create({
   row: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   type: { ...badge, borderWidth: 1, borderColor: colors.faint, color: colors.text },
-  official: { ...badge, backgroundColor: colors.text, color: colors.paper, overflow: "hidden" },
+  official: { ...badge, backgroundColor: colors.brand, color: colors.paper, overflow: "hidden" },
 });

@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   open: {
     minHeight: TOUCH,
     borderRadius: 8,
-    backgroundColor: colors.ink,
+    backgroundColor: colors.brand,
     alignItems: "center",
     justifyContent: "center",
   },

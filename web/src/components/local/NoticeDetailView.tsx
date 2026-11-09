@@ -79,7 +79,7 @@ export function NoticeDetailView({ notice }: { notice: NoticeDetail }) {
         </p>
         <ShareButton
           title={notice.title}
-          className="flex min-h-11 w-full items-center justify-center rounded-lg border border-neutral-950 font-semibold"
+          className="flex min-h-11 w-full items-center justify-center rounded-lg border border-brand text-brand font-semibold"
         />
       </div>
     </article>

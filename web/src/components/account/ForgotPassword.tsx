@@ -14,11 +14,11 @@ export function ForgotPassword() {
     <p className="text-center text-neutral-600">
       {t("forgotPassword")}{" "}
       {href ? (
-        <a href={href} className="font-semibold text-blue-700">
+        <a href={href} className="font-semibold text-brand">
           {t("forgotEmail")}
         </a>
       ) : (
-        <a href={ISSUES_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-700">
+        <a href={ISSUES_URL} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand">
           {t("forgotIssues")}
         </a>
       )}

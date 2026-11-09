@@ -100,13 +100,13 @@ export function AuthForm({ mode }: { mode: Mode }) {
       <button
         type="submit"
         disabled={busy}
-        className="h-12 rounded-lg bg-neutral-950 font-semibold text-white disabled:opacity-60"
+        className="h-12 rounded-lg bg-brand font-semibold text-white disabled:opacity-60"
       >
         {mode === "login" ? t("login") : t("signup")}
       </button>
       <p className="text-center text-neutral-600">
         {mode === "login" ? t("newHere") : t("haveAccount")}{" "}
-        <Link href={otherHref} className="font-semibold text-blue-700">
+        <Link href={otherHref} className="font-semibold text-brand">
           {mode === "login" ? t("createAccount") : t("login")}
         </Link>
       </p>
