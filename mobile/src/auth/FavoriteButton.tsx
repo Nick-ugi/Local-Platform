@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
+import { Icon } from "@/ui/Icon";
 import { colors, TOUCH } from "@/ui/theme";
 import { useAuth } from "./AuthProvider";
 import { getFavorites, removeFavorite, saveFavorite } from "./session";
@@ -89,7 +90,11 @@ export function FavoriteButton({ slug, onNeedLogin }: { slug: string; onNeedLogi
         onPress={() => void press()}
         style={[styles.button, state === "loading" && styles.dim]}
       >
-        <Text style={styles.heart}>{state === "saved" ? "♥" : "♡"}</Text>
+        {state === "saved" ? (
+          <Icon name="heart" size={26} color={colors.heart} />
+        ) : (
+          <Icon name="heart-outline" size={26} color={colors.text} />
+        )}
       </Pressable>
       {failed ? <Text style={styles.error}>{t("saveFailed")}</Text> : null}
     </View>
@@ -100,6 +105,5 @@ const styles = StyleSheet.create({
   box: { alignItems: "flex-end" },
   button: { width: TOUCH, height: TOUCH, alignItems: "center", justifyContent: "center" },
   dim: { opacity: 0.4 },
-  heart: { fontSize: 26, color: colors.ink },
   error: { fontSize: 12, color: "#b91c1c", maxWidth: 200, textAlign: "right" },
 });

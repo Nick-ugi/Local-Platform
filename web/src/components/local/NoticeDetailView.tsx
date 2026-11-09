@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { BackLink } from "@/components/nav/BackLink";
 import { ShareButton } from "@/components/place/ShareButton";
 import { ViewOnMapLink } from "@/components/place/ViewOnMapLink";
+import { Icon } from "@/components/ui/Icon";
 import { DetailRow, EndedNotice, sideActionClass } from "./DetailParts";
 import { NoticeBadges } from "./NoticeBadges";
 import { NoticePeriodText } from "./NoticePeriodText";
@@ -66,7 +67,7 @@ export function NoticeDetailView({ notice }: { notice: NoticeDetail }) {
             sourceUrl ? (
               <a href={sourceUrl} target="_blank" rel="noopener noreferrer" className={sideActionClass}>
                 {t("openOriginal")}
-                <span aria-hidden="true">&nbsp;↗</span>
+                <Icon name="external" className="ml-1 size-4" />
                 <span className="sr-only"> {t("newTab")}</span>
               </a>
             ) : null

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
-import { AccountMenu } from "@/components/account/AccountMenu";
+import { AccountMenu, MenuRowLabel } from "@/components/account/AccountMenu";
+import { Icon, type IconName } from "@/components/ui/Icon";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Pages");
@@ -22,24 +23,22 @@ export default function MorePage() {
       <h1 className="px-4 py-4 text-lg font-bold">{t("more")}</h1>
       <nav aria-label={t("more")}>
         <ul className="divide-y divide-neutral-200 border-y border-neutral-200">
-          <MenuLink href="/about" label={t("about")} />
+          <MenuLink href="/about" icon="info" label={t("about")} />
           <AccountMenu />
-          <MenuLink href="/privacy" label={t("privacy")} />
-          <MenuLink href="/terms" label={t("terms")} />
+          <MenuLink href="/privacy" icon="shield" label={t("privacy")} />
+          <MenuLink href="/terms" icon="document" label={t("terms")} />
         </ul>
       </nav>
     </div>
   );
 }
 
-function MenuLink({ href, label }: { href: string; label: string }) {
+function MenuLink({ href, icon, label }: { href: string; icon: IconName; label: string }) {
   return (
     <li>
-      <Link href={href} className="flex min-h-14 items-center justify-between px-4 font-semibold">
-        {label}
-        <span aria-hidden="true" className="text-xl text-neutral-500">
-          ›
-        </span>
+      <Link href={href} className="flex min-h-14 items-center justify-between gap-3 px-4 font-semibold hover:bg-neutral-50">
+        <MenuRowLabel icon={icon} label={label} />
+        <Icon name="chevron-right" className="size-5 text-neutral-400" />
       </Link>
     </li>
   );

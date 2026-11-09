@@ -1,5 +1,6 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 import { useTranslations } from "use-intl";
+import { Icon } from "./Icon";
 import { colors, TOUCH } from "./theme";
 
 /**
@@ -11,7 +12,7 @@ export function SearchBar({ onPress }: { onPress: () => void }) {
 
   return (
     <Pressable accessibilityRole="search" accessibilityLabel={t("label")} onPress={onPress} style={styles.box}>
-      <View style={styles.icon} />
+      <Icon name="search" size={18} color={colors.faint} />
       <Text style={styles.placeholder}>{t("label")}</Text>
     </Pressable>
   );
@@ -31,7 +32,5 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     backgroundColor: colors.paper,
   },
-  // The wireframes' search mark: a small ring.
-  icon: { width: 16, height: 16, borderRadius: 8, borderWidth: 2, borderColor: colors.faint },
   placeholder: { fontSize: 16, color: colors.faint },
 });

@@ -5,6 +5,7 @@ import { useTranslations } from "use-intl";
 import { NoticeBadges } from "@/local/NoticeBadges";
 import { useNoticePeriodText } from "@/local/useNoticePeriod";
 import { OpenBadge } from "@/ui/OpenBadge";
+import { Icon } from "@/ui/Icon";
 import { colors, TOUCH } from "@/ui/theme";
 
 type Props = {
@@ -87,7 +88,7 @@ export function MarkerPreview({ marker, distanceText, onOpen, onClose }: Props) 
           hitSlop={4}
           style={styles.close}
         >
-          <Text style={styles.closeText}>×</Text>
+          <Icon name="close" size={22} color={colors.muted} />
         </Pressable>
       </View>
       <Pressable accessibilityRole="link" onPress={onOpen} style={styles.open}>
@@ -121,7 +122,6 @@ const styles = StyleSheet.create({
   title: { fontSize: 18, fontWeight: "700", color: colors.text },
   line: { fontSize: 14, color: colors.muted },
   close: { width: TOUCH, height: TOUCH, alignItems: "center", justifyContent: "center", marginRight: -8 },
-  closeText: { fontSize: 24, color: colors.muted },
   open: {
     minHeight: TOUCH,
     borderRadius: 8,

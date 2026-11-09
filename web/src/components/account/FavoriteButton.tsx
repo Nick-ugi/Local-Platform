@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { getFavorites, removeFavorite, saveFavorite } from "@/lib/auth/account";
 import { loginPath } from "@/lib/auth/next";
+import { Icon } from "@/components/ui/Icon";
 
 type State = "loading" | "signedOut" | "saved" | "notSaved";
 
@@ -78,9 +79,9 @@ export function FavoriteButton({ slug }: { slug: string }) {
         disabled={state === "loading"}
         aria-pressed={state === "signedOut" || state === "loading" ? undefined : saved}
         aria-label={saved ? t("saved") : t("save")}
-        className="flex size-11 items-center justify-center rounded-full text-2xl leading-none disabled:opacity-40"
+        className="flex size-11 items-center justify-center rounded-full hover:bg-neutral-100 disabled:opacity-40"
       >
-        <span aria-hidden="true">{saved ? "♥" : "♡"}</span>
+        <Icon name="heart" filled={saved} className={saved ? "size-7 text-rose-600" : "size-7"} />
       </button>
       <p role="status" className="absolute right-0 top-full z-10 w-max max-w-64 text-sm text-red-700 empty:hidden">
         {failed ? t("saveFailed") : null}

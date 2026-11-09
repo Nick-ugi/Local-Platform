@@ -5,16 +5,23 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { Icon, type IconName } from "@/components/ui/Icon";
 import { getAccount, logOut } from "@/lib/auth/account";
 
-const rowClass = "flex min-h-14 w-full items-center justify-between px-4 font-semibold";
+const rowClass = "flex min-h-14 w-full items-center justify-between gap-3 px-4 font-semibold hover:bg-neutral-50";
 
-function Chevron() {
+/** A row of More: its icon in the brand's colour, then its name. */
+export function MenuRowLabel({ icon, label }: { icon: IconName; label: string }) {
   return (
-    <span aria-hidden="true" className="text-xl text-neutral-500">
-      ›
+    <span className="flex min-w-0 items-center gap-3">
+      <Icon name={icon} className="size-[22px] text-brand" />
+      {label}
     </span>
   );
+}
+
+function Chevron() {
+  return <Icon name="chevron-right" className="size-5 text-neutral-400" />;
 }
 
 /**
@@ -52,7 +59,10 @@ export function AccountMenu() {
     <>
       {account ? (
         <li className="flex min-h-14 items-center justify-between gap-3 px-4">
-          <span className="min-w-0 truncate text-neutral-600">{t("signedInAs", { email: account.email })}</span>
+          <span className="flex min-w-0 items-center gap-3 text-neutral-600">
+            <Icon name="user" className="size-[22px] text-brand" />
+            <span className="truncate">{t("signedInAs", { email: account.email })}</span>
+          </span>
           <button type="button" onClick={() => void signOut()} className="min-h-11 shrink-0 font-semibold underline">
             {t("logout")}
           </button>
@@ -60,21 +70,21 @@ export function AccountMenu() {
       ) : (
         <li>
           <Link href="/login?next=%2Fmore" className={rowClass}>
-            {t("login")}
+            <MenuRowLabel icon="log-in" label={t("login")} />
             <Chevron />
           </Link>
         </li>
       )}
       <li>
         <Link href="/favorites" className={rowClass}>
-          {t("favorites")}
+          <MenuRowLabel icon="heart" label={t("favorites")} />
           <Chevron />
         </Link>
       </li>
       {account ? (
         <li>
           <Link href="/account/delete" className={rowClass}>
-            {t("deleteAccount")}
+            <MenuRowLabel icon="trash" label={t("deleteAccount")} />
             <Chevron />
           </Link>
         </li>

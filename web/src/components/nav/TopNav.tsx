@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -12,8 +13,10 @@ export function TopNav() {
   const active = activeMenu(usePathname() ?? "");
 
   return (
-    <header className="hidden h-[60px] shrink-0 items-center gap-7 border-b border-neutral-400 px-6 md:flex">
-      <Link href="/" className="text-base font-extrabold">
+    <header className="hidden h-[60px] shrink-0 items-center gap-7 border-b border-neutral-200 px-6 md:flex">
+      <Link href="/" className="flex items-center gap-2 text-base font-extrabold">
+        {/* The app's icon; the name beside it is the link's text. */}
+        <Image src="/icon-192.png" alt="" width={28} height={28} className="rounded-md" />
         {t("brand")}
       </Link>
       <nav aria-label={t("label")} className="flex h-full items-center gap-5">

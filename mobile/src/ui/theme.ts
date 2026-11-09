@@ -2,6 +2,7 @@
 // blue of the icon and the splash screen for what is selected and the main action of a screen.
 export const colors = {
   brand: "#0369a1",
+  brandSoft: "#e0f2fe",
   ink: "#0a0a0a",
   text: "#171717",
   muted: "#525252",
@@ -12,6 +13,8 @@ export const colors = {
   placeholder: "#e5e5e5",
   link: "#0369a1",
   paper: "#ffffff",
+  // A saved place's heart.
+  heart: "#e11d48",
 } as const;
 
 /** The smallest a thing to press may be (44 pt). */

@@ -11,8 +11,9 @@ jest.mock("expo-location", () => ({
 // The tab icons' font is not loaded under Jest: each icon is a plain Text that names itself.
 jest.mock("@react-native-vector-icons/ionicons", () => {
   const React = require("react");
-  const { Text } = require("react-native");
-  const Icon = ({ name }) => React.createElement(Text, { testID: `icon-${name}` }, name);
+  const { View } = require("react-native");
+  // No text inside, so a button's name stays its label.
+  const Icon = ({ name }) => React.createElement(View, { testID: `icon-${name}` });
   return { __esModule: true, default: Icon, Ionicons: Icon };
 });
 

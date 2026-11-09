@@ -1,5 +1,5 @@
 import type { EventDetail, NoticeDetail, PlaceDetail } from "@queenstown/shared";
-import { act, fireEvent, render, screen } from "@testing-library/react-native";
+import { act, fireEvent, render, screen, within } from "@testing-library/react-native";
 import { Linking, Platform, Share } from "react-native";
 import { AppIntlProvider } from "@/i18n/AppIntlProvider";
 import { EventDetailView } from "../EventDetailView";
@@ -144,6 +144,16 @@ describe("Place", () => {
 
   test("the quick actions call, open the website, give directions and share the web address", async () => {
     show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+
+    // Each has its icon above its name, hidden from screen readers, which read the name.
+    for (const [name, icon] of [
+      ["Call", "icon-call-outline"],
+      ["Website", "icon-globe-outline"],
+      ["Directions", "icon-navigate-outline"],
+      ["Share", "icon-share-social-outline"],
+    ]) {
+      expect(screen.getByRole("button", { name })).toContainElement(screen.getByTestId(icon, { includeHiddenElements: true }));
+    }
 
     await act(async () => fireEvent.press(screen.getByRole("button", { name: "Call" })));
     expect(openURL).toHaveBeenLastCalledWith("tel:+6434410000");

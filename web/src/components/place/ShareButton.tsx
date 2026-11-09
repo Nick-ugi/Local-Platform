@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { sharePage } from "@/lib/share";
 
 // How long "Link copied" stays on screen.
@@ -10,13 +10,15 @@ const COPIED_MS = 2000;
 type Props = {
   title: string;
   className?: string;
+  /** Drawn before the label, as the place's quick actions have. */
+  icon?: ReactNode;
 };
 
 /**
  * Shares the page it is on (COMMON-05). The address is the page's own without its query or
  * fragment, so tracking values that brought the visitor here are not passed on.
  */
-export function ShareButton({ title, className }: Props) {
+export function ShareButton({ title, className, icon }: Props) {
   const t = useTranslations("Place");
   const [notice, setNotice] = useState<"copied" | "failed" | null>(null);
 
@@ -37,6 +39,7 @@ export function ShareButton({ title, className }: Props) {
   return (
     <div className="relative flex">
       <button type="button" onClick={share} className={className}>
+        {icon}
         {t("share")}
       </button>
       {/* Always in the page so that screen readers announce what is put in it. */}

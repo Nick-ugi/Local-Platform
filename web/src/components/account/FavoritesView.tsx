@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { PlaceCard } from "@/components/place/PlaceCard";
 import { getFavorites, removeFavorite } from "@/lib/auth/account";
 import { loginPath } from "@/lib/auth/next";
+import { Icon } from "@/components/ui/Icon";
 
 type State = { status: "loading" } | { status: "signedOut" } | { status: "failed" } | { status: "ready"; items: PlaceSummary[] };
 
@@ -88,9 +89,9 @@ export function FavoritesView() {
             type="button"
             onClick={() => void remove(place)}
             aria-label={t("remove", { name: place.name })}
-            className="flex size-11 shrink-0 items-center justify-center text-2xl"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full hover:bg-neutral-100"
           >
-            <span aria-hidden="true">♥</span>
+            <Icon name="heart" filled className="size-6 text-rose-600" />
           </button>
         </li>
       ))}

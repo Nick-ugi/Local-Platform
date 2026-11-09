@@ -29,6 +29,7 @@ import { type Camera, hasSavedCamera, loadCamera, PLACE_ZOOM, saveCamera } from 
 import { useMarkers } from "@/lib/map/useMarkers";
 import { SEARCH_MARKERS, useSearchMarkers } from "@/lib/map/useSearchMarkers";
 import { useSlow } from "@/lib/useSlow";
+import { Icon } from "@/components/ui/Icon";
 import { FilterChips } from "./FilterChips";
 import { LocateButton } from "./LocateButton";
 import { MapView } from "./MapView";
@@ -277,9 +278,9 @@ export function MapScreen() {
             type="button"
             aria-label={tSearch("clear")}
             onClick={clearSearch}
-            className="flex size-11 shrink-0 items-center justify-center rounded-full text-2xl text-neutral-600 hover:bg-neutral-100"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full text-neutral-600 hover:bg-neutral-100"
           >
-            <span aria-hidden="true">×</span>
+            <Icon name="close" className="size-6" />
           </button>
         </div>
       )}

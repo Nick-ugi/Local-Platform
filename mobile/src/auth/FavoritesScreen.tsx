@@ -4,6 +4,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { PlaceRow } from "@/places/PlaceRow";
 import { StateMessage } from "@/ui/StateMessage";
+import { Icon } from "@/ui/Icon";
 import { colors, TOUCH } from "@/ui/theme";
 import { useAuth } from "./AuthProvider";
 import { getFavorites, removeFavorite } from "./session";
@@ -90,7 +91,7 @@ export function FavoritesScreen({ onOpen, onLogin, onExplore }: Props) {
             onPress={() => void remove(item)}
             style={styles.heart}
           >
-            <Text style={styles.heartText}>♥</Text>
+            <Icon name="heart" size={24} color={colors.heart} />
           </Pressable>
         </View>
       )}
@@ -103,5 +104,4 @@ const styles = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", backgroundColor: colors.paper },
   place: { flex: 1 },
   heart: { width: TOUCH, height: TOUCH, alignItems: "center", justifyContent: "center", marginRight: 8 },
-  heartText: { fontSize: 24, color: colors.ink },
 });

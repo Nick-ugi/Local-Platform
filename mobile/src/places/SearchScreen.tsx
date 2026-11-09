@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { StateMessage } from "@/ui/StateMessage";
+import { Icon } from "@/ui/Icon";
 import { colors, TOUCH } from "@/ui/theme";
 import { PlaceList } from "./PlaceList";
 import { RecentlyViewed } from "./RecentlyViewed";
@@ -64,7 +65,7 @@ export function SearchScreen({ q, onSubmit, onOpen, onExplore, onShowOnMap }: Pr
             }}
             style={styles.clear}
           >
-            <Text style={styles.clearText}>×</Text>
+            <Icon name="close-circle" size={20} color={colors.faint} />
           </Pressable>
         ) : null}
       </View>
@@ -110,7 +111,6 @@ const styles = StyleSheet.create({
   },
   input: { flex: 1, fontSize: 16, color: colors.text, paddingVertical: 8 },
   clear: { width: TOUCH, height: TOUCH, alignItems: "center", justifyContent: "center" },
-  clearText: { fontSize: 20, color: colors.muted },
   showOnMap: { minHeight: TOUCH, justifyContent: "center", paddingHorizontal: 8, paddingTop: 8 },
   showOnMapText: { fontSize: 14, fontWeight: "600", color: colors.text, textDecorationLine: "underline" },
 });
