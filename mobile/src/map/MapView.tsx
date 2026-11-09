@@ -11,6 +11,7 @@ import Mapbox, {
   CircleLayer,
   type CircleLayerStyle,
   Camera as MapboxCamera,
+  Images,
   LocationPuck,
   MapView as MapboxMapView,
   type MapState,
@@ -21,6 +22,7 @@ import Mapbox, {
 import { type ComponentProps, useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import type { Camera } from "./camera";
+import { MARKER_IMAGES } from "./markerImages";
 
 type Props = {
   /** Mapbox public token. */
@@ -51,7 +53,8 @@ const STYLE = "mapbox://styles/mapbox/standard";
 const MOVE_MS = 800;
 
 // The markers look as they do on the web (web/src/components/map/MapView.tsx): a circle in their
-// kind's colour (shared/src/categoryStyle.ts) with a white ring and a white letter. Markers close
+// kind's colour (shared/src/categoryStyle.ts) with a white ring and the kind's picture in white
+// (shared/src/map/markerIcon.ts). Markers close
 // together become a numbered dark cluster up to zoom 17 (MAP-09). Full emissive strength keeps them
 // bright in the Standard style's lighting.
 const INK = "#171717";
@@ -107,7 +110,16 @@ function textStyle(field: SymbolLayerStyle["textField"]): SymbolLayerStyle {
   };
 }
 
-const labelStyle = textStyle(["get", "label"]);
+/** The kind's picture in the middle of a marker. Full emissive strength keeps it white. */
+const iconStyle: SymbolLayerStyle = {
+  iconImage: ["get", "icon"],
+  iconAllowOverlap: true,
+  iconIgnorePlacement: true,
+  iconEmissiveStrength: 1,
+};
+
+// As much larger as the selected circle.
+const selectedIconStyle: SymbolLayerStyle = { ...iconStyle, iconSize: (RADIUS + 6) / RADIUS };
 const countStyle = textStyle(["get", "point_count_abbreviated"]);
 
 /** A press this close to a marker's centre counts: a 44 pt target (README, "Map"). */
@@ -220,6 +232,7 @@ export function MapView({
         ref={cameraRef}
         defaultSettings={{ centerCoordinate: toLngLat(startCamera), zoomLevel: startCamera.zoom }}
       />
+      <Images images={MARKER_IMAGES} />
       {showUserLocation ? <LocationPuck puckBearingEnabled={false} /> : null}
       {/* After the position, so the markers stay on top of it. */}
       <ShapeSource
@@ -235,7 +248,7 @@ export function MapView({
         <CircleLayer id="marker-clusters" style={clusterStyle} filter={CLUSTERED} />
         <SymbolLayer id="marker-cluster-counts" style={countStyle} filter={CLUSTERED} />
         <CircleLayer id="marker-circles" style={circleStyle} filter={NOT_CLUSTERED} />
-        <SymbolLayer id="marker-labels" style={labelStyle} filter={NOT_CLUSTERED} />
+        <SymbolLayer id="marker-icons" style={iconStyle} filter={NOT_CLUSTERED} />
       </ShapeSource>
       {/* Last, so the selected marker is drawn above everything else. */}
       <ShapeSource
@@ -245,7 +258,7 @@ export function MapView({
         onPress={(event) => press(event.features[0])}
       >
         <CircleLayer id="marker-selected" style={selectedStyle} />
-        <SymbolLayer id="marker-selected-label" style={labelStyle} />
+        <SymbolLayer id="marker-selected-icon" style={selectedIconStyle} />
       </ShapeSource>
     </MapboxMapView>
   );

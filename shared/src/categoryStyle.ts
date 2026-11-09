@@ -2,7 +2,7 @@ import { CATEGORIES, type Category, FACILITY_SUBTYPES, type FacilitySubtype } fr
 
 // One colour and one picture per kind of thing on the map, shared by the web app and the app: the
 // markers, the filter chips' dots, and what stands in for a missing photo. Every colour keeps white
-// text readable (4.5:1 or more), since markers write their letter in white on it.
+// text readable (4.5:1 or more), since markers draw their picture in white on it.
 
 export type StyledKind = { category: Category; subtype: FacilitySubtype | null } | 'event' | 'notice'
 

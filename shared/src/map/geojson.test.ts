@@ -35,12 +35,12 @@ test('carries what the layers need', () => {
   expect(collection.type).toBe('FeatureCollection')
   expect(collection.features.map((feature) => feature.type)).toEqual(Array(6).fill('Feature'))
   expect(collection.features.map((feature) => feature.properties)).toEqual([
-    { key: 'place:a', kind: 'place', label: 'F', color: '#c2410c' },
-    { key: 'place:b', kind: 'place', label: 'C', color: '#92400e' },
-    { key: 'place:c', kind: 'place', label: 'B', color: '#7c3aed' },
-    { key: 'place:d', kind: 'place', label: 'A', color: '#15803d' },
-    { key: 'place:e', kind: 'place', label: 'S', color: '#be185d' },
-    { key: 'place:f', kind: 'place', label: 'P', color: '#1d4ed8' },
+    { key: 'place:a', kind: 'place', icon: 'marker-food', color: '#c2410c' },
+    { key: 'place:b', kind: 'place', icon: 'marker-cafe', color: '#92400e' },
+    { key: 'place:c', kind: 'place', icon: 'marker-bar', color: '#7c3aed' },
+    { key: 'place:d', kind: 'place', icon: 'marker-activity', color: '#15803d' },
+    { key: 'place:e', kind: 'place', icon: 'marker-shopping', color: '#be185d' },
+    { key: 'place:f', kind: 'place', icon: 'marker-toilet', color: '#1d4ed8' },
   ])
 })
 
@@ -68,9 +68,9 @@ test('marks events and notices apart from places', () => {
   }
 
   expect(toFeatureCollection([marker('a', 'food'), event, notice]).features.map((f) => f.properties)).toEqual([
-    { key: 'place:a', kind: 'place', label: 'F', color: '#c2410c' },
-    { key: 'event:a', kind: 'event', label: 'E', color: '#0e7490' },
-    { key: 'notice:a', kind: 'notice', label: '!', color: '#b91c1c' },
+    { key: 'place:a', kind: 'place', icon: 'marker-food', color: '#c2410c' },
+    { key: 'event:a', kind: 'event', icon: 'marker-event', color: '#0e7490' },
+    { key: 'notice:a', kind: 'notice', icon: 'marker-notice', color: '#b91c1c' },
   ])
 })
 

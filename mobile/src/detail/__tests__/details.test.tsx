@@ -1,5 +1,5 @@
 import type { EventDetail, NoticeDetail, PlaceDetail } from "@queenstown/shared";
-import { act, fireEvent, render, screen, within } from "@testing-library/react-native";
+import { act, fireEvent, render, screen } from "@testing-library/react-native";
 import { Linking, Platform, Share } from "react-native";
 import { AppIntlProvider } from "@/i18n/AppIntlProvider";
 import { EventDetailView } from "../EventDetailView";

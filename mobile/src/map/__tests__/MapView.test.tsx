@@ -1,4 +1,4 @@
-import { type MapMarker, toFeatureCollection } from "@queenstown/shared";
+import { MARKER_ICONS, type MapMarker, toFeatureCollection } from "@queenstown/shared";
 import { render } from "@testing-library/react-native";
 import type { ComponentProps } from "react";
 import { MapView } from "../MapView";
@@ -17,6 +17,7 @@ const mockSdk = {
   expansionZoom: jest.fn(async (_feature: unknown) => 16),
   layers: [] as string[],
   layerProps: {} as Record<string, Record<string, unknown>>,
+  images: {} as Record<string, unknown>,
 };
 
 jest.mock("@rnmapbox/maps", () => {
@@ -34,6 +35,10 @@ jest.mock("@rnmapbox/maps", () => {
       useImperativeHandle(ref, () => ({ setCamera: mockSdk.setCamera, fitBounds: mockSdk.fitBounds }));
       return null;
     }),
+    Images: (props: { images: Record<string, unknown> }) => {
+      mockSdk.images = props.images;
+      return null;
+    },
     LocationPuck: () => {
       mockSdk.puck = true;
       return null;
@@ -209,13 +214,24 @@ test("draws the markers in their kind's colour with their letters, clustered whe
       "marker-clusters",
       "marker-cluster-counts",
       "marker-circles",
-      "marker-labels",
+      "marker-icons",
       "marker-selected",
-      "marker-selected-label",
+      "marker-selected-icon",
     ]),
   );
   const circles = mockSdk.layerProps["marker-circles"].style as { circleColor: unknown };
   expect(circles.circleColor).toEqual(["get", "color"]);
+});
+
+test("draws each marker's picture, one image for every kind at three pixels to a point", () => {
+  renderMap({ markers: [kitchen] });
+
+  expect(Object.keys(mockSdk.images).sort()).toEqual(MARKER_ICONS.map((icon) => `marker-${icon}`).sort());
+  expect(mockSdk.images["marker-food"]).toEqual({ image: expect.anything(), scale: 3 });
+  const icons = mockSdk.layerProps["marker-icons"].style as { iconImage: unknown };
+  expect(icons.iconImage).toEqual(["get", "icon"]);
+  const selected = mockSdk.layerProps["marker-selected-icon"].style as { iconSize: number };
+  expect(selected.iconSize).toBeGreaterThan(1);
 });
 
 test("draws the selected marker on its own, outside the clusters", () => {
@@ -235,7 +251,7 @@ test("a press on a marker selects it, with a 44 pt target", () => {
 
   expect(mockSdk.sources.markers.hitbox).toEqual({ width: 44, height: 44 });
   (mockSdk.sources.markers.onPress as (event: unknown) => void)({
-    features: [{ properties: { key: "place:lakeside-kitchen", kind: "place", label: "F" } }],
+    features: [{ properties: { key: "place:lakeside-kitchen", kind: "place", icon: "marker-food" } }],
   });
 
   expect(props.onSelect).toHaveBeenCalledWith("place:lakeside-kitchen");

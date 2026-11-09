@@ -1,6 +1,6 @@
 import type { PlaceSummary } from "@queenstown/shared";
 import { useEffect, useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { PlaceRow } from "@/places/PlaceRow";
 import { StateMessage } from "@/ui/StateMessage";
