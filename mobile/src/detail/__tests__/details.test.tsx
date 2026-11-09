@@ -181,6 +181,13 @@ describe("Place", () => {
     expect(screen.queryByText("Opening hours")).toBeNull();
   });
 
+  test("without a photo, the kind's picture stands in for it", () => {
+    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+
+    const placeholder = screen.getByTestId("image-placeholder", { includeHiddenElements: true });
+    expect(placeholder).toHaveTextContent("☕");
+  });
+
   test("a facility shows its kind", () => {
     show(<PlaceDetailView place={{ ...coffee, category: "facility", subtype: "toilet" }} onViewOnMap={jest.fn()} />);
 

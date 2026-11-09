@@ -1,4 +1,5 @@
 import {
+  categoryStyle,
   displayUrl,
   formatDate,
   formatWeeklyHours,
@@ -12,6 +13,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { call, contactEmail, emailOperator, openDirections, openWebsite, shareLink, webUrl } from "@/links/actions";
 import { Icon } from "@/ui/Icon";
+import { KindPlaceholder } from "@/ui/KindArt";
 import { OpenBadge } from "@/ui/OpenBadge";
 import { PlaceImage } from "@/ui/PlaceImage";
 import { colors, TOUCH } from "@/ui/theme";
@@ -73,7 +75,13 @@ export function PlaceDetailView({
 
   return (
     <ScrollView style={detailStyles.scroll} contentContainerStyle={detailStyles.content}>
-      <PlaceImage url={place.imageUrl} label={place.name} style={detailStyles.image} />
+      <PlaceImage
+        url={place.imageUrl}
+        label={place.name}
+        style={detailStyles.image}
+        // The kind's picture stands in for a missing photo, as in the lists.
+        fallback={<KindPlaceholder look={categoryStyle(place)} style={styles.hero} emojiSize={64} />}
+      />
       <View style={styles.header}>
         <View style={styles.headerText}>
           <Text accessibilityRole="header" style={detailStyles.title}>
@@ -164,6 +172,7 @@ function LinkText({ text, onPress }: { text: string; onPress: () => void }) {
 }
 
 const styles = StyleSheet.create({
+  hero: { width: "100%", aspectRatio: 2, borderRadius: 12 },
   header: { flexDirection: "row", alignItems: "flex-start", gap: 8 },
   headerText: { flex: 1 },
   actions: { flexDirection: "row", gap: 8 },

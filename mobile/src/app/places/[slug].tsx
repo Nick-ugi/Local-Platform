@@ -13,7 +13,7 @@ export default function PlaceRoute() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
 
   return (
-    <DetailRoute kind="place" slug={slug} load={getPlace} titleOf={(place) => place.name}>
+    <DetailRoute kind="place" slug={slug} load={getPlace}>
       {(place, onViewOnMap) => <PlaceScreen place={place} onViewOnMap={onViewOnMap} />}
     </DetailRoute>
   );
