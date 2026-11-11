@@ -72,6 +72,8 @@ const VISITOR_DOT = "visitor-dot";
 const INK = "#171717";
 const PAPER = "#ffffff";
 const VISITOR_BLUE = "#1d4ed8";
+// The brand's blue (--color-brand in src/app/globals.css), for the clusters.
+const BRAND = "#0369a1";
 const RADIUS_PX = 14;
 /** A click this far outside a marker still counts, which makes the marker a 44 px target. */
 const REACH_PX = 22 - RADIUS_PX;
@@ -119,9 +121,10 @@ function addMarkerImages(map: MapboxMap) {
 }
 
 /**
- * One clustered source and five layers (MAP-09): a numbered dark circle for each cluster, then for
- * single markers a circle in their kind's colour (shared/src/categoryStyle.ts), a larger one with a
- * dark ring for the selected marker (wireframe m-map-place), and the kind's picture in white.
+ * One clustered source and five layers (MAP-09): a numbered circle in the brand's blue for each
+ * cluster, then for single markers a circle in their kind's colour (shared/src/categoryStyle.ts), a
+ * larger one with a dark ring for the selected marker (wireframe m-map-place), and the kind's
+ * picture in white.
  */
 function addMarkerLayers(map: MapboxMap) {
   addMarkerImages(map);
@@ -139,7 +142,7 @@ function addMarkerLayers(map: MapboxMap) {
     filter: ["has", "point_count"],
     paint: {
       "circle-radius": CLUSTER_RADIUS,
-      "circle-color": INK,
+      "circle-color": BRAND,
       "circle-stroke-color": PAPER,
       "circle-stroke-width": 2,
       "circle-emissive-strength": 1,

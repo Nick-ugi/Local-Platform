@@ -21,6 +21,7 @@ import Mapbox, {
 } from "@rnmapbox/maps";
 import { type ComponentProps, useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
+import { colors } from "../ui/theme";
 import type { Camera } from "./camera";
 import { MARKER_IMAGES } from "./markerImages";
 
@@ -54,9 +55,9 @@ const MOVE_MS = 800;
 
 // The markers look as they do on the web (web/src/components/map/MapView.tsx): a circle in their
 // kind's colour (shared/src/categoryStyle.ts) with a white ring and the kind's picture in white
-// (shared/src/map/markerIcon.ts). Markers close
-// together become a numbered dark cluster up to zoom 17 (MAP-09). Full emissive strength keeps them
-// bright in the Standard style's lighting.
+// (shared/src/map/markerIcon.ts). Markers close together become a numbered cluster in the brand's
+// blue up to zoom 17 (MAP-09). Full emissive strength keeps them bright in the Standard style's
+// lighting.
 const INK = "#171717";
 const PAPER = "#ffffff";
 const RADIUS = 14;
@@ -75,7 +76,7 @@ const NOT_CLUSTERED: Filter = ["!", ["has", "point_count"]];
 const clusterStyle: CircleLayerStyle = {
   // 18, 22 or 26 pt as the count grows.
   circleRadius: ["step", ["get", "point_count"], 18, 10, 22, 50, 26],
-  circleColor: INK,
+  circleColor: colors.brand,
   circleStrokeColor: PAPER,
   circleStrokeWidth: 2,
   circleEmissiveStrength: 1,

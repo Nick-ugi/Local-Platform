@@ -558,12 +558,14 @@ test("draws each marker in its kind's colour", async () => {
   expect(circles?.paint?.["circle-color"]).toEqual(["get", "color"]);
 });
 
-test("groups markers that are close together into numbered clusters until zoom 17", async () => {
+test("groups markers that are close together into numbered clusters in the brand's blue until zoom 17", async () => {
   renderMap({ markers: [kitchen, bakery] });
   const map = await loadedMap();
 
   expect(map.sources.markers.options).toMatchObject({ cluster: true, clusterMaxZoom: 17, clusterRadius: 44 });
   expect(map.layers.map((layer) => layer.id)).toEqual(expect.arrayContaining(["marker-clusters", "marker-cluster-counts"]));
+  const clusters = map.layers.find((layer) => layer.id === "marker-clusters");
+  expect(clusters?.paint?.["circle-color"]).toBe("#0369a1");
 });
 
 test("zooms in to where a clicked cluster comes apart, without selecting anything", async () => {

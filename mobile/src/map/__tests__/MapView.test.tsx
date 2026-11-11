@@ -200,7 +200,7 @@ function keysIn(id: "markers" | "selected-marker") {
   );
 }
 
-test("draws the markers in their kind's colour with their letters, clustered when zoomed out, up to zoom 17", () => {
+test("draws the markers in their kind's colour, clustered in the brand's blue when zoomed out, up to zoom 17", () => {
   const { update } = renderMap();
   expect(mockSdk.sources.markers.shape).toEqual(toFeatureCollection([]));
 
@@ -221,6 +221,8 @@ test("draws the markers in their kind's colour with their letters, clustered whe
   );
   const circles = mockSdk.layerProps["marker-circles"].style as { circleColor: unknown };
   expect(circles.circleColor).toEqual(["get", "color"]);
+  const clusters = mockSdk.layerProps["marker-clusters"].style as { circleColor: unknown };
+  expect(clusters.circleColor).toBe("#0369a1");
 });
 
 test("draws each marker's picture, one image for every kind at three pixels to a point", () => {
