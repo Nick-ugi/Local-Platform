@@ -1,4 +1,5 @@
 import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { useTranslations } from "use-intl";
 import { AuthProvider } from "@/auth/AuthProvider";
 import { VisitorPositionProvider } from "@/geo/VisitorPosition";
@@ -29,6 +30,9 @@ export default function RootLayout() {
     <AppIntlProvider>
       <AuthProvider>
         <VisitorPositionProvider>
+          {/* The screens are always light (userInterfaceStyle), so the clock and icons above them
+              are dark. Left alone, Android drew them white on the light background. */}
+          <StatusBar style="dark" />
           <RootStack />
         </VisitorPositionProvider>
       </AuthProvider>
