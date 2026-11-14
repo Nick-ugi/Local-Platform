@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import { afterEach, expect, test, vi } from "vitest";
 import { renderWithMessages } from "@/test/render";
-import LoginPage from "./page";
+import LoginPage, { dynamic } from "./page";
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ replace: vi.fn(), push: vi.fn(), refresh: vi.fn(), back: vi.fn() }),
@@ -22,6 +22,11 @@ test("Log in offers to email the operator about a forgotten password", () => {
     "href",
     "mailto:hello@queenstownlocal.example?subject=Forgotten%20password&body=The%20email%20address%20of%20my%20account%3A%20",
   );
+});
+
+test("Log in is rendered when it is requested, so the contact address set on the server reaches it", () => {
+  // A page prerendered by the build has no CONTACT_EMAIL, and would point to the issues for good.
+  expect(dynamic).toBe("force-dynamic");
 });
 
 test("without a contact address, Log in points to the project's issues, as the legal pages do", () => {

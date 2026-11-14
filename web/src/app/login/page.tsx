@@ -6,6 +6,10 @@ import { AuthForm } from "@/components/account/AuthForm";
 import { ForgotPassword } from "@/components/account/ForgotPassword";
 import { BackLink } from "@/components/nav/BackLink";
 
+// The contact address under the form comes from CONTACT_EMAIL when the page is requested, not when
+// it is built.
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Pages");
   // Not a page for search engines (docs/02-information-architecture.md, section 3).
