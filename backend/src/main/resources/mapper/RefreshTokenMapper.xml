@@ -16,4 +16,9 @@
 		RETURNING user_id
 	</select>
 
+	<delete id="deleteUnusable">
+		DELETE FROM refresh_token
+		WHERE expires_at &lt; #{now} OR revoked_at &lt; #{revokedBefore}
+	</delete>
+
 </mapper>

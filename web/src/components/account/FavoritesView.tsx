@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { PlaceCard } from "@/components/place/PlaceCard";
 import { getFavorites, removeFavorite } from "@/lib/auth/account";
 import { loginPath } from "@/lib/auth/next";
+import { Icon } from "@/components/ui/Icon";
 
 type State = { status: "loading" } | { status: "signedOut" } | { status: "failed" } | { status: "ready"; items: PlaceSummary[] };
 
@@ -51,7 +52,7 @@ export function FavoritesView() {
     return (
       <div className="flex flex-col items-center gap-4 px-4 py-10 text-center">
         <p className="text-neutral-600">{t("loginToSee")}</p>
-        <Link href={loginPath("/favorites")} className="rounded-lg bg-neutral-950 px-4 py-2 font-semibold text-white">
+        <Link href={loginPath("/favorites")} className="rounded-lg bg-brand px-4 py-2 font-semibold text-white">
           {tAccount("login")}
         </Link>
       </div>
@@ -71,7 +72,7 @@ export function FavoritesView() {
     return (
       <div className="flex flex-col items-center gap-4 px-4 py-10 text-center">
         <p className="text-neutral-600">{t("empty")}</p>
-        <Link href="/explore" className="rounded-lg border border-neutral-950 px-4 py-2 font-semibold">
+        <Link href="/explore" className="rounded-lg border border-brand text-brand px-4 py-2 font-semibold">
           {tState("goToExplore")}
         </Link>
       </div>
@@ -88,9 +89,9 @@ export function FavoritesView() {
             type="button"
             onClick={() => void remove(place)}
             aria-label={t("remove", { name: place.name })}
-            className="flex size-11 shrink-0 items-center justify-center text-2xl"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full hover:bg-neutral-100"
           >
-            <span aria-hidden="true">♥</span>
+            <Icon name="heart" filled className="size-6 text-rose-600" />
           </button>
         </li>
       ))}

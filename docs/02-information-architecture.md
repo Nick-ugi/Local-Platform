@@ -48,7 +48,8 @@ Web
       ├── Terms               /terms        (Should)
       ├── Login               /login        (Should)
       ├── Sign Up             /signup       (Should)
-      └── Favorites           /favorites    (Should)
+      ├── Favorites           /favorites    (Should)
+      └── Delete account      /account/delete   (로그인했을 때, Google Play 요구)
 ```
 
 ### App
@@ -71,7 +72,8 @@ App
  └── More (Tab)
       ├── About
       ├── Login / Sign Up                   (Should)
-      └── Favorites                         (Should)
+      ├── Favorites                         (Should)
+      └── Delete account                    (로그인했을 때, Google Play 요구)
 ```
 
 Search, Place Detail, Event Detail, Notice Detail은 Tab 위에 쌓이는 화면이다. 어느 Tab에서 열어도 뒤로 가면 원래 화면으로 돌아온다.
@@ -115,6 +117,7 @@ Admin은 Web과 분리된 별도의 앱이다.
 | Login | `/login` | 화면 | 제외 | USER-02 |
 | Sign Up | `/signup` | 화면 | 제외 | USER-01 |
 | Favorites | `/favorites` | 화면 | 제외 | FAV-02 |
+| Delete account | `/account/delete` | 화면 | 제외 | Google Play의 계정 삭제 요구 |
 | 전체 공통 | 없음 | 없음 | 없음 | NAV-01, NAV-02, COMMON-02 ~ COMMON-04, SEO-02 |
 | Admin | 2장의 Admin 구조 | 없음 | 제외 | ADMIN-01 ~ ADMIN-04 |
 

@@ -9,6 +9,8 @@ type Auth = {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  /** Deletes the account with its password again; rejects with the API's error, such as WRONG_PASSWORD. */
+  deleteAccount: (password: string) => Promise<void>;
   /**
    * The place a visitor pressed the heart of before logging in. The heart saves it once they are
    * back, signed in (wireframe m-login, 1).
@@ -47,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(await session.signup(email, password));
   }, []);
   const logout = useCallback(() => session.logout(), []);
+  const deleteAccount = useCallback((password: string) => session.deleteAccount(password), []);
 
   const value = useMemo<Auth>(
     () => ({
@@ -55,10 +58,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       login,
       signup,
       logout,
+      deleteAccount,
       pendingFavorite,
       setPendingFavorite,
     }),
-    [checking, user, login, signup, logout, pendingFavorite],
+    [checking, user, login, signup, logout, deleteAccount, pendingFavorite],
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

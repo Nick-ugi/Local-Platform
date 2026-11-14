@@ -3,28 +3,32 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { useAuth } from "@/auth/AuthProvider";
 import { openWebsite, webUrl } from "@/links/actions";
+import { Icon, type IconName } from "@/ui/Icon";
 import { colors } from "@/ui/theme";
 
-function Chevron() {
+/** A row's icon and name. */
+function Label({ icon, text }: { icon: IconName; text: string }) {
   return (
-    <Text style={styles.chevron} accessibilityElementsHidden importantForAccessibility="no">
-      ›
-    </Text>
+    <View style={styles.labelRow}>
+      <Icon name={icon} size={22} color={colors.brand} />
+      <Text style={styles.label}>{text}</Text>
+    </View>
   );
+}
+
+function Chevron() {
+  return <Icon name="chevron-forward" color={colors.faint} />;
 }
 
 /** Marks a row that leaves the app for the browser. */
 function Outward() {
-  return (
-    <Text style={styles.chevron} accessibilityElementsHidden importantForAccessibility="no">
-      ↗
-    </Text>
-  );
+  return <Icon name="open-outline" color={colors.faint} />;
 }
 
 /**
  * More (wireframe m-more): About, then Log in or the account with Log out (USER-02), Favorites
- * (FAV-02), and the web app's Privacy Policy and Terms of Use (MORE-03), which open in the browser.
+ * (FAV-02), Delete account once signed in (Google Play), and the web app's Privacy Policy and Terms
+ * of Use (MORE-03), which open in the browser.
  */
 export default function MoreTab() {
   const t = useTranslations("Pages");
@@ -32,20 +36,21 @@ export default function MoreTab() {
   const auth = useAuth();
   const router = useRouter();
   const legal = [
-    { label: t("privacy"), path: "/privacy" },
-    { label: t("terms"), path: "/terms" },
+    { label: t("privacy"), path: "/privacy", icon: "shield-checkmark-outline" as const },
+    { label: t("terms"), path: "/terms", icon: "document-text-outline" as const },
   ];
 
   return (
     <View style={styles.container}>
       <Link href="/about" asChild>
         <Pressable accessibilityRole="link" style={styles.row}>
-          <Text style={styles.label}>{t("about")}</Text>
+          <Label icon="information-circle-outline" text={t("about")} />
           <Chevron />
         </Pressable>
       </Link>
       {auth.status === "signedIn" ? (
         <View style={styles.row}>
+          <Icon name="person-circle-outline" size={22} color={colors.brand} />
           <Text style={styles.account} numberOfLines={1}>
             {tAccount("signedInAs", { email: auth.user?.email ?? "" })}
           </Text>
@@ -60,17 +65,25 @@ export default function MoreTab() {
           onPress={() => router.push("/login")}
           style={styles.row}
         >
-          <Text style={styles.label}>{tAccount("login")}</Text>
+          <Label icon="log-in-outline" text={tAccount("login")} />
           <Chevron />
         </Pressable>
       )}
       <Link href="/favorites" asChild>
         <Pressable accessibilityRole="link" style={styles.row}>
-          <Text style={styles.label}>{t("favorites")}</Text>
+          <Label icon="heart-outline" text={t("favorites")} />
           <Chevron />
         </Pressable>
       </Link>
-      {legal.map(({ label, path }) => (
+      {auth.status === "signedIn" ? (
+        <Link href="/delete-account" asChild>
+          <Pressable accessibilityRole="link" style={styles.row}>
+            <Label icon="trash-outline" text={t("deleteAccount")} />
+            <Chevron />
+          </Pressable>
+        </Link>
+      ) : null}
+      {legal.map(({ label, path, icon }) => (
         <Pressable
           key={path}
           accessibilityRole="link"
@@ -78,7 +91,7 @@ export default function MoreTab() {
           onPress={() => void openWebsite(webUrl(path))}
           style={styles.row}
         >
-          <Text style={styles.label}>{label}</Text>
+          <Label icon={icon} text={label} />
           <Outward />
         </Pressable>
       ))}
@@ -98,9 +111,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: colors.line,
   },
+  labelRow: { flex: 1, flexDirection: "row", alignItems: "center", gap: 14 },
   label: { fontSize: 16, fontWeight: "600", color: colors.text },
   account: { flex: 1, fontSize: 16, color: colors.muted },
   action: { minHeight: 44, justifyContent: "center" },
   actionText: { fontSize: 16, fontWeight: "600", textDecorationLine: "underline", color: colors.text },
-  chevron: { fontSize: 22, color: colors.faint },
 });

@@ -99,10 +99,11 @@ App은 토큰을 기기의 보안 저장소에 둔다. Web은 브라우저의 Ja
 | INVALID_REFRESH_TOKEN | 401 | Refresh Token이 없거나 만료되었거나 무효다. |
 | UNAUTHORIZED | 401 | 로그인이 필요하다. |
 | FORBIDDEN | 403 | 권한이 없다. |
+| WRONG_PASSWORD | 403 | 계정 삭제를 확인하는 비밀번호가 틀렸다. 세션은 그대로이므로 401이 아니다. |
 | NOT_FOUND | 404 | 대상이 없거나 `private`이다. 없는 경로도 여기에 해당한다. |
 | METHOD_NOT_ALLOWED | 405 | 지원하지 않는 Method다. |
 | EMAIL_ALREADY_USED | 409 | 이미 가입한 이메일이다. |
-| TOO_MANY_REQUESTS | 429 | 로그인이나 가입 시도가 너무 많다. 10분에 20번까지이고, 로그인은 주소와 이메일마다, 가입은 주소마다 센다. `Retry-After`(초) 뒤에 다시 시도한다. |
+| TOO_MANY_REQUESTS | 429 | 로그인이나 가입, 계정 삭제 시도가 너무 많다. 10분에 20번까지이고, 로그인은 주소와 이메일마다, 가입은 주소마다, 계정 삭제는 주소와 계정마다 센다. `Retry-After`(초) 뒤에 다시 시도한다. |
 | INTERNAL_ERROR | 500 | 서버 오류. `detail`에 내부 메시지를 담지 않는다. |
 
 표에 없는 오류도 같은 형식으로 응답한다. `code`는 4xx이면 `VALIDATION_FAILED`, 5xx이면 `INTERNAL_ERROR`다.
@@ -134,6 +135,7 @@ App은 토큰을 기기의 보안 저장소에 둔다. Web은 브라우저의 Ja
 | POST | `/auth/refresh` | 토큰 재발급 | 없음 | USER-02 |
 | POST | `/auth/logout` | 로그아웃 | 없음 | USER-02 |
 | GET | `/me` | 내 계정 | 로그인 | USER-02 |
+| DELETE | `/me` | 계정 삭제 | 로그인 | Google Play 요구 |
 | GET | `/me/favorites` | Favorite 목록 | 로그인 | FAV-02 |
 | PUT | `/me/favorites/{slug}` | Favorite 추가 | 로그인 | FAV-01 |
 | DELETE | `/me/favorites/{slug}` | Favorite 해제 | 로그인 | FAV-01 |
@@ -602,6 +604,23 @@ Web의 Next.js 서버가 `sitemap.xml`을 만들 때 호출한다. Place는 `pub
 ```json
 { "email": "name@example.com", "role": "user" }
 ```
+
+### DELETE /me
+
+계정을 지운다. Google Play는 가입할 수 있는 앱에 앱 안과 웹 양쪽의 계정 삭제를 요구한다. 휴대폰이 로그인된 채 남아 있어도 다른 사람이 지우지 못하게 비밀번호를 다시 받는다.
+
+```json
+{ "password": "correct horse battery" }
+```
+
+| 상태 | 경우 |
+|---|---|
+| 204 | 지웠다. 계정의 Favorite과 Refresh Token도 함께 지워진다. 같은 이메일로 다시 가입할 수 있다. |
+| 400 | `password`가 비어 있다. |
+| 403 | `WRONG_PASSWORD`: 비밀번호가 틀렸다. `FORBIDDEN`: Admin 계정이다. Admin은 운영자가 DB에서 지운다. |
+| 429 | 시도가 너무 많다. |
+
+지운 뒤에도 Access Token은 만료(15분)까지 남지만, 그 토큰의 `/me` 요청은 모두 401이다.
 
 ### GET /me/favorites
 

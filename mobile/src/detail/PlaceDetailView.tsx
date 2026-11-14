@@ -1,4 +1,5 @@
 import {
+  categoryStyle,
   displayUrl,
   formatDate,
   formatWeeklyHours,
@@ -11,6 +12,8 @@ import { type ReactNode, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { call, contactEmail, emailOperator, openDirections, openWebsite, shareLink, webUrl } from "@/links/actions";
+import { Icon } from "@/ui/Icon";
+import { KindPlaceholder } from "@/ui/KindArt";
 import { OpenBadge } from "@/ui/OpenBadge";
 import { PlaceImage } from "@/ui/PlaceImage";
 import { colors, TOUCH } from "@/ui/theme";
@@ -58,15 +61,27 @@ export function PlaceDetailView({
   }
 
   const actions = [
-    canCall && place.phone ? { label: t("call"), action: () => call(place.phone as string) } : null,
-    website ? { label: t("website"), action: () => openWebsite(website) } : null,
-    { label: t("directions"), action: () => openDirections(place, place.name) },
-    { label: t("share"), action: () => shareLink(place.name, `/places/${encodeURIComponent(place.slug)}`) },
+    canCall && place.phone
+      ? { label: t("call"), icon: "call-outline" as const, action: () => call(place.phone as string) }
+      : null,
+    website ? { label: t("website"), icon: "globe-outline" as const, action: () => openWebsite(website) } : null,
+    { label: t("directions"), icon: "navigate-outline" as const, action: () => openDirections(place, place.name) },
+    {
+      label: t("share"),
+      icon: "share-social-outline" as const,
+      action: () => shareLink(place.name, `/places/${encodeURIComponent(place.slug)}`),
+    },
   ].filter((item) => item !== null);
 
   return (
     <ScrollView style={detailStyles.scroll} contentContainerStyle={detailStyles.content}>
-      <PlaceImage url={place.imageUrl} label={place.name} style={detailStyles.image} />
+      <PlaceImage
+        url={place.imageUrl}
+        label={place.name}
+        style={detailStyles.image}
+        // The kind's picture stands in for a missing photo, as in the lists.
+        fallback={<KindPlaceholder look={categoryStyle(place)} style={styles.hero} emojiSize={64} />}
+      />
       <View style={styles.header}>
         <View style={styles.headerText}>
           <Text accessibilityRole="header" style={detailStyles.title}>
@@ -78,8 +93,9 @@ export function PlaceDetailView({
       </View>
 
       <View accessibilityLabel={t("actions")} style={styles.actions}>
-        {actions.map(({ label, action }) => (
+        {actions.map(({ label, icon, action }) => (
           <Pressable key={label} accessibilityRole="button" onPress={() => void run(action)} style={styles.action}>
+            <Icon name={icon} size={22} color={colors.brand} />
             <Text style={styles.actionText}>{label}</Text>
           </Pressable>
         ))}
@@ -156,19 +172,22 @@ function LinkText({ text, onPress }: { text: string; onPress: () => void }) {
 }
 
 const styles = StyleSheet.create({
+  hero: { width: "100%", aspectRatio: 2, borderRadius: 12 },
   header: { flexDirection: "row", alignItems: "flex-start", gap: 8 },
   headerText: { flex: 1 },
   actions: { flexDirection: "row", gap: 8 },
   action: {
     flex: 1,
-    minHeight: TOUCH,
+    minHeight: 64,
     paddingHorizontal: 4,
+    paddingVertical: 8,
+    alignItems: "center",
     justifyContent: "center",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.line,
+    gap: 4,
+    borderRadius: 12,
+    backgroundColor: colors.brandSoft,
   },
-  actionText: { fontSize: 13, fontWeight: "600", color: colors.text, textAlign: "center" },
+  actionText: { fontSize: 13, fontWeight: "600", color: colors.brand, textAlign: "center" },
   linkPress: { minHeight: TOUCH, justifyContent: "center", alignSelf: "flex-start" },
   link: { fontSize: 16, color: colors.link, textDecorationLine: "underline" },
   footer: { borderTopWidth: StyleSheet.hairlineWidth, borderColor: colors.line, paddingTop: 8, gap: 4 },

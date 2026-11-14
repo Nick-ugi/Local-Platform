@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 const tabClass =
-  "flex h-11 flex-1 items-center justify-center border-b-[3px] border-transparent font-semibold text-neutral-500 aria-[current=page]:border-neutral-950 aria-[current=page]:text-neutral-950";
+  "flex h-11 flex-1 items-center justify-center border-b-[3px] border-transparent font-semibold text-neutral-500 aria-[current=page]:border-brand aria-[current=page]:text-brand";
 
 /**
  * Notices and Events, the two halves of Local (wireframes m-notices, m-events, d-notices). Each

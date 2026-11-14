@@ -19,4 +19,7 @@ public interface RefreshTokenMapper {
 	 */
 	Optional<Long> revokeIfActive(@Param("tokenHash") String tokenHash, @Param("now") OffsetDateTime now);
 
+	/** Deletes the tokens that expired before {@code now} or were revoked before {@code revokedBefore}. */
+	int deleteUnusable(@Param("now") OffsetDateTime now, @Param("revokedBefore") OffsetDateTime revokedBefore);
+
 }

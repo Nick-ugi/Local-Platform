@@ -42,7 +42,7 @@ export function FilterChips({ selected, onToggle }: Props) {
           type="button"
           aria-pressed={selected.includes(key)}
           onClick={() => onToggle(key)}
-          className="flex h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-neutral-400 px-4 text-sm font-medium aria-pressed:border-neutral-950 aria-pressed:bg-neutral-950 aria-pressed:text-white"
+          className="flex h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-neutral-400 px-4 text-sm font-medium aria-pressed:border-brand aria-pressed:bg-brand aria-pressed:text-white"
         >
           <KindDot color={colorOf(key)} />
           {label(key)}

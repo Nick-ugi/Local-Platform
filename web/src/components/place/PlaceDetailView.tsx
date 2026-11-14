@@ -1,4 +1,5 @@
 import {
+  categoryStyle,
   displayUrl,
   formatDate,
   formatWeeklyHours,
@@ -13,13 +14,14 @@ import { useTranslations } from "next-intl";
 import { type ReactNode, Suspense } from "react";
 import { FavoriteButton } from "@/components/account/FavoriteButton";
 import { BackLink } from "@/components/nav/BackLink";
+import { KindPlaceholder } from "./KindArt";
 import { NearbyList } from "./NearbyList";
 import { OpenBadge } from "./OpenBadge";
 import { PlaceActions } from "./PlaceActions";
 import { PlaceImage } from "./PlaceImage";
 import { ViewOnMapLink } from "./ViewOnMapLink";
 
-const externalLinkClass = "text-blue-700 underline underline-offset-2";
+const externalLinkClass = "text-brand underline underline-offset-2";
 
 /**
  * Place detail (wireframes m-place and d-place). Rows the place has no value for are left out;
@@ -70,11 +72,18 @@ export function PlaceDetailView({
       </nav>
 
       <div className="contents md:flex md:flex-col md:gap-5">
-        {/* An image that is missing or does not load leaves no gap. */}
+        {/* An image that is missing or does not load gives way to the kind's picture, as on the cards. */}
         <PlaceImage
           src={place.imageUrl}
           alt={place.name}
           className="order-2 aspect-[16/9] w-full rounded-xl bg-neutral-200 object-cover md:order-none"
+          fallback={
+            <KindPlaceholder
+              look={categoryStyle(place)}
+              large
+              className="order-2 aspect-[2/1] w-full rounded-xl md:order-none md:aspect-[16/9]"
+            />
+          }
         />
 
         <header className="order-3 flex items-start gap-2 md:order-none">
@@ -100,7 +109,7 @@ export function PlaceDetailView({
           <p>{place.address}</p>
           <ViewOnMapLink
             place={place}
-            className="flex min-h-11 items-center self-start font-semibold text-blue-700 underline underline-offset-2"
+            className="flex min-h-11 items-center self-start font-semibold text-brand underline underline-offset-2"
           />
         </Row>
 

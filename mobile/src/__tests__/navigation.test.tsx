@@ -1,4 +1,5 @@
 import { act, fireEvent, renderRouter, screen, waitFor, within } from "expo-router/testing-library";
+import * as SecureStore from "expo-secure-store";
 import { Linking } from "react-native";
 import { getPlace } from "@/api/places";
 import RootLayout from "@/app/_layout";
@@ -8,6 +9,7 @@ import MapTab from "@/app/(tabs)/index";
 import LocalTab from "@/app/(tabs)/local";
 import MoreTab from "@/app/(tabs)/more";
 import AboutScreen from "@/app/about";
+import DeleteAccountRoute from "@/app/delete-account";
 import EventRoute from "@/app/events/[slug]";
 import FavoritesRoute from "@/app/favorites";
 import LoginRoute from "@/app/login";
@@ -15,6 +17,7 @@ import SignupRoute from "@/app/signup";
 import NoticeRoute from "@/app/notices/[slug]";
 import PlaceRoute from "@/app/places/[slug]";
 import SearchRoute from "@/app/search";
+import { resetForTests } from "@/auth/session";
 import { clearRecentPlaces, loadRecentPlaces } from "@/places/recentPlaces";
 
 // The Map tab asks for the position when it opens. Here that question is never answered, so the
@@ -82,6 +85,7 @@ const routes = {
   "(tabs)/local": LocalTab,
   "(tabs)/more": MoreTab,
   about: AboutScreen,
+  "delete-account": DeleteAccountRoute,
   search: SearchRoute,
   "places/[slug]": PlaceRoute,
   "events/[slug]": EventRoute,
@@ -118,6 +122,14 @@ test("opens on the Map tab with Map, Explore, Local and More in order", async ()
     "More, tab, 4 of 4",
   ]);
   expect(tab("Map")).toBeSelected();
+  // Each tab has its icon, filled for the tab that is open.
+  for (const icon of ["icon-map", "icon-list-outline", "icon-calendar-outline", "icon-ellipsis-horizontal-outline"]) {
+    expect(screen.getByTestId(icon)).toBeTruthy();
+  }
+
+  fireEvent.press(tab("Explore"));
+  expect(screen.getByTestId("icon-map-outline")).toBeTruthy();
+  expect(screen.getByTestId("icon-list")).toBeTruthy();
 });
 
 test("the tabs lead to Explore, Local and More", async () => {
@@ -160,6 +172,7 @@ test("More lists About, Log in, Favorites, then Privacy Policy and Terms of Use,
       links.indexOf(screen.getByRole("link", { name: new RegExp(`^${name}`) })),
     );
     expect(order).toEqual([0, 1, 2, 3, 4]);
+    expect(screen.queryByRole("link", { name: /Delete account/ })).toBeNull();
 
     await act(async () => fireEvent.press(screen.getByRole("link", { name: /^Privacy Policy/ })));
     expect(openURL).toHaveBeenLastCalledWith("https://queenstown.example/privacy");
@@ -182,6 +195,29 @@ test("a place's screen is remembered among the places seen lately", async () => 
       { slug: "harbour-coffee", name: "Harbour Coffee", category: "cafe", subtype: null },
     ]),
   );
+});
+
+test("signed in, More leads to Delete account", async () => {
+  await SecureStore.setItemAsync("auth.refreshToken", "r0");
+  const fetchMock = jest.fn(async () => ({
+    ok: true,
+    status: 200,
+    json: async () => ({ accessToken: "a", refreshToken: "r", expiresIn: 900, user: { email: "kiri@example.com", role: "user" } }),
+    text: async () => "",
+  }));
+  globalThis.fetch = fetchMock as unknown as typeof fetch;
+  try {
+    renderRouter(routes, { initialUrl: "/more" });
+    expect(await screen.findByText("Signed in as kiri@example.com")).toBeOnTheScreen();
+
+    fireEvent.press(screen.getByRole("link", { name: /Delete account/ }));
+
+    expect(screen).toHavePathname("/delete-account");
+    expect(await screen.findByText(/This deletes your account \(kiri@example\.com\)/)).toBeOnTheScreen();
+  } finally {
+    await SecureStore.deleteItemAsync("auth.refreshToken");
+    resetForTests();
+  }
 });
 
 test("the search box on the Map leads to Search, and a search names its words", async () => {

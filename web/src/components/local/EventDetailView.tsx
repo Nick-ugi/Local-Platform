@@ -5,6 +5,7 @@ import { BackLink } from "@/components/nav/BackLink";
 import { PlaceImage } from "@/components/place/PlaceImage";
 import { ShareButton } from "@/components/place/ShareButton";
 import { ViewOnMapLink } from "@/components/place/ViewOnMapLink";
+import { Icon } from "@/components/ui/Icon";
 import { DetailRow, EndedNotice, sideActionClass } from "./DetailParts";
 
 /**
@@ -69,10 +70,10 @@ export function EventDetailView({ event }: { event: EventDetail }) {
                 href={sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center text-blue-700 underline underline-offset-2"
+                className="inline-flex min-h-11 items-center gap-1 text-brand underline underline-offset-2"
               >
                 {t("eventPage")}
-                <span aria-hidden="true">&nbsp;↗</span>
+                <Icon name="external" className="size-4" />
                 <span className="sr-only"> {t("newTab")}</span>
               </a>
             </p>
@@ -84,7 +85,7 @@ export function EventDetailView({ event }: { event: EventDetail }) {
         <div className="order-10 md:order-none">
           <ShareButton
             title={event.title}
-            className="flex min-h-11 w-full items-center justify-center rounded-lg border border-neutral-950 font-semibold"
+            className="flex min-h-11 w-full items-center justify-center rounded-lg border border-brand text-brand font-semibold"
           />
         </div>
       </div>

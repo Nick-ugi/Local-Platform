@@ -16,4 +16,7 @@ public interface UserMapper {
 
 	Optional<UserAccount> findById(long id);
 
+	/** Deletes an account; its favorites and refresh tokens go with it (ON DELETE CASCADE). */
+	int delete(long id);
+
 }

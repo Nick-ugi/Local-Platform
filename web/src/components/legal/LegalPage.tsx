@@ -2,9 +2,7 @@ import { formatDate } from "@queenstown/shared";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 import { BackLink } from "@/components/nav/BackLink";
-import { contactEmail } from "@/lib/contact";
-
-const ISSUES = "https://github.com/Nick-ugi/Local-Platform/issues";
+import { contactEmail, ISSUES_URL } from "@/lib/contact";
 
 const linkClass = "font-semibold underline";
 
@@ -36,7 +34,7 @@ export function LegalPage({ title, updated, children }: { title: string; updated
             })
           : t.rich("contactIssues", {
               link: (chunks) => (
-                <a href={ISSUES} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                <a href={ISSUES_URL} target="_blank" rel="noopener noreferrer" className={linkClass}>
                   {chunks}
                 </a>
               ),

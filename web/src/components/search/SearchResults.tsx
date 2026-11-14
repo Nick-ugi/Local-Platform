@@ -25,7 +25,7 @@ export function SearchResults({ query, result }: Props) {
     return (
       <div className="flex flex-col items-center gap-4 px-4 py-10 text-center md:px-8">
         <p className="text-neutral-600 [overflow-wrap:anywhere]">{t("empty", { q })}</p>
-        <Link href="/explore" className="rounded-lg border border-neutral-950 px-4 py-2 font-semibold">
+        <Link href="/explore" className="rounded-lg border border-brand text-brand px-4 py-2 font-semibold">
           {tState("goToExplore")}
         </Link>
       </div>

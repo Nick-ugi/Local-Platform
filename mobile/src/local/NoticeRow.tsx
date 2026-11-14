@@ -1,5 +1,6 @@
 import type { NoticeSummary } from "@queenstown/shared";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Icon } from "@/ui/Icon";
 import { colors } from "@/ui/theme";
 import { NoticeBadges } from "./NoticeBadges";
 import { useNoticePeriodText } from "./useNoticePeriod";
@@ -15,9 +16,7 @@ export function NoticeRow({ notice, onPress }: { notice: NoticeSummary; onPress:
         <Text style={styles.title}>{notice.title}</Text>
         <Text style={styles.line}>{periodText(notice.startsAt, notice.endsAt)}</Text>
       </View>
-      <Text style={styles.chevron} accessibilityElementsHidden importantForAccessibility="no">
-        ›
-      </Text>
+      <Icon name="chevron-forward" color={colors.faint} />
     </Pressable>
   );
 }
@@ -36,5 +35,4 @@ const styles = StyleSheet.create({
   text: { flex: 1, gap: 4 },
   title: { fontSize: 17, fontWeight: "700", color: colors.text },
   line: { fontSize: 14, color: colors.muted },
-  chevron: { fontSize: 22, color: colors.faint },
 });

@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/* The brand's blue, as on the app icon and the app's splash screen: what is selected and the main
+   action of a page. Text stays near black. */
+@theme {
+  --color-brand: #0369a1;
+  --color-brand-dark: #075985;
+  --color-brand-soft: #e0f2fe;
+}
+
 /* System fonts until the visual design is decided. */
 body {
   background: #ffffff;

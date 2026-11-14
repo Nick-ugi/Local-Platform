@@ -201,6 +201,30 @@ test("a visitor saves the place on the way through sign up, then removes it and 
   await expect(page.getByRole("link", { name: "Log in" })).toBeVisible();
 });
 
+test("a visitor deletes their account at the address given to Google Play, and cannot log in with it again", async ({ page }) => {
+  const email = `e2e-delete-${RUN}@check.test`;
+  const password = `delete-password-${RUN}`;
+  await page.goto("/account/delete");
+  await page.getByRole("link", { name: "Log in" }).click();
+  await expect(page).toHaveURL(/\/login\?next=%2Faccount%2Fdelete/);
+  await page.getByRole("link", { name: "Create account" }).click();
+  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Password").fill(password);
+  await page.getByRole("button", { name: "Create account" }).click();
+  await expect(page).toHaveURL(/\/account\/delete$/);
+
+  await page.getByLabel("Password").fill("not-the-password");
+  await page.getByRole("button", { name: "Delete my account" }).click();
+  await expect(page.getByRole("alert").filter({ hasText: "That password is wrong." })).toBeVisible();
+
+  await page.getByLabel("Password").fill(password);
+  await page.getByRole("button", { name: "Delete my account" }).click();
+  await expect(page.getByRole("heading", { name: "Your account has been deleted." })).toBeVisible();
+
+  const login = await page.request.post("/api/auth/login", { data: { email, password } });
+  expect(login.status()).toBe(401);
+});
+
 test("too many wrong passwords for one account are refused with a message", async ({ page }) => {
   const email = `e2e-limit-${RUN}@check.test`;
   for (let i = 0; i < 20; i++) {

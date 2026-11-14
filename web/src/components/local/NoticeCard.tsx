@@ -1,5 +1,6 @@
 import type { NoticeSummary } from "@queenstown/shared";
 import Link from "next/link";
+import { Icon } from "@/components/ui/Icon";
 import { NoticeBadges } from "./NoticeBadges";
 import { NoticePeriodText } from "./NoticePeriodText";
 
@@ -17,9 +18,7 @@ export function NoticeCard({ notice }: { notice: NoticeSummary }) {
           <NoticePeriodText startsAt={notice.startsAt} endsAt={notice.endsAt} />
         </p>
       </div>
-      <span aria-hidden="true" className="text-xl text-neutral-500">
-        ›
-      </span>
+      <Icon name="chevron-right" className="size-5 text-neutral-500" />
     </Link>
   );
 }

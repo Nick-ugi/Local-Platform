@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { type FormEvent, Suspense, useRef, useState } from "react";
 import { searchPath } from "@/lib/places/listUrl";
+import { Icon } from "@/components/ui/Icon";
 
 /**
  * The form itself. It is an ordinary GET form to /search, so it works before the scripts have
@@ -36,8 +37,9 @@ function SearchForm({ initial }: { initial: string }) {
       action="/search"
       method="get"
       onSubmit={submit}
-      className="flex h-11 items-center rounded-full border border-neutral-400 bg-white pl-4 focus-within:border-neutral-950"
+      className="flex h-11 items-center gap-2 rounded-full border border-neutral-400 bg-white pl-4 focus-within:border-brand"
     >
+      <Icon name="search" className="size-[18px] text-neutral-500" />
       <input
         ref={input}
         type="search"
@@ -56,9 +58,9 @@ function SearchForm({ initial }: { initial: string }) {
           type="button"
           aria-label={t("clear")}
           onClick={clear}
-          className="flex size-11 shrink-0 items-center justify-center text-xl leading-none text-neutral-600"
+          className="flex size-11 shrink-0 items-center justify-center text-neutral-500"
         >
-          <span aria-hidden="true">×</span>
+          <Icon name="close" className="size-5" />
         </button>
       ) : (
         <span className="w-4 shrink-0" />

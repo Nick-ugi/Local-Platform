@@ -1,7 +1,7 @@
 import type { MapMarker, MarkerKind } from '../api'
 import { categoryStyle } from '../categoryStyle'
-import type { Category } from '../codes'
 import type { LatLng } from '../geo'
+import { markerIcon, markerImageName } from './markerIcon'
 import { keyOf } from './selection'
 
 // The API and the app's own types say latitude and longitude. GeoJSON and Mapbox want
@@ -14,8 +14,8 @@ export interface MarkerProperties {
   /** "event:lakefront-night-market": slugs are unique within a kind only (selection.ts). */
   key: string
   kind: MarkerKind
-  /** The letter drawn inside the marker until the categories get icons. */
-  label: string
+  /** The name of the white picture drawn inside the marker (markerIcon.ts). */
+  icon: string
   /** The marker's fill: its kind's colour (categoryStyle.ts), the same as its chip's dot. */
   color: string
 }
@@ -34,19 +34,6 @@ interface PointCollection<P> {
 export type MarkerCollection = PointCollection<MarkerProperties>
 export type PositionCollection = PointCollection<Record<string, never>>
 
-// The wireframes mark a public facility with P and a notice with "!" (m-map-notice).
-const EVENT_LABEL = 'E'
-const NOTICE_LABEL = '!'
-
-const LABELS: Record<Category, string> = {
-  food: 'F',
-  cafe: 'C',
-  bar: 'B',
-  activity: 'A',
-  shopping: 'S',
-  facility: 'P',
-}
-
 export function toLngLat(position: LatLng): LngLat {
   return [position.longitude, position.latitude]
 }
@@ -61,7 +48,7 @@ export function toFeatureCollection(markers: readonly MapMarker[]): MarkerCollec
       properties: {
         key: keyOf(marker),
         kind: marker.kind,
-        label: marker.kind === 'place' ? LABELS[marker.category] : marker.kind === 'event' ? EVENT_LABEL : NOTICE_LABEL,
+        icon: markerImageName(markerIcon(marker)),
         color: categoryStyle(marker.kind === 'place' ? marker : marker.kind).color,
       },
     })),

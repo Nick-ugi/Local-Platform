@@ -84,15 +84,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: colors.ink,
+    borderColor: colors.brand,
   },
-  sideText: { fontSize: 14, fontWeight: "600", color: colors.ink, textAlign: "center" },
+  sideText: { fontSize: 14, fontWeight: "600", color: colors.brand, textAlign: "center" },
   wide: {
     minHeight: TOUCH,
     justifyContent: "center",
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: colors.ink,
+    borderColor: colors.brand,
   },
   ended: { backgroundColor: colors.fill, borderRadius: 8, paddingHorizontal: 16, paddingVertical: 12, fontWeight: "600" },
   updated: {

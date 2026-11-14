@@ -1,6 +1,7 @@
 import type { PlaceDetail } from "@queenstown/shared";
 import { expect, test } from "vitest";
 import { placeMetadata } from "./placeMetadata";
+import { DEFAULT_SHARE_IMAGE } from "./shareImage";
 
 const place: PlaceDetail = {
   slug: "lakeside-kitchen",
@@ -72,12 +73,12 @@ test("adds the image when there is a safe one", () => {
   expect(metadata.twitter).toMatchObject({ card: "summary_large_image" });
 });
 
-test("leaves the image out when there is no safe one", () => {
+test("shares the site's own picture when the place has no safe one, so the link still has a preview", () => {
   for (const imageUrl of [null, "javascript:alert(1)"]) {
     const metadata = placeMetadata({ ...place, imageUrl }, labels);
 
-    expect(metadata.openGraph?.images).toBeUndefined();
-    expect(metadata.twitter).toMatchObject({ card: "summary" });
+    expect(metadata.openGraph?.images).toEqual([DEFAULT_SHARE_IMAGE]);
+    expect(metadata.twitter).toMatchObject({ card: "summary_large_image" });
   }
 });
 

@@ -10,6 +10,8 @@ public enum ErrorCode {
 	INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED),
 	UNAUTHORIZED(HttpStatus.UNAUTHORIZED),
 	FORBIDDEN(HttpStatus.FORBIDDEN),
+	/** The password that confirms an account's deletion is wrong. Not 401: the session is still good. */
+	WRONG_PASSWORD(HttpStatus.FORBIDDEN),
 	NOT_FOUND(HttpStatus.NOT_FOUND),
 	METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED),
 	EMAIL_ALREADY_USED(HttpStatus.CONFLICT),

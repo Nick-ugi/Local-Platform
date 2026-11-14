@@ -22,7 +22,7 @@ export default function ErrorPage({ retry }: Props) {
       <button
         type="button"
         onClick={() => retry()}
-        className="rounded-lg border border-neutral-950 bg-neutral-950 px-4 py-2 font-semibold text-white"
+        className="rounded-lg border border-brand bg-brand px-4 py-2 font-semibold text-white"
       >
         {t("retry")}
       </button>

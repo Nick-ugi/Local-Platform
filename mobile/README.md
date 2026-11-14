@@ -101,6 +101,30 @@ npm run typecheck -w mobile
 
 저장소 루트에서 `npm test`와 `npm run lint`를 실행하면 `shared`, `web`과 함께 돈다.
 
+## 스토어 준비 (Android)
+
+코드와 설정은 준비되어 있다. 실제 빌드와 제출은 Render 배포로 API 주소가 정해진 뒤에 한다. iOS는 Apple Developer Program 계정이 생긴 뒤에 한다.
+
+이미 된 것:
+
+- 계정 삭제: 앱의 More → Delete account, Web의 `/account/delete`(Google Play에 적을 주소). 즐겨찾기도 함께 지워진다.
+- 아이콘과 스플래시: `assets/brand`의 SVG 원본, 호수색 `#0369a1` 배경의 흰 지도 핀.
+- 빌드 설정: `eas.json`의 `development`(개발 빌드 APK), `preview`(내부 배포 APK), `production`(Play용 AAB, 버전 코드 자동 증가). `preview`와 `production`은 `APP_VARIANT=production`이라 http를 막는다.
+- 권한: 위치(앱을 쓰는 동안)와 인터넷만. 저장소 읽기 · 쓰기, 다른 앱 위에 그리기, 진동은 `app.config.ts`의 `blockedPermissions`로 뺐다.
+
+할 일:
+
+1. [expo.dev](https://expo.dev) 계정을 만들고 `mobile`에서 `npx eas-cli@latest login`, `npx eas-cli@latest init`. `app.config.ts`가 TypeScript라 프로젝트 ID를 자동으로 쓰지 못한다. 안내에 나오는 `extra.eas.projectId`를 `app.config.ts`에 직접 넣는다.
+2. EAS 대시보드의 Environment variables에서 `preview`와 `production` 환경에 넣는다: `EXPO_PUBLIC_API_BASE_URL`(배포한 API의 https 주소), `EXPO_PUBLIC_SITE_URL`(Web 주소), `EXPO_PUBLIC_MAPBOX_TOKEN`, `EXPO_PUBLIC_CONTACT_EMAIL`. 모두 앱 안에 보이는 공개 값이다. Mapbox 토큰은 Web과 따로 앱용 공개 토큰을 만들어 두면 하나를 바꿔도 다른 쪽이 멈추지 않는다.
+3. 시험용 APK: `npx eas-cli@latest build --platform android --profile preview`. 빌드 페이지의 링크로 휴대폰에 설치한다.
+4. Play용 AAB: `npx eas-cli@latest build --platform android --profile production`. Play Console에서 앱을 만들고 첫 AAB는 직접 올린다. 그 뒤로는 서비스 계정 키를 연결해 `npx eas-cli@latest submit --platform android --profile production`(내부 테스트 트랙).
+5. Play Console에 적는 것:
+   - 앱 이름 Queenstown Local, 패키지 `com.queenstownlocal.app`
+   - 개인정보 처리방침: `https://<Web 주소>/privacy`
+   - 계정 삭제: `https://<Web 주소>/account/delete`, 앱 안에서는 More → Delete account
+   - 데이터 보안: 수집하는 것은 이메일 주소(계정)와 위치(대략 · 정확, 앱 기능, 서버에 저장하지 않음)와 저장한 장소(앱 기능). 제3자와 공유하지 않는다. 전송은 암호화된다(https). 계정 삭제를 요청할 수 있다.
+   - 광고 없음, 콘텐츠 등급 설문, 대상 연령
+
 ## 구조
 
 ```text

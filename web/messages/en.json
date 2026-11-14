@@ -190,7 +190,20 @@
     "shortPassword": "Use at least 8 characters.",
     "failed": "We couldn't sign you in. Please try again.",
     "favorites": "Favorites",
-    "tooMany": "Too many tries. Wait a few minutes and try again."
+    "tooMany": "Too many tries. Wait a few minutes and try again.",
+    "deleteAccount": "Delete account",
+    "deleteTitle": "Delete your account",
+    "deleteBody": "This deletes your account ({email}) and your saved places. It can't be undone. Enter your password to confirm.",
+    "deleteLogin": "Log in to delete your account.",
+    "deleteConfirm": "Delete my account",
+    "deleted": "Your account has been deleted.",
+    "wrongPassword": "That password is wrong.",
+    "deleteFailed": "We couldn't delete your account. Please try again.",
+    "forgotPassword": "Forgot your password?",
+    "forgotEmail": "Email us",
+    "forgotIssues": "Ask on GitHub Issues",
+    "forgotSubject": "Forgotten password",
+    "forgotBody": "The email address of my account: "
   },
   "Favorites": {
     "save": "Save to favorites",
@@ -209,21 +222,21 @@
   },
   "Privacy": {
     "description": "What Queenstown Local collects, why, and how to have it removed.",
-    "intro": "This policy explains what Queenstown Local collects when you use the website and what it is used for. You can use the map, lists and details without an account.",
+    "intro": "This policy explains what Queenstown Local collects when you use the website or the app and what it is used for. You can use the map, lists and details without an account.",
     "collectTitle": "What we collect",
     "account": "If you create an account: your email address, your password stored only as a one-way hash, and the places you save as favourites.",
     "tokens": "While you are signed in: sign-in tokens. The long-lived one is stored only as a hash and stops working after 30 days or when you log out.",
     "logs": "Request logs kept by our servers and hosting providers, which include your IP address. They are used to keep the service secure, for example to slow down repeated sign-in attempts, and to fix problems.",
     "locationTitle": "Your location",
-    "location": "Only if you press the location button, your browser shares your position with the page. It is used to show where you are and to sort places by distance, and it is sent with those requests. It is not stored.",
+    "location": "On the website, only if you press the location button, your browser shares your position with the page. In the app, your phone asks you once whether to share it while you use the app. Either way it is used to show where you are and to sort places by distance, and it is sent with those requests. It is not stored.",
     "cookiesTitle": "Cookies and storage",
-    "cookies": "Cookies keep you signed in. The ones that hold your sign-in cannot be read by the page's scripts; one more, which holds nothing but the fact that you are signed in, can be. Your browser also keeps the map position for the current tab. There are no advertising or tracking cookies.",
+    "cookies": "On the website, cookies keep you signed in. The ones that hold your sign-in cannot be read by the page's scripts; one more, which holds nothing but the fact that you are signed in, can be. Your browser also keeps the map position for the current tab. In the app, your sign-in and the places you viewed lately are kept in your phone's secure storage and stay on your phone. There are no advertising or tracking cookies.",
     "providersTitle": "Who else is involved",
     "providers": "The website and its database run with hosting providers (currently Render and Neon). Maps come from Mapbox, which receives the map requests from your browser, including your IP address. Each provider has its own privacy policy.",
     "keepTitle": "How long we keep it",
-    "keep": "Your account and favourites are kept until you ask us to delete them. You can remove a favourite at any time with its heart.",
+    "keep": "Your account and favourites are kept until you delete your account or ask us to. You can remove a favourite at any time with its heart.",
     "choicesTitle": "Deleting your account",
-    "choices": "To delete your account or to get a copy of what we hold about you, contact us. We will reply within 30 days."
+    "choices": "You can delete your account and your favourites yourself, at once: in the app or on the website, go to More → Delete account, or use the <link>Delete account page</link>. To get a copy of what we hold about you, or if you cannot sign in, contact us. We will reply within 30 days."
   },
   "Terms": {
     "description": "The terms for using Queenstown Local.",

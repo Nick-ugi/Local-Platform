@@ -8,7 +8,7 @@ export default function EventRoute() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
 
   return (
-    <DetailRoute kind="event" slug={slug} load={getEvent} titleOf={(event) => event.title}>
+    <DetailRoute kind="event" slug={slug} load={getEvent}>
       {(event, onViewOnMap) => <EventDetailView event={event} onViewOnMap={onViewOnMap} />}
     </DetailRoute>
   );

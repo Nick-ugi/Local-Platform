@@ -9,7 +9,7 @@ type Props = {
   pages: number;
 };
 
-const linkClass = "flex h-11 items-center rounded-lg border border-neutral-950 px-4 font-semibold";
+const linkClass = "flex h-11 items-center rounded-lg border border-brand text-brand px-4 font-semibold";
 
 /** The way to the neighbouring pages of a list. A list of one page has none. */
 export function Pagination({ path, page, pages }: Props) {

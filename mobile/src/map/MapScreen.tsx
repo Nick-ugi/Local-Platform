@@ -19,6 +19,7 @@ import type { LocationResult } from "@/geo/location";
 import { type LocationProblem, useVisitorPosition } from "@/geo/VisitorPosition";
 import { Chips } from "@/ui/Chips";
 import { SearchBar } from "@/ui/SearchBar";
+import { Icon } from "@/ui/Icon";
 import { colors, TOUCH } from "@/ui/theme";
 import { useSlow } from "@/ui/useSlow";
 import { type Camera, DEFAULT_CAMERA, LOCATE_ZOOM, PLACE_ZOOM } from "./camera";
@@ -179,7 +180,7 @@ export function MapScreen({ target, onTargetDone, onOpenDetail, onSearch, search
               onPress={onSearchClear}
               style={styles.clear}
             >
-              <Text style={styles.clearText}>×</Text>
+              <Icon name="close" size={22} color={colors.muted} />
             </Pressable>
           </View>
         ) : (
@@ -250,7 +251,6 @@ const styles = StyleSheet.create({
   results: { flexDirection: "row", alignItems: "center", gap: 8, paddingLeft: 16, paddingRight: 8 },
   resultsText: { flex: 1, fontSize: 16, fontWeight: "600", color: colors.text },
   clear: { width: TOUCH, height: TOUCH, alignItems: "center", justifyContent: "center" },
-  clearText: { fontSize: 24, color: colors.muted },
   mapArea: { flex: 1 },
   centred: { flex: 1, alignItems: "center", justifyContent: "center", padding: 32 },
   message: { fontSize: 16, color: colors.muted, textAlign: "center" },

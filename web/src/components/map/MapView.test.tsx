@@ -1,4 +1,4 @@
-import { type MapMarker, toFeatureCollection } from "@queenstown/shared";
+import { MARKER_ICONS, type MapMarker, toFeatureCollection } from "@queenstown/shared";
 import { act, render, waitFor } from "@testing-library/react";
 import type { ComponentProps } from "react";
 import { beforeEach, expect, test, vi } from "vitest";
@@ -24,7 +24,10 @@ const { FakeMap } = vi.hoisted(() => {
         getClusterExpansionZoom: (id: number, callback: (error: Error | null, zoom: number) => void) => void;
       }
     > = {};
-    layers: { id: string; source?: string; paint?: Record<string, unknown> }[] = [];
+    layers: { id: string; source?: string; layout?: Record<string, unknown>; paint?: Record<string, unknown> }[] = [];
+    /** Pictures asked for, with the callback that hands each one over. */
+    imageRequests: { url: string; callback: (error: Error | null, image?: unknown) => void }[] = [];
+    images: Record<string, { image: unknown; options: unknown }> = {};
     easings: unknown[] = [];
     filters: Record<string, unknown> = {};
     canvas = { style: { cursor: "" } };
@@ -81,6 +84,19 @@ const { FakeMap } = vi.hoisted(() => {
     getSource(id: string) {
       this.mustBeAlive();
       return this.sources[id];
+    }
+
+    loadImage(url: string, callback: (error: Error | null, image?: unknown) => void) {
+      this.imageRequests.push({ url, callback });
+    }
+
+    hasImage(name: string) {
+      return name in this.images;
+    }
+
+    addImage(name: string, image: unknown, options: unknown) {
+      this.mustBeAlive();
+      this.images[name] = { image, options };
     }
 
     addLayer(layer: { id: string; source?: string; filter?: unknown; paint?: Record<string, unknown> }) {
@@ -220,14 +236,35 @@ test("draws the markers once the map has loaded", async () => {
   act(() => map.fire("load"));
 
   expect(dataOf(map, "markers")).toEqual(toFeatureCollection([kitchen, bakery]));
-  // Clusters and their counts, then each marker and its letter (MAP-09). The selected marker has a
+  // Clusters and their counts, then each marker and its picture (MAP-09). The selected marker has a
   // source of its own.
   expect(map.layers.filter((layer) => layer.source === "markers").map((layer) => layer.id)).toEqual([
     "marker-clusters",
     "marker-cluster-counts",
     "marker-circles",
-    "marker-labels",
+    "marker-icons",
   ]);
+});
+
+test("draws each marker's picture, which it loads from the site at three pixels to a point", async () => {
+  renderMap();
+  const map = await loadedMap();
+
+  expect(map.imageRequests.map((request) => request.url)).toEqual(MARKER_ICONS.map((icon) => `/markers/${icon}.png`));
+  const picture = { width: 48, height: 48 };
+  act(() => {
+    for (const request of map.imageRequests) {
+      request.callback(request.url === "/markers/cafe.png" ? new Error("404") : null, picture);
+    }
+  });
+
+  expect(map.images["marker-food"]).toEqual({ image: picture, options: { pixelRatio: 3 } });
+  // A picture that does not load leaves its markers as plain circles.
+  expect(map.images["marker-cafe"]).toBeUndefined();
+  const icons = map.layers.find((layer) => layer.id === "marker-icons");
+  expect(icons?.layout?.["icon-image"]).toEqual(["get", "icon"]);
+  const selected = map.layers.find((layer) => layer.id === "marker-selected-icon");
+  expect(selected?.layout?.["icon-size"]).toBeGreaterThan(1);
 });
 
 test("updates the data when the markers change", async () => {
@@ -521,12 +558,14 @@ test("draws each marker in its kind's colour", async () => {
   expect(circles?.paint?.["circle-color"]).toEqual(["get", "color"]);
 });
 
-test("groups markers that are close together into numbered clusters until zoom 17", async () => {
+test("groups markers that are close together into numbered clusters in the brand's blue until zoom 17", async () => {
   renderMap({ markers: [kitchen, bakery] });
   const map = await loadedMap();
 
   expect(map.sources.markers.options).toMatchObject({ cluster: true, clusterMaxZoom: 17, clusterRadius: 44 });
   expect(map.layers.map((layer) => layer.id)).toEqual(expect.arrayContaining(["marker-clusters", "marker-cluster-counts"]));
+  const clusters = map.layers.find((layer) => layer.id === "marker-clusters");
+  expect(clusters?.paint?.["circle-color"]).toBe("#0369a1");
 });
 
 test("zooms in to where a clicked cluster comes apart, without selecting anything", async () => {

@@ -4,12 +4,13 @@ import type { KindStyle } from "@queenstown/shared";
  * What stands in for a missing photo: the kind's colour, lightly, with its picture in the middle
  * (shared/src/categoryStyle.ts). Decorative: the name next to it says what the place is.
  */
-export function KindPlaceholder({ look, className }: { look: KindStyle; className: string }) {
+export function KindPlaceholder({ look, className, large = false }: { look: KindStyle; className: string; large?: boolean }) {
   return (
     <div
       data-slot="image-placeholder"
       aria-hidden="true"
-      className={`${className} flex items-center justify-center text-3xl md:text-5xl`}
+      // Large is for the top of a detail page, where the picture stands in for its photo.
+      className={`${className} flex items-center justify-center ${large ? "text-6xl md:text-8xl" : "text-3xl md:text-5xl"}`}
       // A tenth of the colour over white, so the picture stands out and the card stays light.
       style={{ backgroundColor: `${look.color}1a` }}
     >

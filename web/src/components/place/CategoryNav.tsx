@@ -5,7 +5,7 @@ import { explorePath } from "@/lib/places/listUrl";
 import { KindDot } from "./KindArt";
 
 const linkClass =
-  "flex h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-neutral-400 px-4 text-sm font-medium aria-[current=page]:border-neutral-950 aria-[current=page]:bg-neutral-950 aria-[current=page]:text-white";
+  "flex h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-neutral-400 px-4 text-sm font-medium aria-[current=page]:border-brand aria-[current=page]:bg-brand aria-[current=page]:text-white";
 
 /**
  * The categories of Explore (wireframes m-explore and d-explore). One is chosen at a time and

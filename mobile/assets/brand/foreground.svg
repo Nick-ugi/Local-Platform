@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Android adaptive icon foreground: transparent, the pin inside the middle 61% circle (66 of 108 dp). -->
+  <path d="M512 800 C440 700 312 560 312 430 A200 200 0 0 1 712 430 C712 560 584 700 512 800 Z" fill="#ffffff"/>
+  <path d="M372 505 L446 386 L486 438 L566 330 L652 505 Z" fill="#0369a1"/>
+</svg>

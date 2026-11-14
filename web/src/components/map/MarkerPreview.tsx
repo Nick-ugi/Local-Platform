@@ -5,6 +5,7 @@ import { useId } from "react";
 import { NoticeBadges } from "@/components/local/NoticeBadges";
 import { NoticePeriodText } from "@/components/local/NoticePeriodText";
 import { OpenBadge } from "@/components/place/OpenBadge";
+import { Icon } from "@/components/ui/Icon";
 
 type Props = {
   marker: MapMarker;
@@ -64,7 +65,7 @@ export function MarkerPreview({ marker, distanceText, onClose }: Props) {
         ) : null}
         <Link
           href={detailPath(marker)}
-          className="mt-2 flex h-11 items-center justify-center rounded-lg bg-neutral-950 px-4 text-sm font-semibold text-white"
+          className="mt-2 flex h-11 items-center justify-center rounded-lg bg-brand px-4 text-sm font-semibold text-white"
         >
           {t("viewDetails")}
         </Link>
@@ -73,9 +74,9 @@ export function MarkerPreview({ marker, distanceText, onClose }: Props) {
         type="button"
         aria-label={t("closePreview")}
         onClick={onClose}
-        className="-mr-2 -mt-2 flex size-11 shrink-0 items-center justify-center text-2xl leading-none text-neutral-600"
+        className="-mr-2 -mt-2 flex size-11 shrink-0 items-center justify-center text-neutral-600"
       >
-        <span aria-hidden="true">×</span>
+        <Icon name="close" className="size-6" />
       </button>
     </section>
   );

@@ -4,7 +4,10 @@ import {
   type LatLng,
   type MapBounds,
   keyOf,
+  MARKER_ICON_PIXEL_RATIO,
+  MARKER_ICONS,
   type MapMarker,
+  markerImageName,
   toFeatureCollection,
   toLngLat,
   toMapBounds,
@@ -49,10 +52,10 @@ const SOURCE = "markers";
 const CLUSTERS = "marker-clusters";
 const CLUSTER_COUNTS = "marker-cluster-counts";
 const CIRCLES = "marker-circles";
-const LABELS = "marker-labels";
+const ICONS = "marker-icons";
 const SELECTED_SOURCE = "selected-marker";
 const SELECTED = "marker-selected";
-const SELECTED_LABEL = "marker-selected-label";
+const SELECTED_ICON = "marker-selected-icon";
 
 // Markers closer than this on screen are drawn as one numbered cluster (MAP-09), up to this zoom.
 const CLUSTER_RADIUS_PX = 44;
@@ -69,6 +72,8 @@ const VISITOR_DOT = "visitor-dot";
 const INK = "#171717";
 const PAPER = "#ffffff";
 const VISITOR_BLUE = "#1d4ed8";
+// The brand's blue (--color-brand in src/app/globals.css), for the clusters.
+const BRAND = "#0369a1";
 const RADIUS_PX = 14;
 /** A click this far outside a marker still counts, which makes the marker a 44 px target. */
 const REACH_PX = 22 - RADIUS_PX;
@@ -100,11 +105,29 @@ function addVisitorLayers(map: MapboxMap) {
 }
 
 /**
- * One clustered source and five layers (MAP-09): a numbered dark circle for each cluster, then for
- * single markers a circle in their kind's colour (shared/src/categoryStyle.ts), a larger one with a
- * dark ring for the selected marker (wireframe m-map-place), and the category letter in white.
+ * The white pictures inside the markers (shared/src/map/markerIcon.ts), from web/public/markers.
+ * They arrive a moment after the map, and the markers are drawn with them once they are there.
+ */
+function addMarkerImages(map: MapboxMap) {
+  for (const icon of MARKER_ICONS) {
+    const name = markerImageName(icon);
+    map.loadImage(`/markers/${icon}.png`, (error, image) => {
+      // A picture that does not load leaves its markers as plain circles.
+      if (!error && image && !map.hasImage(name)) {
+        map.addImage(name, image, { pixelRatio: MARKER_ICON_PIXEL_RATIO });
+      }
+    });
+  }
+}
+
+/**
+ * One clustered source and five layers (MAP-09): a numbered circle in the brand's blue for each
+ * cluster, then for single markers a circle in their kind's colour (shared/src/categoryStyle.ts), a
+ * larger one with a dark ring for the selected marker (wireframe m-map-place), and the kind's
+ * picture in white.
  */
 function addMarkerLayers(map: MapboxMap) {
+  addMarkerImages(map);
   map.addSource(SOURCE, {
     type: "geojson",
     data: toFeatureCollection([]),
@@ -119,7 +142,7 @@ function addMarkerLayers(map: MapboxMap) {
     filter: ["has", "point_count"],
     paint: {
       "circle-radius": CLUSTER_RADIUS,
-      "circle-color": INK,
+      "circle-color": BRAND,
       "circle-stroke-color": PAPER,
       "circle-stroke-width": 2,
       "circle-emissive-strength": 1,
@@ -152,7 +175,7 @@ function addMarkerLayers(map: MapboxMap) {
       "circle-emissive-strength": 1,
     },
   });
-  map.addLayer({ id: LABELS, type: "symbol", source: SOURCE, filter: NOT_A_CLUSTER, layout: LETTER, paint: WHITE_TEXT });
+  map.addLayer({ id: ICONS, type: "symbol", source: SOURCE, filter: NOT_A_CLUSTER, layout: ICON, paint: ICON_PAINT });
 
   // The selected marker is kept out of the clusters and drawn last, on its own source, so a linked
   // place shows even where its neighbours are clustered (the map keeps the visitor's view).
@@ -169,19 +192,25 @@ function addMarkerLayers(map: MapboxMap) {
       "circle-emissive-strength": 1,
     },
   });
-  map.addLayer({ id: SELECTED_LABEL, type: "symbol", source: SELECTED_SOURCE, layout: LETTER, paint: WHITE_TEXT });
+  map.addLayer({
+    id: SELECTED_ICON,
+    type: "symbol",
+    source: SELECTED_SOURCE,
+    // As much larger as the selected circle.
+    layout: { ...ICON, "icon-size": (RADIUS_PX + 6) / RADIUS_PX },
+    paint: ICON_PAINT,
+  });
 }
 
-/** The category letter drawn in the middle of a marker. */
-const LETTER = {
-  "text-field": ["get", "label"],
-  "text-size": 13,
-  "text-font": ["DIN Pro Bold", "Arial Unicode MS Bold"],
-  "text-allow-overlap": true,
-  "text-ignore-placement": true,
+/** The kind's picture drawn in the middle of a marker. */
+const ICON = {
+  "icon-image": ["get", "icon"],
+  "icon-allow-overlap": true,
+  "icon-ignore-placement": true,
 } satisfies SymbolLayerSpecification["layout"];
 
-const WHITE_TEXT = { "text-color": PAPER, "text-emissive-strength": 1 } satisfies SymbolLayerSpecification["paint"];
+// Full emissive strength keeps the pictures as white as the circles are bright.
+const ICON_PAINT = { "icon-emissive-strength": 1 } satisfies SymbolLayerSpecification["paint"];
 
 /** The cluster at the pointer, with its id and centre, or null. */
 function clusterAt(map: MapboxMap, event: MapMouseEvent): { id: number; center: [number, number] } | null {

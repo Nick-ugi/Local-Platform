@@ -1,5 +1,5 @@
 import type { MarkerKind } from "@queenstown/shared";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import type { ReactNode } from "react";
 import { View } from "react-native";
 import { colors } from "@/ui/theme";
@@ -11,17 +11,16 @@ type Props<T> = {
   slug: string;
   /** Fetches the item; a stable function, such as getPlace. */
   load: (slug: string, options: { signal: AbortSignal }) => Promise<T | null>;
-  /** The header's title once the item is there. */
-  titleOf: (item: T) => string;
   children: (item: T, onViewOnMap: () => void) => ReactNode;
 };
 
 /**
  * A detail screen on top of the tabs (docs/02-information-architecture.md, App): loads its item,
- * shows the states before it, puts its name in the header, and leads back to the Map with the
- * item selected ("View on map": ?place=, ?event= or ?notice=).
+ * shows the states before it, and leads back to the Map with the item selected ("View on map":
+ * ?place=, ?event= or ?notice=). The header has only the way back: the screen's own heading names
+ * the item, and the name twice looked unfinished.
  */
-export function DetailRoute<T>({ kind, slug, load, titleOf, children }: Props<T>) {
+export function DetailRoute<T>({ kind, slug, load, children }: Props<T>) {
   const router = useRouter();
   const detail = useDetail(load, slug);
 
@@ -30,7 +29,6 @@ export function DetailRoute<T>({ kind, slug, load, titleOf, children }: Props<T>
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.paper }}>
-      <Stack.Screen options={{ title: detail.status === "ready" ? titleOf(detail.data) : "" }} />
       {detail.status === "ready" ? (
         children(detail.data, toMap)
       ) : (

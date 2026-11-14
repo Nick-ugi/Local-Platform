@@ -9,7 +9,7 @@ export function NoticeBadges({ type, isOfficial }: { type: NoticeType; isOfficia
   return (
     <p className="flex flex-wrap gap-2 text-xs font-semibold">
       <span className="rounded border border-neutral-500 px-2 py-0.5">{tType(type)}</span>
-      {isOfficial ? <span className="rounded bg-neutral-900 px-2 py-0.5 text-white">{t("official")}</span> : null}
+      {isOfficial ? <span className="rounded bg-brand px-2 py-0.5 text-white">{t("official")}</span> : null}
     </p>
   );
 }

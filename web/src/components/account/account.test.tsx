@@ -5,6 +5,7 @@ import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { renderWithMessages } from "@/test/render";
 import { AccountMenu } from "./AccountMenu";
 import { AuthForm } from "./AuthForm";
+import { DeleteAccountView } from "./DeleteAccountView";
 import { FavoriteButton } from "./FavoriteButton";
 import { FavoritesView } from "./FavoritesView";
 
@@ -138,11 +139,15 @@ test("More offers Log in to a visitor, and the account and Log out once signed i
   const { unmount } = renderWithMessages(<ul><AccountMenu /></ul>);
   expect(await screen.findByRole("link", { name: "Log in" })).toHaveAttribute("href", "/login?next=%2Fmore");
   expect(screen.getByRole("link", { name: "Favorites" })).toHaveAttribute("href", "/favorites");
+  expect(screen.queryByRole("link", { name: "Delete account" })).toBeNull();
   unmount();
 
   const calls = site(({ url }) => (url === "/api/v1/me" ? { status: 200, body: { email: "kiri@example.com", role: "user" } } : { status: 204 }));
   renderWithMessages(<ul><AccountMenu /></ul>);
   expect(await screen.findByText("Signed in as kiri@example.com")).toBeInTheDocument();
+
+  // Only an account can be deleted (Google Play asks for this in the app and on the web).
+  expect(screen.getByRole("link", { name: "Delete account" })).toHaveAttribute("href", "/account/delete");
 
   await userEvent.click(screen.getByRole("button", { name: "Log out" }));
   expect(calls.at(-1)).toMatchObject({ method: "POST", url: "/api/auth/logout" });
@@ -196,4 +201,44 @@ test("Favorites asks a visitor to log in", async () => {
   renderWithMessages(<FavoritesView />);
 
   expect(await screen.findByRole("link", { name: "Log in" })).toHaveAttribute("href", "/login?next=%2Ffavorites");
+});
+
+const signedIn = { status: 200, body: { email: "kiri@example.com", role: "user" } };
+
+test("Delete account asks a visitor to log in first and come back", async () => {
+  site(() => signedOut);
+  renderWithMessages(<DeleteAccountView />);
+
+  expect(await screen.findByRole("link", { name: "Log in" })).toHaveAttribute("href", "/login?next=%2Faccount%2Fdelete");
+  expect(screen.queryByLabelText("Password")).toBeNull();
+});
+
+test("Delete account says what goes, takes the password again, and confirms once it is done", async () => {
+  const calls = site(({ url }) => (url === "/api/v1/me" ? signedIn : { status: 204 }));
+  renderWithMessages(<DeleteAccountView />);
+
+  expect(await screen.findByText(/kiri@example.com/)).toBeInTheDocument();
+  expect(screen.getByText(/your saved places/)).toBeInTheDocument();
+  await userEvent.type(screen.getByLabelText("Password"), "correct horse battery");
+  await userEvent.click(screen.getByRole("button", { name: "Delete my account" }));
+
+  expect(calls.at(-1)).toEqual({ method: "POST", url: "/api/auth/delete-account", body: { password: "correct horse battery" } });
+  expect(await screen.findByRole("heading", { name: "Your account has been deleted." })).toBeInTheDocument();
+  expect(screen.getByRole("link", { name: "Go to Map" })).toHaveAttribute("href", "/");
+  expect(router.refresh).toHaveBeenCalled();
+});
+
+test("Delete account with a wrong password says so and keeps the account", async () => {
+  site(({ url }) =>
+    url === "/api/v1/me"
+      ? signedIn
+      : { status: 403, body: { code: "WRONG_PASSWORD", status: 403, detail: "That password is wrong." } },
+  );
+  renderWithMessages(<DeleteAccountView />);
+
+  await userEvent.type(await screen.findByLabelText("Password"), "not mine");
+  await userEvent.click(screen.getByRole("button", { name: "Delete my account" }));
+
+  expect(await screen.findByText("That password is wrong.")).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "Delete my account" })).toBeEnabled();
 });

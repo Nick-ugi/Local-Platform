@@ -41,6 +41,7 @@
     "favorites": "Favorites",
     "privacy": "Privacy Policy",
     "terms": "Terms of Use",
+    "deleteAccount": "Delete account",
     "opensInBrowser": "Opens in your browser"
   },
   "State": {
@@ -178,7 +179,21 @@
     "invalidEmail": "Enter an email address like name@example.com.",
     "shortPassword": "Use at least 8 characters.",
     "failed": "We couldn't sign you in. Please try again.",
-    "favorites": "Favorites"
+    "favorites": "Favorites",
+    "tooMany": "Too many tries. Wait a few minutes and try again.",
+    "deleteAccount": "Delete account",
+    "deleteBody": "This deletes your account ({email}) and your saved places. It can't be undone. Enter your password to confirm.",
+    "deleteLogin": "Log in to delete your account.",
+    "deleteConfirm": "Delete my account",
+    "deleted": "Your account has been deleted.",
+    "done": "Done",
+    "wrongPassword": "That password is wrong.",
+    "deleteFailed": "We couldn't delete your account. Please try again.",
+    "forgotPassword": "Forgot your password?",
+    "forgotEmail": "Email us",
+    "forgotSubject": "Forgotten password",
+    "forgotBody": "The email address of my account: ",
+    "forgotFailed": "Couldn't open a mail app. Email {email} for help."
   },
   "Favorites": {
     "save": "Save to favorites",

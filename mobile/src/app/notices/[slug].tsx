@@ -8,7 +8,7 @@ export default function NoticeRoute() {
   const { slug } = useLocalSearchParams<{ slug: string }>();
 
   return (
-    <DetailRoute kind="notice" slug={slug} load={getNotice} titleOf={(notice) => notice.title}>
+    <DetailRoute kind="notice" slug={slug} load={getNotice}>
       {(notice, onViewOnMap) => <NoticeDetailView notice={notice} onViewOnMap={onViewOnMap} />}
     </DetailRoute>
   );

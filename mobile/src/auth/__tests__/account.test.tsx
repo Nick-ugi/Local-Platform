@@ -1,6 +1,7 @@
 import type { PlaceSummary } from "@queenstown/shared";
 import { act, fireEvent, screen } from "@testing-library/react-native";
 import * as SecureStore from "expo-secure-store";
+import { Linking } from "react-native";
 import { renderScreen } from "@/test/render";
 import { AuthScreen } from "../AuthScreen";
 import { FavoriteButton } from "../FavoriteButton";
@@ -168,4 +169,49 @@ test("Favorites asks a visitor to log in", async () => {
   fireEvent.press(screen.getByRole("button", { name: "Log in" }));
   expect(onLogin).toHaveBeenCalledTimes(1);
   expect(calls).toHaveLength(0);
+});
+
+describe("Forgot your password?", () => {
+  let openURL: jest.SpyInstance;
+  beforeEach(() => {
+    openURL = jest.spyOn(Linking, "openURL").mockResolvedValue(true);
+  });
+  afterEach(() => {
+    openURL.mockRestore();
+    delete process.env.EXPO_PUBLIC_CONTACT_EMAIL;
+  });
+
+  test("Log in offers to email the operator, as on the web; Sign up does not", async () => {
+    process.env.EXPO_PUBLIC_CONTACT_EMAIL = "hello@queenstown.example";
+    const view = renderScreen(<AuthScreen mode="login" onDone={jest.fn()} onSwitch={jest.fn()} />);
+    await settle();
+
+    expect(screen.getByText("Forgot your password?")).toBeOnTheScreen();
+    await act(async () => fireEvent.press(screen.getByRole("link", { name: "Email us" })));
+    expect(openURL).toHaveBeenCalledWith(
+      "mailto:hello@queenstown.example?subject=Forgotten%20password&body=The%20email%20address%20of%20my%20account%3A%20",
+    );
+    view.unmount();
+
+    renderScreen(<AuthScreen mode="signup" onDone={jest.fn()} onSwitch={jest.fn()} />);
+    await settle();
+    expect(screen.queryByText("Forgot your password?")).toBeNull();
+  });
+
+  test("without a usable contact address there is nothing to offer", async () => {
+    renderScreen(<AuthScreen mode="login" onDone={jest.fn()} onSwitch={jest.fn()} />);
+    await settle();
+    expect(screen.queryByText("Forgot your password?")).toBeNull();
+  });
+
+  test("a phone without a mail app gives the address to write to", async () => {
+    process.env.EXPO_PUBLIC_CONTACT_EMAIL = "hello@queenstown.example";
+    openURL.mockRejectedValue(new Error("No Activity found"));
+    renderScreen(<AuthScreen mode="login" onDone={jest.fn()} onSwitch={jest.fn()} />);
+    await settle();
+
+    await act(async () => fireEvent.press(screen.getByRole("link", { name: "Email us" })));
+
+    expect(screen.getByText("Couldn't open a mail app. Email hello@queenstown.example for help.")).toBeOnTheScreen();
+  });
 });

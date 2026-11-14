@@ -2,6 +2,7 @@
 import { NextRequest } from "next/server";
 import { afterEach, expect, test, vi } from "vitest";
 import { POST as login } from "@/app/api/auth/login/route";
+import { POST as deleteAccount } from "@/app/api/auth/delete-account/route";
 import { POST as logout } from "@/app/api/auth/logout/route";
 import { DELETE as removeFavorite, GET as getMe } from "@/app/api/v1/me/[[...path]]/route";
 import { loginPath, safeNext } from "./next";
@@ -179,6 +180,81 @@ test("logout revokes the refresh token and clears the cookies", async () => {
   expect(response.status).toBe(204);
   expect(JSON.parse(calls[0].body ?? "")).toEqual({ refreshToken: "refresh-1" });
   expect(setCookies(response).ql_access).toMatch(/Max-Age=0/);
+});
+
+test("deleting the account sends the password with the access token and the visitor's address, then clears the cookies", async () => {
+  const calls = backend(() => new Response(null, { status: 204 }));
+
+  const response = await deleteAccount(
+    request("/api/auth/delete-account", {
+      method: "POST",
+      body: '{"password":"correct horse battery"}',
+      cookies: { ql_access: "access-1", ql_refresh: "refresh-1" },
+      forwardedFor: "203.0.113.5",
+    }),
+  );
+
+  expect(response.status).toBe(204);
+  expect(calls).toEqual([
+    {
+      url: "http://localhost:8080/api/v1/me",
+      method: "DELETE",
+      auth: "Bearer access-1",
+      body: '{"password":"correct horse battery"}',
+      forwardedFor: "203.0.113.5",
+    },
+  ]);
+  const cookies = setCookies(response);
+  expect(cookies.ql_access).toMatch(/Max-Age=0/);
+  expect(cookies.ql_refresh).toMatch(/Max-Age=0/);
+  expect(cookies.ql_signed_in).toMatch(/Max-Age=0/);
+});
+
+test("a wrong password passes the backend's 403 through and keeps the session", async () => {
+  backend(() =>
+    Response.json({ code: "WRONG_PASSWORD", detail: "That password is wrong.", status: 403 }, { status: 403 }),
+  );
+
+  const response = await deleteAccount(
+    request("/api/auth/delete-account", {
+      method: "POST",
+      body: '{"password":"x"}',
+      cookies: { ql_access: "access-1", ql_refresh: "refresh-1" },
+    }),
+  );
+
+  expect(response.status).toBe(403);
+  expect(await response.json()).toMatchObject({ code: "WRONG_PASSWORD" });
+  expect(response.headers.getSetCookie()).toEqual([]);
+});
+
+test("a token that ran out is renewed before the account is deleted", async () => {
+  const calls = backend((call) => {
+    if (call.url.endsWith("/auth/refresh")) return Response.json(tokens(2));
+    return call.auth === "Bearer access-2" ? new Response(null, { status: 204 }) : Response.json({}, { status: 401 });
+  });
+
+  const response = await deleteAccount(
+    request("/api/auth/delete-account", { method: "POST", body: '{"password":"x"}', cookies: { ql_refresh: "refresh-1" } }),
+  );
+
+  expect(response.status).toBe(204);
+  expect(calls.map((call) => [call.method, call.url.replace("http://localhost:8080/api/v1", "")])).toEqual([
+    ["POST", "/auth/refresh"],
+    ["DELETE", "/me"],
+  ]);
+  // Deleted: the new tokens are not kept either.
+  expect(setCookies(response).ql_access).toMatch(/Max-Age=0/);
+});
+
+test("without a session there is nothing to delete and the backend is not asked", async () => {
+  const calls = backend(() => new Response(null, { status: 204 }));
+
+  const response = await deleteAccount(request("/api/auth/delete-account", { method: "POST", body: '{"password":"x"}' }));
+
+  expect(response.status).toBe(401);
+  expect(await response.json()).toMatchObject({ code: "UNAUTHORIZED" });
+  expect(calls).toEqual([]);
 });
 
 test("after login the visitor goes back only to a path on this site", () => {

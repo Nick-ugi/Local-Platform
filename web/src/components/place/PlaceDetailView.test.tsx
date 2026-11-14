@@ -168,8 +168,8 @@ test("offers the quick actions", () => {
   expect(actions.getByRole("button", { name: "Share" })).toBeInTheDocument();
 });
 
-test("shows the image only when it can", () => {
-  const { rerender } = renderWithMessages(
+test("shows the image when it can, and the kind's picture in its place otherwise", () => {
+  const { container, rerender } = renderWithMessages(
     <PlaceDetailView place={{ ...full, imageUrl: "https://lakesidekitchen.example/front.jpg" }} />,
   );
   expect(screen.getByRole("img", { name: "Lakeside Kitchen" })).toHaveAttribute(
@@ -177,9 +177,15 @@ test("shows the image only when it can", () => {
     "https://lakesidekitchen.example/front.jpg",
   );
 
+  expect(container.querySelector('[data-slot="image-placeholder"]')).toBeNull();
+
   for (const imageUrl of [null, "javascript:alert(1)"]) {
     rerender(<PlaceDetailView place={{ ...full, imageUrl }} />);
     expect(screen.queryByRole("img")).toBeNull();
+    // Decorative, as on the cards: the name under it says what the place is.
+    const placeholder = container.querySelector('[data-slot="image-placeholder"]');
+    expect(placeholder).toHaveAttribute("aria-hidden", "true");
+    expect(placeholder).toHaveTextContent("🍽️");
   }
 });
 

@@ -40,3 +40,14 @@ test("marks nothing on a path outside every tab", () => {
     expect(tab).not.toHaveAttribute("aria-current");
   }
 });
+
+test("each tab has the icon the app gives it, which screen readers skip", () => {
+  location.pathname = "/";
+  renderWithMessages(<BottomNav />);
+
+  expect(tabs().map((tab) => tab.querySelector("svg")?.dataset.icon)).toEqual(["map", "list", "calendar", "more"]);
+  for (const tab of tabs()) {
+    expect(tab.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+  }
+  expect(tabs().map((tab) => tab.textContent)).toEqual(["Map", "Explore", "Local", "More"]);
+});

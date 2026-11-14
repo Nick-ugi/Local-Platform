@@ -6,7 +6,16 @@ import { type StyleProp, StyleSheet, Text, View, type ViewStyle } from "react-na
  * (shared/src/categoryStyle.ts). Decorative: the name next to it says what the place is. The web
  * app's placeholder (web/src/components/place/KindArt.tsx).
  */
-export function KindPlaceholder({ look, style }: { look: KindStyle; style: StyleProp<ViewStyle> }) {
+export function KindPlaceholder({
+  look,
+  style,
+  emojiSize = 30,
+}: {
+  look: KindStyle;
+  style: StyleProp<ViewStyle>;
+  /** Larger at the top of a detail screen, where the picture stands in for its photo. */
+  emojiSize?: number;
+}) {
   return (
     <View
       testID="image-placeholder"
@@ -14,7 +23,7 @@ export function KindPlaceholder({ look, style }: { look: KindStyle; style: Style
       // A tenth of the colour over white, so the picture stands out and the row stays light.
       style={[style, styles.placeholder, { backgroundColor: `${look.color}1a` }]}
     >
-      <Text style={styles.emoji}>{look.emoji}</Text>
+      <Text style={{ fontSize: emojiSize }}>{look.emoji}</Text>
     </View>
   );
 }
@@ -26,6 +35,5 @@ export function KindDot({ color }: { color: string }) {
 
 const styles = StyleSheet.create({
   placeholder: { alignItems: "center", justifyContent: "center" },
-  emoji: { fontSize: 30 },
   dot: { width: 10, height: 10, borderRadius: 5 },
 });
