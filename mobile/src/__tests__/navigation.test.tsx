@@ -1,6 +1,6 @@
 import { act, fireEvent, renderRouter, screen, waitFor, within } from "expo-router/testing-library";
 import * as SecureStore from "expo-secure-store";
-import { Linking } from "react-native";
+import { Linking, StatusBar } from "react-native";
 import { getPlace } from "@/api/places";
 import RootLayout from "@/app/_layout";
 import TabsLayout from "@/app/(tabs)/_layout";
@@ -130,6 +130,13 @@ test("opens on the Map tab with Map, Explore, Local and More in order", async ()
   fireEvent.press(tab("Explore"));
   expect(screen.getByTestId("icon-map-outline")).toBeTruthy();
   expect(screen.getByTestId("icon-list")).toBeTruthy();
+});
+
+test("the status bar's clock and icons are dark, as the app stays light on a phone in dark mode too", async () => {
+  renderRouter(routes, { initialUrl: "/" });
+  await act(async () => {});
+
+  expect(screen.UNSAFE_getByType(StatusBar).props.barStyle).toBe("dark-content");
 });
 
 test("the tabs lead to Explore, Local and More", async () => {
