@@ -63,11 +63,11 @@ beforeEach(() => {
 test("logging in signs in and goes back", async () => {
   api(() => ({ status: 200, body: tokens }));
   const onDone = jest.fn();
-  renderScreen(<AuthScreen mode="login" onDone={onDone} onSwitch={jest.fn()} />);
+  await renderScreen(<AuthScreen mode="login" onDone={onDone} onSwitch={jest.fn()} />);
   await settle();
 
-  fireEvent.changeText(screen.getByLabelText("Email"), " kiri@example.com ");
-  fireEvent.changeText(screen.getByLabelText("Password"), "correct horse");
+  await fireEvent.changeText(screen.getByLabelText("Email"), " kiri@example.com ");
+  await fireEvent.changeText(screen.getByLabelText("Password"), "correct horse");
   await act(async () => fireEvent.press(screen.getByRole("button", { name: "Log in" })));
 
   expect(calls[0]).toEqual({ method: "POST", url: "/auth/login", body: { email: "kiri@example.com", password: "correct horse" } });
@@ -77,20 +77,20 @@ test("logging in signs in and goes back", async () => {
 
 test("a wrong password says so, and sign up explains a used email", async () => {
   api(() => ({ status: 401, body: { code: "INVALID_CREDENTIALS", detail: "x" } }));
-  const view = renderScreen(<AuthScreen mode="login" onDone={jest.fn()} onSwitch={jest.fn()} />);
+  const view = await renderScreen(<AuthScreen mode="login" onDone={jest.fn()} onSwitch={jest.fn()} />);
   await settle();
   await act(async () => fireEvent.press(screen.getByRole("button", { name: "Log in" })));
   expect(screen.getByText("The email or password is wrong.")).toBeOnTheScreen();
-  view.unmount();
+  await view.unmount();
 
   api(() => ({ status: 409, body: { code: "EMAIL_ALREADY_USED", detail: "x" } }));
   const onSwitch = jest.fn();
-  renderScreen(<AuthScreen mode="signup" onDone={jest.fn()} onSwitch={onSwitch} />);
+  await renderScreen(<AuthScreen mode="signup" onDone={jest.fn()} onSwitch={onSwitch} />);
   await settle();
   await act(async () => fireEvent.press(screen.getByRole("button", { name: "Create account" })));
   expect(screen.getByText(/already has an account/)).toBeOnTheScreen();
 
-  fireEvent.press(screen.getByRole("link", { name: "Log in" }));
+  await fireEvent.press(screen.getByRole("link", { name: "Log in" }));
   expect(onSwitch).toHaveBeenCalledTimes(1);
 });
 
@@ -101,7 +101,7 @@ test("the heart sends a visitor to Log in, and saves the place once they are bac
     return { status: 204 };
   });
   const onNeedLogin = jest.fn();
-  renderScreen(
+  await renderScreen(
     <>
       <FavoriteButton slug="harbour-coffee" onNeedLogin={onNeedLogin} />
       <AuthScreen mode="login" onDone={jest.fn()} onSwitch={jest.fn()} />
@@ -109,7 +109,7 @@ test("the heart sends a visitor to Log in, and saves the place once they are bac
   );
   await settle();
 
-  fireEvent.press(screen.getByRole("button", { name: "Save to favorites" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Save to favorites" }));
   expect(onNeedLogin).toHaveBeenCalledTimes(1);
 
   await act(async () => fireEvent.press(screen.getByRole("button", { name: "Log in" })));
@@ -130,7 +130,7 @@ test("a signed-in visitor removes a saved place with the heart", async () => {
     if (method === "GET") return { status: 200, body: { items: [coffee] } };
     return { status: 204 };
   });
-  renderScreen(<FavoriteButton slug="harbour-coffee" onNeedLogin={jest.fn()} />);
+  await renderScreen(<FavoriteButton slug="harbour-coffee" onNeedLogin={jest.fn()} />);
   await settle();
   await settle();
 
@@ -148,25 +148,25 @@ test("Favorites lists the saved places, removes one, and then points to Explore"
     return { status: 204 };
   });
   const handlers = { onOpen: jest.fn(), onLogin: jest.fn(), onExplore: jest.fn() };
-  renderScreen(<FavoritesScreen {...handlers} />);
+  await renderScreen(<FavoritesScreen {...handlers} />);
   await settle();
   await settle();
 
-  fireEvent.press(screen.getByRole("link", { name: /Harbour Coffee/ }));
+  await fireEvent.press(screen.getByRole("link", { name: /Harbour Coffee/ }));
   expect(handlers.onOpen).toHaveBeenCalledWith(coffee);
 
   await act(async () => fireEvent.press(screen.getByRole("button", { name: "Remove Harbour Coffee from favorites" })));
-  fireEvent.press(screen.getByRole("button", { name: "Go to Explore" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Go to Explore" }));
   expect(handlers.onExplore).toHaveBeenCalledTimes(1);
 });
 
 test("Favorites asks a visitor to log in", async () => {
   api(() => ({ status: 500 }));
   const onLogin = jest.fn();
-  renderScreen(<FavoritesScreen onOpen={jest.fn()} onLogin={onLogin} onExplore={jest.fn()} />);
+  await renderScreen(<FavoritesScreen onOpen={jest.fn()} onLogin={onLogin} onExplore={jest.fn()} />);
   await settle();
 
-  fireEvent.press(screen.getByRole("button", { name: "Log in" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Log in" }));
   expect(onLogin).toHaveBeenCalledTimes(1);
   expect(calls).toHaveLength(0);
 });
@@ -174,7 +174,7 @@ test("Favorites asks a visitor to log in", async () => {
 describe("Forgot your password?", () => {
   let openURL: jest.SpyInstance;
   beforeEach(() => {
-    openURL = jest.spyOn(Linking, "openURL").mockResolvedValue(true);
+    openURL = jest.spyOn(Linking, "openURL").mockResolvedValue(undefined);
   });
   afterEach(() => {
     openURL.mockRestore();
@@ -183,7 +183,7 @@ describe("Forgot your password?", () => {
 
   test("Log in offers to email the operator, as on the web; Sign up does not", async () => {
     process.env.EXPO_PUBLIC_CONTACT_EMAIL = "hello@queenstown.example";
-    const view = renderScreen(<AuthScreen mode="login" onDone={jest.fn()} onSwitch={jest.fn()} />);
+    const view = await renderScreen(<AuthScreen mode="login" onDone={jest.fn()} onSwitch={jest.fn()} />);
     await settle();
 
     expect(screen.getByText("Forgot your password?")).toBeOnTheScreen();
@@ -191,15 +191,15 @@ describe("Forgot your password?", () => {
     expect(openURL).toHaveBeenCalledWith(
       "mailto:hello@queenstown.example?subject=Forgotten%20password&body=The%20email%20address%20of%20my%20account%3A%20",
     );
-    view.unmount();
+    await view.unmount();
 
-    renderScreen(<AuthScreen mode="signup" onDone={jest.fn()} onSwitch={jest.fn()} />);
+    await renderScreen(<AuthScreen mode="signup" onDone={jest.fn()} onSwitch={jest.fn()} />);
     await settle();
     expect(screen.queryByText("Forgot your password?")).toBeNull();
   });
 
   test("without a usable contact address there is nothing to offer", async () => {
-    renderScreen(<AuthScreen mode="login" onDone={jest.fn()} onSwitch={jest.fn()} />);
+    await renderScreen(<AuthScreen mode="login" onDone={jest.fn()} onSwitch={jest.fn()} />);
     await settle();
     expect(screen.queryByText("Forgot your password?")).toBeNull();
   });
@@ -207,7 +207,7 @@ describe("Forgot your password?", () => {
   test("a phone without a mail app gives the address to write to", async () => {
     process.env.EXPO_PUBLIC_CONTACT_EMAIL = "hello@queenstown.example";
     openURL.mockRejectedValue(new Error("No Activity found"));
-    renderScreen(<AuthScreen mode="login" onDone={jest.fn()} onSwitch={jest.fn()} />);
+    await renderScreen(<AuthScreen mode="login" onDone={jest.fn()} onSwitch={jest.fn()} />);
     await settle();
 
     await act(async () => fireEvent.press(screen.getByRole("link", { name: "Email us" })));

@@ -12,11 +12,11 @@ afterEach(() => {
 
 const actions = { retry: jest.fn(), onGoToMap: jest.fn(), onGoToExplore: jest.fn() };
 
-test("loading says Loading, then after five seconds that the server is waking up", () => {
-  render(<DetailStateView status="loading" {...actions} />, { wrapper: AppIntlProvider });
+test("loading says Loading, then after five seconds that the server is waking up", async () => {
+  await render(<DetailStateView status="loading" {...actions} />, { wrapper: AppIntlProvider });
   expect(screen.getByText("Loading…")).toBeOnTheScreen();
 
-  act(() => jest.advanceTimersByTime(5000));
+  await act(() => jest.advanceTimersByTime(5000));
 
   expect(screen.getByText("Waking up the server… This can take up to a minute.")).toBeOnTheScreen();
   expect(screen.queryByText("Loading…")).toBeNull();

@@ -62,7 +62,7 @@ function mapProps() {
 /** Opens the screen and lets the position asked for on arrival come back. */
 async function openMap(result: LocationResult, target: Selection | null = null, search: string | null = null) {
   locateMock.mockResolvedValue(result);
-  const view = renderScreen(screenWith(target, search));
+  const view = await renderScreen(screenWith(target, search));
   await act(async () => {});
   return view;
 }
@@ -91,14 +91,14 @@ test("without a token there is a notice instead of a map", async () => {
 test("a map that cannot start gives way to the notice", async () => {
   await openMap({ status: "denied" });
 
-  act(() => mapProps().onUnavailable());
+  await act(() => mapProps().onUnavailable());
 
   expect(screen.getByText("The map isn't available right now.")).toBeOnTheScreen();
 });
 
 test("asks for the position as soon as it opens, and starts on Queenstown", async () => {
   locateMock.mockReturnValue(new Promise(() => {}));
-  renderScreen(screenWith());
+  await renderScreen(screenWith());
 
   expect(locateMock).toHaveBeenCalledTimes(1);
   expect(mapProps().token).toBe("pk.test");
@@ -144,7 +144,7 @@ test("the button asks again and goes back to the position", async () => {
   const first = mapProps().camera;
   locateMock.mockResolvedValue({ status: "inside", position: { latitude: -45.0322, longitude: 168.661 } });
 
-  fireEvent.press(screen.getByRole("button", { name: "Show my location" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Show my location" }));
   await act(async () => {});
 
   expect(locateMock).toHaveBeenCalledTimes(2);
@@ -156,7 +156,7 @@ test("the button asks again and goes back to the position", async () => {
 test("moving the map with a finger puts the message away", async () => {
   await openMap({ status: "outside", position: { latitude: 37.5665, longitude: 126.978 } });
 
-  act(() => mapProps().onGesture());
+  await act(() => mapProps().onGesture());
 
   expect(screen.queryByText(/outside the Queenstown area/)).toBeNull();
 });
@@ -166,7 +166,7 @@ test("asks for the places in the box the map reports", async () => {
   expect(jest.mocked(useMarkers).mock.lastCall?.[0]).toBeNull();
 
   const box = { west: 168.65, south: -45.04, east: 168.67, north: -45.02 };
-  act(() => mapProps().onIdle(box, { latitude: -45.03, longitude: 168.66, zoom: 14 }));
+  await act(() => mapProps().onIdle(box, { latitude: -45.03, longitude: 168.66, zoom: 14 }));
 
   const [bounds, filter] = jest.mocked(useMarkers).mock.lastCall ?? [];
   expect(bounds).toEqual(box);
@@ -188,7 +188,7 @@ test("a failed load says so and offers to try again", async () => {
   mockMarkers.state = { status: "error", markers: [kitchen], truncated: false, retry };
 
   await openMap({ status: "inside", position: { latitude: -45.0322, longitude: 168.661 } });
-  fireEvent.press(screen.getByRole("button", { name: "Try again" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Try again" }));
 
   expect(screen.getByText("We couldn't load the map data.")).toBeOnTheScreen();
   // The markers already on the map stay.
@@ -203,11 +203,11 @@ test("markers that take over five seconds say the server is waking up", async ()
     const view = await openMap({ status: "denied" });
     expect(screen.queryByText(/Waking up the server/)).toBeNull();
 
-    act(() => jest.advanceTimersByTime(5000));
+    await act(() => jest.advanceTimersByTime(5000));
     expect(screen.getByText("Waking up the server… This can take up to a minute.")).toBeOnTheScreen();
 
     mockMarkers.state = { status: "ready", markers: [kitchen], truncated: false, retry: jest.fn() };
-    view.rerender(screenWith());
+    await view.rerender(screenWith());
     expect(screen.queryByText(/Waking up the server/)).toBeNull();
   } finally {
     jest.useRealTimers();
@@ -289,13 +289,13 @@ test("the chips are the six categories, then Events and Notices, none on", async
 test("a chip narrows the markers, and pressing it again shows everything", async () => {
   await openMap({ status: "denied" });
 
-  fireEvent.press(chip("Cafes"));
-  fireEvent.press(chip("Events"));
+  await fireEvent.press(chip("Cafes"));
+  await fireEvent.press(chip("Events"));
   expect(jest.mocked(useMarkers).mock.lastCall?.[1]).toEqual(["cafe", "event"]);
   expect(chip("Cafes")).toBeSelected();
 
-  fireEvent.press(chip("Cafes"));
-  fireEvent.press(chip("Events"));
+  await fireEvent.press(chip("Cafes"));
+  await fireEvent.press(chip("Events"));
   expect(jest.mocked(useMarkers).mock.lastCall?.[1]).toEqual([]);
 });
 
@@ -304,8 +304,8 @@ test("an empty area with chips on offers to clear them", async () => {
   await openMap({ status: "denied" });
   expect(screen.queryByRole("button", { name: "Clear filters" })).toBeNull();
 
-  fireEvent.press(chip("Bars"));
-  fireEvent.press(screen.getByRole("button", { name: "Clear filters" }));
+  await fireEvent.press(chip("Bars"));
+  await fireEvent.press(screen.getByRole("button", { name: "Clear filters" }));
 
   expect(chip("Bars")).not.toBeSelected();
   expect(jest.mocked(useMarkers).mock.lastCall?.[1]).toEqual([]);
@@ -315,13 +315,13 @@ test("pressing a place shows its card with the distance, and the card leads to t
   mockMarkers.state = { status: "ready", markers: [kitchen, harbourCoffee], truncated: false, retry: jest.fn() };
   await openMap({ status: "inside", position: { latitude: -45.0312, longitude: 168.6626 } });
 
-  act(() => mapProps().onSelect("place:harbour-coffee"));
+  await act(() => mapProps().onSelect("place:harbour-coffee"));
 
   expect(mapProps().selectedKey).toBe("place:harbour-coffee");
   expect(screen.getByRole("header", { name: "Harbour Coffee" })).toBeOnTheScreen();
   expect(screen.getByText("Cafes · 380 m")).toBeOnTheScreen();
 
-  fireEvent.press(screen.getByRole("link", { name: "View details" }));
+  await fireEvent.press(screen.getByRole("link", { name: "View details" }));
   expect(handlers.onOpenDetail).toHaveBeenCalledWith(harbourCoffee);
 });
 
@@ -329,7 +329,7 @@ test("without a position the card has no distance", async () => {
   mockMarkers.state = { status: "ready", markers: [harbourCoffee], truncated: false, retry: jest.fn() };
   await openMap({ status: "denied" });
 
-  act(() => mapProps().onSelect("place:harbour-coffee"));
+  await act(() => mapProps().onSelect("place:harbour-coffee"));
 
   // The chip and the card's line.
   expect(screen.getAllByText("Cafes")).toHaveLength(2);
@@ -340,7 +340,7 @@ test("an event's card shows when and where in New Zealand time", async () => {
   mockMarkers.state = { status: "ready", markers: [nightMarket], truncated: false, retry: jest.fn() };
   await openMap({ status: "denied" });
 
-  act(() => mapProps().onSelect("event:lakefront-night-market"));
+  await act(() => mapProps().onSelect("event:lakefront-night-market"));
 
   expect(screen.getByRole("header", { name: "Lakefront Night Market" })).toBeOnTheScreen();
   expect(screen.getByText("Fri 9 Oct · 5:00 pm - 9:00 pm")).toBeOnTheScreen();
@@ -351,7 +351,7 @@ test("a notice's card shows its type, Official and period", async () => {
   mockMarkers.state = { status: "ready", markers: [roadWorks], truncated: false, retry: jest.fn() };
   await openMap({ status: "denied" });
 
-  act(() => mapProps().onSelect("notice:shotover-street-works"));
+  await act(() => mapProps().onSelect("notice:shotover-street-works"));
 
   expect(screen.getByText("Road Work")).toBeOnTheScreen();
   expect(screen.getByText("Official")).toBeOnTheScreen();
@@ -362,13 +362,13 @@ test("the close button and a press beside the markers close the card", async () 
   mockMarkers.state = { status: "ready", markers: [kitchen], truncated: false, retry: jest.fn() };
   await openMap({ status: "denied" });
 
-  act(() => mapProps().onSelect("place:lakeside-kitchen"));
-  fireEvent.press(screen.getByRole("button", { name: "Close" }));
+  await act(() => mapProps().onSelect("place:lakeside-kitchen"));
+  await fireEvent.press(screen.getByRole("button", { name: "Close" }));
   expect(screen.queryByRole("header", { name: "Lakeside Kitchen" })).toBeNull();
   expect(mapProps().selectedKey).toBeNull();
 
-  act(() => mapProps().onSelect("place:lakeside-kitchen"));
-  act(() => mapProps().onSelect(null));
+  await act(() => mapProps().onSelect("place:lakeside-kitchen"));
+  await act(() => mapProps().onSelect(null));
   expect(screen.queryByRole("header", { name: "Lakeside Kitchen" })).toBeNull();
 });
 
@@ -376,19 +376,19 @@ test("a chip that hides the selected marker closes its card; one that keeps it d
   mockMarkers.state = { status: "ready", markers: [kitchen, nightMarket], truncated: false, retry: jest.fn() };
   await openMap({ status: "denied" });
 
-  act(() => mapProps().onSelect("place:lakeside-kitchen"));
-  fireEvent.press(chip("Food"));
+  await act(() => mapProps().onSelect("place:lakeside-kitchen"));
+  await fireEvent.press(chip("Food"));
   expect(screen.getByRole("header", { name: "Lakeside Kitchen" })).toBeOnTheScreen();
 
-  fireEvent.press(chip("Food"));
-  fireEvent.press(chip("Events"));
+  await fireEvent.press(chip("Food"));
+  await fireEvent.press(chip("Events"));
   expect(screen.queryByRole("header", { name: "Lakeside Kitchen" })).toBeNull();
 });
 
 test("the search box opens Search", async () => {
   await openMap({ status: "denied" });
 
-  fireEvent.press(screen.getByRole("search", { name: "Search places" }));
+  await fireEvent.press(screen.getByRole("search", { name: "Search places" }));
 
   expect(handlers.onSearch).toHaveBeenCalledTimes(1);
 });
@@ -407,9 +407,9 @@ test("View on map selects a marker the map shows and goes to it", async () => {
 test("View on map looks up a marker the map is not showing, and a chip that hides it gives way", async () => {
   lookUpMock.mockResolvedValue(nightMarket);
   const view = await openMap({ status: "denied" });
-  fireEvent.press(chip("Food"));
+  await fireEvent.press(chip("Food"));
 
-  view.rerender(
+  await view.rerender(
     <MapScreen target={{ kind: "event", slug: "lakefront-night-market" }} search={null} {...handlers} />,
   );
   await act(async () => {});
@@ -447,12 +447,12 @@ describe("search results on the map (SEARCH-03)", () => {
     expect(jest.mocked(useSearchMarkers).mock.lastCall?.[0]).toBe("coffee");
     expect(mapProps().markers).toEqual([coffee, bean]);
     expect(mapProps().fit).toEqual(boundsOf([coffee, bean]));
-    act(() => mapProps().onIdle({ west: 168.65, south: -45.04, east: 168.67, north: -45.02 }, { latitude: -45.03, longitude: 168.66, zoom: 14 }));
+    await act(() => mapProps().onIdle({ west: 168.65, south: -45.04, east: 168.67, north: -45.02 }, { latitude: -45.03, longitude: 168.66, zoom: 14 }));
     expect(jest.mocked(useMarkers).mock.lastCall?.[0]).toBeNull();
     expect(screen.queryByLabelText("Filters")).toBeNull();
     expect(screen.getByText("Results for “coffee”")).toBeOnTheScreen();
 
-    fireEvent.press(screen.getByRole("button", { name: "Clear search" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Clear search" }));
     expect(handlers.onSearchClear).toHaveBeenCalledTimes(1);
   });
 
@@ -475,7 +475,7 @@ describe("search results on the map (SEARCH-03)", () => {
     const state = searchIs({ status: "error" });
     await openMap({ status: "denied" }, null, "coffee");
 
-    fireEvent.press(screen.getByRole("button", { name: "Try again" }));
+    await fireEvent.press(screen.getByRole("button", { name: "Try again" }));
 
     expect(state.retry).toHaveBeenCalledTimes(1);
   });

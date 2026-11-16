@@ -41,8 +41,8 @@ beforeEach(() => {
   getPlacesMock.mockReset();
 });
 
-test("asks for nothing without search words", () => {
-  const { result } = renderHook(() => useSearchMarkers(null));
+test("asks for nothing without search words", async () => {
+  const { result } = await renderHook(() => useSearchMarkers(null));
 
   expect(result.current.status).toBe("idle");
   expect(result.current.markers).toEqual([]);
@@ -50,11 +50,12 @@ test("asks for nothing without search words", () => {
 });
 
 test("asks for the first fifty places that match, and gives them as markers with the total", async () => {
-  getPlacesMock.mockResolvedValue(page(60, "harbour-coffee", "bean-around"));
-  const { result } = renderHook(() => useSearchMarkers("coffee"));
+  const search = pending();
+  getPlacesMock.mockReturnValue(search.promise);
+  const { result } = await renderHook(() => useSearchMarkers("coffee"));
   expect(result.current.status).toBe("loading");
 
-  await act(async () => {});
+  await act(async () => search.resolve(page(60, "harbour-coffee", "bean-around")));
 
   expect(getPlacesMock.mock.lastCall?.[0]).toEqual({ q: "coffee", size: 50 });
   expect(result.current.status).toBe("ready");
@@ -67,7 +68,7 @@ test("asks for the first fifty places that match, and gives them as markers with
 
 test("a failed search says so and can be asked again", async () => {
   getPlacesMock.mockRejectedValueOnce(new Error("offline")).mockResolvedValue(page(1, "harbour-coffee"));
-  const { result } = renderHook(() => useSearchMarkers("coffee"));
+  const { result } = await renderHook(() => useSearchMarkers("coffee"));
   await act(async () => {});
   expect(result.current.status).toBe("error");
 
@@ -80,11 +81,11 @@ test("a failed search says so and can be asked again", async () => {
 test("the answer to old words does not land on new ones", async () => {
   const coffee = pending();
   getPlacesMock.mockReturnValueOnce(coffee.promise).mockResolvedValue(page(1, "fergburger"));
-  const { result, rerender } = renderHook(({ q }: { q: string }) => useSearchMarkers(q), {
+  const { result, rerender } = await renderHook(({ q }: { q: string }) => useSearchMarkers(q), {
     initialProps: { q: "coffee" },
   });
 
-  rerender({ q: "burger" });
+  await rerender({ q: "burger" });
   await act(async () => {});
   await act(async () => coffee.resolve(page(1, "harbour-coffee")));
 

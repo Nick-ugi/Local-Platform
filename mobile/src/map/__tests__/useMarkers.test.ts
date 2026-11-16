@@ -68,7 +68,7 @@ afterEach(() => {
 });
 
 test("does nothing without bounds", async () => {
-  const { result } = renderMarkers({ bounds: null, filter: [] });
+  const { result } = await renderMarkers({ bounds: null, filter: [] });
 
   await wait(1000);
 
@@ -79,7 +79,7 @@ test("does nothing without bounds", async () => {
 
 test("waits 300 ms before asking", async () => {
   getMarkersMock.mockResolvedValue({ ...answer("a", "b"), truncated: true });
-  const { result } = renderMarkers({ bounds: queenstown, filter: [] });
+  const { result } = await renderMarkers({ bounds: queenstown, filter: [] });
 
   await wait(299);
   expect(getMarkersMock).not.toHaveBeenCalled();
@@ -96,12 +96,12 @@ test("waits 300 ms before asking", async () => {
 
 test("asks once after several quick moves", async () => {
   getMarkersMock.mockResolvedValue(answer("a"));
-  const { rerender } = renderMarkers({ bounds: queenstown, filter: [] });
+  const { rerender } = await renderMarkers({ bounds: queenstown, filter: [] });
 
   await wait(100);
-  rerender({ bounds: frankton, filter: [] });
+  await rerender({ bounds: frankton, filter: [] });
   await wait(100);
-  rerender({ bounds: arrowtown, filter: [] });
+  await rerender({ bounds: arrowtown, filter: [] });
   await wait(300);
 
   expect(getMarkersMock).toHaveBeenCalledTimes(1);
@@ -110,11 +110,11 @@ test("asks once after several quick moves", async () => {
 
 test("cancels the request it no longer needs", async () => {
   getMarkersMock.mockReturnValue(pending().promise);
-  const { rerender } = renderMarkers({ bounds: queenstown, filter: [] });
+  const { rerender } = await renderMarkers({ bounds: queenstown, filter: [] });
   await wait(300);
   expect(signalOfCall(0).aborted).toBe(false);
 
-  rerender({ bounds: frankton, filter: [] });
+  await rerender({ bounds: frankton, filter: [] });
 
   expect(signalOfCall(0).aborted).toBe(true);
 });
@@ -123,9 +123,9 @@ test("a late answer does not replace a newer one", async () => {
   const first = pending();
   const second = pending();
   getMarkersMock.mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
-  const { result, rerender } = renderMarkers({ bounds: queenstown, filter: [] });
+  const { result, rerender } = await renderMarkers({ bounds: queenstown, filter: [] });
   await wait(300);
-  rerender({ bounds: frankton, filter: [] });
+  await rerender({ bounds: frankton, filter: [] });
   await wait(300);
 
   await act(async () => second.resolve(answer("new")));
@@ -139,9 +139,9 @@ test("a late failure does not spoil a newer answer", async () => {
   const first = pending();
   const second = pending();
   getMarkersMock.mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
-  const { result, rerender } = renderMarkers({ bounds: queenstown, filter: [] });
+  const { result, rerender } = await renderMarkers({ bounds: queenstown, filter: [] });
   await wait(300);
-  rerender({ bounds: frankton, filter: [] });
+  await rerender({ bounds: frankton, filter: [] });
   await wait(300);
 
   await act(async () => second.resolve(answer("new")));
@@ -152,10 +152,10 @@ test("a late failure does not spoil a newer answer", async () => {
 
 test("keeps the markers on screen when a request fails", async () => {
   getMarkersMock.mockResolvedValueOnce(answer("a", "b")).mockRejectedValueOnce(new Error("no network"));
-  const { result, rerender } = renderMarkers({ bounds: queenstown, filter: [] });
+  const { result, rerender } = await renderMarkers({ bounds: queenstown, filter: [] });
   await wait(300);
 
-  rerender({ bounds: frankton, filter: [] });
+  await rerender({ bounds: frankton, filter: [] });
   await wait(300);
 
   expect(result.current.status).toBe("error");
@@ -164,11 +164,11 @@ test("keeps the markers on screen when a request fails", async () => {
 
 test("retry asks again for the same box", async () => {
   getMarkersMock.mockRejectedValueOnce(new Error("no network")).mockResolvedValueOnce(answer("a"));
-  const { result } = renderMarkers({ bounds: queenstown, filter: ["cafe"] });
+  const { result } = await renderMarkers({ bounds: queenstown, filter: ["cafe"] });
   await wait(300);
   expect(result.current.status).toBe("error");
 
-  act(() => result.current.retry());
+  await act(() => result.current.retry());
   expect(result.current.status).toBe("loading");
   await wait(300);
 
@@ -181,10 +181,10 @@ test("retry asks again for the same box", async () => {
 
 test("asks again when the filter changes", async () => {
   getMarkersMock.mockResolvedValue(answer("a"));
-  const { rerender } = renderMarkers({ bounds: queenstown, filter: [] });
+  const { rerender } = await renderMarkers({ bounds: queenstown, filter: [] });
   await wait(300);
 
-  rerender({ bounds: queenstown, filter: ["food", "cafe"] });
+  await rerender({ bounds: queenstown, filter: ["food", "cafe"] });
   await wait(300);
 
   expect(getMarkersMock).toHaveBeenCalledTimes(2);
@@ -194,10 +194,10 @@ test("asks again when the filter changes", async () => {
 // The screen builds the filter from the URL on every render, so equal values arrive as new objects.
 test("does not ask again for an equal box and filter", async () => {
   getMarkersMock.mockResolvedValue(answer("a"));
-  const { result, rerender } = renderMarkers({ bounds: queenstown, filter: ["food"] });
+  const { result, rerender } = await renderMarkers({ bounds: queenstown, filter: ["food"] });
   await wait(300);
 
-  rerender({ bounds: { ...queenstown }, filter: ["food"] });
+  await rerender({ bounds: { ...queenstown }, filter: ["food"] });
   await wait(1000);
 
   expect(getMarkersMock).toHaveBeenCalledTimes(1);
@@ -206,9 +206,9 @@ test("does not ask again for an equal box and filter", async () => {
 
 test("stops asking when the screen goes away", async () => {
   getMarkersMock.mockResolvedValue(answer("a"));
-  const { unmount } = renderMarkers({ bounds: queenstown, filter: [] });
+  const { unmount } = await renderMarkers({ bounds: queenstown, filter: [] });
 
-  unmount();
+  await unmount();
   await wait(1000);
 
   expect(getMarkersMock).not.toHaveBeenCalled();

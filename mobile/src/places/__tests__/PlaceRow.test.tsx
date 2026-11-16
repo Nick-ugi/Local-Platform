@@ -28,7 +28,7 @@ afterEach(() => {
 });
 
 async function show(place: PlaceSummary) {
-  render(<PlaceRow place={place} onPress={jest.fn()} />, { wrapper: AppIntlProvider });
+  await render(<PlaceRow place={place} onPress={jest.fn()} />, { wrapper: AppIntlProvider });
   await act(async () => {
     jest.advanceTimersByTime(0);
   });

@@ -25,7 +25,7 @@ const coffee: PlaceSummary = {
 const handlers = { onSubmit: jest.fn(), onOpen: jest.fn(), onExplore: jest.fn(), onShowOnMap: jest.fn() };
 
 async function openSearch(q: string) {
-  renderScreen(<SearchScreen q={q} {...handlers} />);
+  await renderScreen(<SearchScreen q={q} {...handlers} />);
   await act(async () => {});
 }
 
@@ -55,7 +55,7 @@ test("before a search the places seen lately are there to open again, and Clear 
     "Harbour Coffee",
     "Lakeside Kitchen",
   ]);
-  fireEvent.press(screen.getByRole("link", { name: /Harbour Coffee/ }));
+  await fireEvent.press(screen.getByRole("link", { name: /Harbour Coffee/ }));
   expect(handlers.onOpen).toHaveBeenCalledWith(expect.objectContaining({ slug: "harbour-coffee" }));
 
   await act(async () => fireEvent.press(screen.getByRole("button", { name: "Clear" })));
@@ -73,12 +73,12 @@ test("submitting sends the tidied words; blank words stay on the screen", async 
   await openSearch("");
   const box = screen.getByLabelText("Search places");
 
-  fireEvent.changeText(box, "   ");
-  fireEvent(box, "submitEditing");
+  await fireEvent.changeText(box, "   ");
+  await fireEvent(box, "submitEditing");
   expect(handlers.onSubmit).not.toHaveBeenCalled();
 
-  fireEvent.changeText(box, "  wood   fired ");
-  fireEvent(box, "submitEditing");
+  await fireEvent.changeText(box, "  wood   fired ");
+  await fireEvent(box, "submitEditing");
   expect(handlers.onSubmit).toHaveBeenCalledWith("wood fired");
 });
 
@@ -92,14 +92,14 @@ test("the results say how many there are and open the place", async () => {
   expect(screen.getByLabelText("Search places")).toHaveDisplayValue("coffee");
   expect(screen.getByText("1 result")).toBeOnTheScreen();
 
-  fireEvent.press(screen.getByRole("link", { name: /Harbour Coffee/ }));
+  await fireEvent.press(screen.getByRole("link", { name: /Harbour Coffee/ }));
   expect(handlers.onOpen).toHaveBeenCalledWith(coffee);
 });
 
 test("results can be seen on the map", async () => {
   await openSearch("coffee");
 
-  fireEvent.press(screen.getByRole("button", { name: "Show on map" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Show on map" }));
 
   expect(handlers.onShowOnMap).toHaveBeenCalledWith("coffee");
 });
@@ -109,7 +109,7 @@ test("no match says so and leads to Explore", async () => {
   await openSearch("sushi");
 
   expect(screen.getByText("No places match “sushi”.")).toBeOnTheScreen();
-  fireEvent.press(screen.getByRole("button", { name: "Go to Explore" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Go to Explore" }));
   expect(handlers.onExplore).toHaveBeenCalledTimes(1);
   expect(screen.queryByRole("button", { name: "Show on map" })).toBeNull();
 });
@@ -117,7 +117,7 @@ test("no match says so and leads to Explore", async () => {
 test("the clear button empties the box", async () => {
   await openSearch("coffee");
 
-  fireEvent.press(screen.getByRole("button", { name: "Clear search" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Clear search" }));
 
   expect(screen.getByLabelText("Search places")).toHaveDisplayValue("");
 });

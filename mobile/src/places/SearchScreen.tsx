@@ -1,6 +1,6 @@
 import { MAX_QUERY_LENGTH, normalizeQuery } from "@queenstown/shared";
 import { useRef, useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, type TextInputInstance, View } from "react-native";
 import { useTranslations } from "use-intl";
 import { StateMessage } from "@/ui/StateMessage";
 import { Icon } from "@/ui/Icon";
@@ -29,7 +29,7 @@ export function SearchScreen({ q, onSubmit, onOpen, onExplore, onShowOnMap }: Pr
   const t = useTranslations("Search");
   const tState = useTranslations("State");
   const [value, setValue] = useState(q);
-  const input = useRef<TextInput>(null);
+  const input = useRef<TextInputInstance>(null);
 
   function submit() {
     const words = normalizeQuery(value);

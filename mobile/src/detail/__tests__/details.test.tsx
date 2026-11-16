@@ -67,9 +67,9 @@ function show(element: React.ReactElement) {
 
 beforeEach(() => {
   openURL.mockReset();
-  openURL.mockResolvedValue(true);
+  openURL.mockResolvedValue(undefined);
   share.mockReset();
-  share.mockResolvedValue({ action: Share.sharedAction });
+  share.mockResolvedValue({ action: Share.sharedAction, activityType: undefined });
   delete process.env.EXPO_PUBLIC_SITE_URL;
   delete process.env.EXPO_PUBLIC_CONTACT_EMAIL;
   // The app is checked on Android (docs/plans/2026-10-15-week10-app-core.md).
@@ -77,8 +77,8 @@ beforeEach(() => {
 });
 
 describe("Place", () => {
-  test("shows every part of the place", () => {
-    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+  test("shows every part of the place", async () => {
+    await show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
 
     expect(screen.getByRole("header", { name: "Harbour Coffee" })).toBeOnTheScreen();
     expect(screen.getByText("Cafes")).toBeOnTheScreen();
@@ -95,7 +95,7 @@ describe("Place", () => {
     try {
       // Saturday 10 am in Queenstown.
       jest.setSystemTime(new Date("2026-10-24T10:00:00+13:00"));
-      show(<PlaceDetailView place={{ ...coffee, openingHours: "Mo-Fr 07:00-16:00; Sa 08:00-14:00" }} onViewOnMap={jest.fn()} />);
+      await show(<PlaceDetailView place={{ ...coffee, openingHours: "Mo-Fr 07:00-16:00; Sa 08:00-14:00" }} onViewOnMap={jest.fn()} />);
       await act(async () => {
         jest.advanceTimersByTime(0);
       });
@@ -112,7 +112,7 @@ describe("Place", () => {
   test("Suggest an edit starts an email to the operator about the place, as on the web", async () => {
     process.env.EXPO_PUBLIC_CONTACT_EMAIL = "hello@queenstown.example";
     process.env.EXPO_PUBLIC_SITE_URL = "https://queenstown.example";
-    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+    await show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
 
     await act(async () => fireEvent.press(screen.getByRole("link", { name: "Suggest an edit" })));
 
@@ -123,19 +123,19 @@ describe("Place", () => {
     );
   });
 
-  test("without a usable contact address there is no Suggest an edit", () => {
-    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+  test("without a usable contact address there is no Suggest an edit", async () => {
+    await show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
     expect(screen.queryByText("Suggest an edit")).toBeNull();
 
     process.env.EXPO_PUBLIC_CONTACT_EMAIL = "not an address";
-    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+    await show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
     expect(screen.queryByText("Suggest an edit")).toBeNull();
   });
 
   test("a phone without a mail app says so", async () => {
     process.env.EXPO_PUBLIC_CONTACT_EMAIL = "hello@queenstown.example";
     openURL.mockRejectedValue(new Error("No Activity found"));
-    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+    await show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
 
     await act(async () => fireEvent.press(screen.getByRole("link", { name: "Suggest an edit" })));
 
@@ -143,7 +143,7 @@ describe("Place", () => {
   });
 
   test("the quick actions call, open the website, give directions and share the web address", async () => {
-    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+    await show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
 
     // Each has its icon above its name, hidden from screen readers, which read the name.
     for (const [name, icon] of [
@@ -171,8 +171,8 @@ describe("Place", () => {
     });
   });
 
-  test("a place without a phone or website has only Directions and Share, and no Contact", () => {
-    show(<PlaceDetailView place={{ ...coffee, phone: null, website: null, openingHours: null, description: null }} onViewOnMap={jest.fn()} />);
+  test("a place without a phone or website has only Directions and Share, and no Contact", async () => {
+    await show(<PlaceDetailView place={{ ...coffee, phone: null, website: null, openingHours: null, description: null }} onViewOnMap={jest.fn()} />);
 
     expect(screen.queryByRole("button", { name: "Call" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Website" })).toBeNull();
@@ -181,41 +181,41 @@ describe("Place", () => {
     expect(screen.queryByText("Opening hours")).toBeNull();
   });
 
-  test("without a photo, the kind's picture stands in for it", () => {
-    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+  test("without a photo, the kind's picture stands in for it", async () => {
+    await show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
 
     const placeholder = screen.getByTestId("image-placeholder", { includeHiddenElements: true });
     expect(placeholder).toHaveTextContent("☕");
   });
 
-  test("a facility shows its kind", () => {
-    show(<PlaceDetailView place={{ ...coffee, category: "facility", subtype: "toilet" }} onViewOnMap={jest.fn()} />);
+  test("a facility shows its kind", async () => {
+    await show(<PlaceDetailView place={{ ...coffee, category: "facility", subtype: "toilet" }} onViewOnMap={jest.fn()} />);
 
     expect(screen.getByText("Facilities · Public toilet")).toBeOnTheScreen();
   });
 
   test("an action the phone cannot do says so", async () => {
     openURL.mockRejectedValue(new Error("No app"));
-    show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
+    await show(<PlaceDetailView place={coffee} onViewOnMap={jest.fn()} />);
 
     await act(async () => fireEvent.press(screen.getByRole("button", { name: "Website" })));
 
     expect(screen.getByText("Couldn't open this on your phone.")).toBeOnTheScreen();
   });
 
-  test("View on map", () => {
+  test("View on map", async () => {
     const onViewOnMap = jest.fn();
-    show(<PlaceDetailView place={coffee} onViewOnMap={onViewOnMap} />);
+    await show(<PlaceDetailView place={coffee} onViewOnMap={onViewOnMap} />);
 
-    fireEvent.press(screen.getByRole("link", { name: "View on map" }));
+    await fireEvent.press(screen.getByRole("link", { name: "View on map" }));
 
     expect(onViewOnMap).toHaveBeenCalledTimes(1);
   });
 });
 
 describe("Event", () => {
-  test("shows when and where in New Zealand time, with the year", () => {
-    show(<EventDetailView event={market} onViewOnMap={jest.fn()} />);
+  test("shows when and where in New Zealand time, with the year", async () => {
+    await show(<EventDetailView event={market} onViewOnMap={jest.fn()} />);
 
     expect(screen.getByRole("header", { name: "Lakefront Night Market" })).toBeOnTheScreen();
     expect(screen.getByText("Fri 9 Oct 2026 · 5:00 pm - 9:00 pm")).toBeOnTheScreen();
@@ -227,7 +227,7 @@ describe("Event", () => {
 
   test("opens the official page, shares, and leads to the map", async () => {
     const onViewOnMap = jest.fn();
-    show(<EventDetailView event={market} onViewOnMap={onViewOnMap} />);
+    await show(<EventDetailView event={market} onViewOnMap={onViewOnMap} />);
 
     await act(async () => fireEvent.press(screen.getByRole("link", { name: "Official event page" })));
     expect(openURL).toHaveBeenCalledWith("https://events.example/night-market");
@@ -235,12 +235,12 @@ describe("Event", () => {
     await act(async () => fireEvent.press(screen.getByRole("button", { name: "Share" })));
     expect(share.mock.calls[0][0]).toMatchObject({ message: expect.stringContaining("/events/lakefront-night-market") });
 
-    fireEvent.press(screen.getByRole("link", { name: "View on map" }));
+    await fireEvent.press(screen.getByRole("link", { name: "View on map" }));
     expect(onViewOnMap).toHaveBeenCalledTimes(1);
   });
 
-  test("an ended event says so and is not on the map", () => {
-    show(<EventDetailView event={{ ...market, ended: true }} onViewOnMap={jest.fn()} />);
+  test("an ended event says so and is not on the map", async () => {
+    await show(<EventDetailView event={{ ...market, ended: true }} onViewOnMap={jest.fn()} />);
 
     expect(screen.getByText("This event has ended.")).toBeOnTheScreen();
     expect(screen.queryByRole("link", { name: "View on map" })).toBeNull();
@@ -248,8 +248,8 @@ describe("Event", () => {
 });
 
 describe("Notice", () => {
-  test("shows its type, Official, period, summary, location and source", () => {
-    show(<NoticeDetailView notice={works} onViewOnMap={jest.fn()} />);
+  test("shows its type, Official, period, summary, location and source", async () => {
+    await show(<NoticeDetailView notice={works} onViewOnMap={jest.fn()} />);
 
     expect(screen.getByText("Road Work")).toBeOnTheScreen();
     expect(screen.getByText("Official")).toBeOnTheScreen();
@@ -262,22 +262,22 @@ describe("Notice", () => {
   });
 
   test("opens the original", async () => {
-    show(<NoticeDetailView notice={works} onViewOnMap={jest.fn()} />);
+    await show(<NoticeDetailView notice={works} onViewOnMap={jest.fn()} />);
 
     await act(async () => fireEvent.press(screen.getByRole("link", { name: "Open original" })));
 
     expect(openURL).toHaveBeenCalledWith("https://qldc.example/works");
   });
 
-  test("a notice without a location has no Location row", () => {
-    show(<NoticeDetailView notice={{ ...works, latitude: null, longitude: null, locationName: null }} onViewOnMap={jest.fn()} />);
+  test("a notice without a location has no Location row", async () => {
+    await show(<NoticeDetailView notice={{ ...works, latitude: null, longitude: null, locationName: null }} onViewOnMap={jest.fn()} />);
 
     expect(screen.queryByText("Location")).toBeNull();
     expect(screen.queryByRole("link", { name: "View on map" })).toBeNull();
   });
 
-  test("a notice without an end runs from its start; an ended one says so", () => {
-    show(<NoticeDetailView notice={{ ...works, endsAt: null, ended: true }} onViewOnMap={jest.fn()} />);
+  test("a notice without an end runs from its start; an ended one says so", async () => {
+    await show(<NoticeDetailView notice={{ ...works, endsAt: null, ended: true }} onViewOnMap={jest.fn()} />);
 
     expect(screen.getByText("From 6 Oct 2026")).toBeOnTheScreen();
     expect(screen.getByText("This notice has ended.")).toBeOnTheScreen();

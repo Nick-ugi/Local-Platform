@@ -110,7 +110,7 @@ function tab(name: string) {
 }
 
 test("opens on the Map tab with Map, Explore, Local and More in order", async () => {
-  renderRouter(routes, { initialUrl: "/" });
+  await renderRouter(routes, { initialUrl: "/" });
   // The app looks for a stored session as it starts.
   await act(async () => {});
 
@@ -127,40 +127,46 @@ test("opens on the Map tab with Map, Explore, Local and More in order", async ()
     expect(screen.getByTestId(icon)).toBeTruthy();
   }
 
-  fireEvent.press(tab("Explore"));
+  await fireEvent.press(tab("Explore"));
   expect(screen.getByTestId("icon-map-outline")).toBeTruthy();
   expect(screen.getByTestId("icon-list")).toBeTruthy();
 });
 
 test("the status bar's clock and icons are dark, as the app stays light on a phone in dark mode too", async () => {
-  renderRouter(routes, { initialUrl: "/" });
-  await act(async () => {});
+  // A StatusBar puts its style on React Native's stack of them when it mounts.
+  const pushStackEntry = jest.spyOn(StatusBar, "pushStackEntry");
+  try {
+    await renderRouter(routes, { initialUrl: "/" });
+    await act(async () => {});
 
-  expect(screen.UNSAFE_getByType(StatusBar).props.barStyle).toBe("dark-content");
+    expect(pushStackEntry).toHaveBeenCalledWith(expect.objectContaining({ barStyle: "dark-content" }));
+  } finally {
+    pushStackEntry.mockRestore();
+  }
 });
 
 test("the tabs lead to Explore, Local and More", async () => {
-  renderRouter(routes, { initialUrl: "/" });
+  await renderRouter(routes, { initialUrl: "/" });
 
-  fireEvent.press(tab("Explore"));
+  await fireEvent.press(tab("Explore"));
   expect(screen).toHavePathname("/explore");
   expect(await screen.findByText("Harbour Coffee")).toBeOnTheScreen();
   expect(screen.getByText("Nearest first")).toBeOnTheScreen();
 
-  fireEvent.press(tab("Local"));
+  await fireEvent.press(tab("Local"));
   expect(screen).toHavePathname("/local");
   expect(await screen.findByText("There are no current notices.")).toBeOnTheScreen();
 
-  fireEvent.press(tab("More"));
+  await fireEvent.press(tab("More"));
   expect(screen).toHavePathname("/more");
   expect(within(screen.getByRole("link", { name: /About/ })).getByText("About")).toBeOnTheScreen();
 });
 
 test("More leads to About", async () => {
-  renderRouter(routes, { initialUrl: "/more" });
+  await renderRouter(routes, { initialUrl: "/more" });
   await act(async () => {});
 
-  fireEvent.press(screen.getByRole("link", { name: /About/ }));
+  await fireEvent.press(screen.getByRole("link", { name: /About/ }));
 
   expect(screen).toHavePathname("/about");
   expect(screen.getByText("About Queenstown Local")).toBeOnTheScreen();
@@ -169,9 +175,9 @@ test("More leads to About", async () => {
 
 test("More lists About, Log in, Favorites, then Privacy Policy and Terms of Use, which open the web pages", async () => {
   process.env.EXPO_PUBLIC_SITE_URL = "https://queenstown.example";
-  const openURL = jest.spyOn(Linking, "openURL").mockResolvedValue(true);
+  const openURL = jest.spyOn(Linking, "openURL").mockResolvedValue(undefined);
   try {
-    renderRouter(routes, { initialUrl: "/more" });
+    await renderRouter(routes, { initialUrl: "/more" });
     await act(async () => {});
 
     const links = screen.getAllByRole("link");
@@ -194,14 +200,18 @@ test("More lists About, Log in, Favorites, then Privacy Policy and Terms of Use,
 });
 
 test("a place's screen is remembered among the places seen lately", async () => {
-  renderRouter(routes, { initialUrl: "/places/harbour-coffee" });
+  const setItem = jest.mocked(SecureStore.setItemAsync);
+  setItem.mockClear();
+  await renderRouter(routes, { initialUrl: "/places/harbour-coffee" });
 
   expect(await screen.findByRole("header", { name: "Harbour Coffee" })).toBeOnTheScreen();
-  await waitFor(async () =>
-    expect(await loadRecentPlaces()).toEqual([
-      { slug: "harbour-coffee", name: "Harbour Coffee", category: "cafe", subtype: null },
-    ]),
-  );
+  // The list is saved a moment after the screen shows. waitFor gets a check that answers at once:
+  // under renderRouter's fake timers, one that awaits could let waitFor finish while the timers it
+  // was running are still going, and they would run into the next test.
+  await waitFor(() => expect(setItem).toHaveBeenCalledWith("recentPlaces", expect.any(String)));
+  expect(await loadRecentPlaces()).toEqual([
+    { slug: "harbour-coffee", name: "Harbour Coffee", category: "cafe", subtype: null },
+  ]);
 });
 
 test("signed in, More leads to Delete account", async () => {
@@ -214,10 +224,10 @@ test("signed in, More leads to Delete account", async () => {
   }));
   globalThis.fetch = fetchMock as unknown as typeof fetch;
   try {
-    renderRouter(routes, { initialUrl: "/more" });
+    await renderRouter(routes, { initialUrl: "/more" });
     expect(await screen.findByText("Signed in as kiri@example.com")).toBeOnTheScreen();
 
-    fireEvent.press(screen.getByRole("link", { name: /Delete account/ }));
+    await fireEvent.press(screen.getByRole("link", { name: /Delete account/ }));
 
     expect(screen).toHavePathname("/delete-account");
     expect(await screen.findByText(/This deletes your account \(kiri@example\.com\)/)).toBeOnTheScreen();
@@ -228,13 +238,13 @@ test("signed in, More leads to Delete account", async () => {
 });
 
 test("the search box on the Map leads to Search, and a search names its words", async () => {
-  renderRouter(routes, { initialUrl: "/" });
+  await renderRouter(routes, { initialUrl: "/" });
 
-  fireEvent.press(screen.getByRole("search", { name: "Search places" }));
+  await fireEvent.press(screen.getByRole("search", { name: "Search places" }));
   expect(screen).toHavePathname("/search");
 
-  fireEvent.changeText(screen.getByLabelText("Search places"), "  harbour   coffee ");
-  fireEvent(screen.getByLabelText("Search places"), "submitEditing");
+  await fireEvent.changeText(screen.getByLabelText("Search places"), "  harbour   coffee ");
+  await fireEvent(screen.getByLabelText("Search places"), "submitEditing");
 
   expect(screen).toHavePathname("/search");
   expect(screen).toHaveSearchParams({ q: "harbour coffee" });
@@ -242,23 +252,23 @@ test("the search box on the Map leads to Search, and a search names its words", 
 });
 
 test("Explore's search box leads to Search too", async () => {
-  renderRouter(routes, { initialUrl: "/explore" });
+  await renderRouter(routes, { initialUrl: "/explore" });
   await screen.findByText("Harbour Coffee");
 
-  fireEvent.press(screen.getByRole("search", { name: "Search places" }));
+  await fireEvent.press(screen.getByRole("search", { name: "Search places" }));
 
   expect(screen).toHavePathname("/search");
   expect(screen.getByText("Search for a place by name or keyword.")).toBeOnTheScreen();
 });
 
 test("a place in Explore opens its detail, and View on map goes back to the Map with it", async () => {
-  renderRouter(routes, { initialUrl: "/explore" });
+  await renderRouter(routes, { initialUrl: "/explore" });
 
-  fireEvent.press(await screen.findByRole("link", { name: /Harbour Coffee/ }));
+  await fireEvent.press(await screen.findByRole("link", { name: /Harbour Coffee/ }));
   expect(screen).toHavePathname("/places/harbour-coffee");
   expect(await screen.findByRole("header", { name: "Harbour Coffee" })).toBeOnTheScreen();
 
-  fireEvent.press(screen.getByRole("link", { name: "View on map" }));
+  await fireEvent.press(screen.getByRole("link", { name: "View on map" }));
   expect(screen).toHavePathname("/");
   expect(tab("Map")).toBeSelected();
   // The Map looks the place up (its markers are not loaded here), then forgets the request.
@@ -267,10 +277,10 @@ test("a place in Explore opens its detail, and View on map goes back to the Map 
 });
 
 test("a place that does not exist says so and leads to Explore", async () => {
-  renderRouter(routes, { initialUrl: "/places/no-such-place" });
+  await renderRouter(routes, { initialUrl: "/places/no-such-place" });
 
   expect(await screen.findByText("Page not found")).toBeOnTheScreen();
-  fireEvent.press(screen.getByRole("button", { name: "Go to Explore" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Go to Explore" }));
 
   expect(screen).toHavePathname("/explore");
   expect(await screen.findByText("Harbour Coffee")).toBeOnTheScreen();

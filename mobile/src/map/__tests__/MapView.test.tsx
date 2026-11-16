@@ -66,7 +66,7 @@ jest.mock("@rnmapbox/maps", () => {
 
 type Props = ComponentProps<typeof MapView>;
 
-function renderMap(overrides: Partial<Props> = {}) {
+async function renderMap(overrides: Partial<Props> = {}) {
   const props: Props = {
     token: "pk.test",
     camera: { latitude: -45.0312, longitude: 168.6626, zoom: 14 },
@@ -79,7 +79,7 @@ function renderMap(overrides: Partial<Props> = {}) {
     onUnavailable: jest.fn(),
     ...overrides,
   };
-  const view = render(<MapView {...props} />);
+  const view = await render(<MapView {...props} />);
   return { props, update: (changes: Partial<Props>) => view.rerender(<MapView {...props} {...changes} />) };
 }
 
@@ -95,18 +95,18 @@ beforeEach(() => {
   mockSdk.setAccessToken.mockClear();
 });
 
-test("gives the SDK the token and starts on the camera, longitude first", () => {
-  renderMap();
+test("gives the SDK the token and starts on the camera, longitude first", async () => {
+  await renderMap();
 
   expect(mockSdk.setAccessToken).toHaveBeenCalledWith("pk.test");
   expect(mockSdk.defaultSettings).toEqual({ centerCoordinate: [168.6626, -45.0312], zoomLevel: 14 });
   expect(mockSdk.setCamera).not.toHaveBeenCalled();
 });
 
-test("moves to a new camera", () => {
-  const { update } = renderMap();
+test("moves to a new camera", async () => {
+  const { update } = await renderMap();
 
-  update({ camera: { latitude: -45.0322, longitude: 168.661, zoom: 15 } });
+  await update({ camera: { latitude: -45.0322, longitude: 168.661, zoom: 15 } });
 
   expect(mockSdk.setCamera).toHaveBeenCalledWith({
     centerCoordinate: [168.661, -45.0322],
@@ -115,23 +115,23 @@ test("moves to a new camera", () => {
   });
 });
 
-test("fits a box it is given once, with room round it", () => {
+test("fits a box it is given once, with room round it", async () => {
   const box = { west: 168.65, south: -45.04, east: 168.67, north: -45.02 };
-  const { update } = renderMap();
+  const { update } = await renderMap();
   expect(mockSdk.fitBounds).not.toHaveBeenCalled();
 
-  update({ fit: box });
+  await update({ fit: box });
   expect(mockSdk.fitBounds).toHaveBeenCalledWith([168.67, -45.02], [168.65, -45.04], 64, 800);
 
   // The same box again, as a new object, is not a new fit.
-  update({ fit: { ...box } });
+  await update({ fit: { ...box } });
   expect(mockSdk.fitBounds).toHaveBeenCalledTimes(1);
 });
 
-test("a box round a single place centres on it at street level instead of zooming all the way in", () => {
-  const { update } = renderMap();
+test("a box round a single place centres on it at street level instead of zooming all the way in", async () => {
+  const { update } = await renderMap();
 
-  update({ fit: { west: 168.659, south: -45.0335, east: 168.659, north: -45.0335 } });
+  await update({ fit: { west: 168.659, south: -45.0335, east: 168.659, north: -45.0335 } });
 
   expect(mockSdk.fitBounds).not.toHaveBeenCalled();
   expect(mockSdk.setCamera).toHaveBeenCalledWith({
@@ -141,8 +141,8 @@ test("a box round a single place centres on it at street level instead of zoomin
   });
 });
 
-test("reports the box and camera when the map comes to rest", () => {
-  const { props } = renderMap();
+test("reports the box and camera when the map comes to rest", async () => {
+  const { props } = await renderMap();
 
   mockSdk.map?.onMapIdle({
     properties: { bounds: { ne: [168.67, -45.02], sw: [168.65, -45.04] }, center: [168.66, -45.03], zoom: 14.5 },
@@ -154,8 +154,8 @@ test("reports the box and camera when the map comes to rest", () => {
   );
 });
 
-test("reports a gesture, and not a move the app made", () => {
-  const { props } = renderMap();
+test("reports a gesture, and not a move the app made", async () => {
+  const { props } = await renderMap();
 
   mockSdk.map?.onCameraChanged({ gestures: { isGestureActive: false } } as never);
   expect(props.onGesture).not.toHaveBeenCalled();
@@ -164,16 +164,16 @@ test("reports a gesture, and not a move the app made", () => {
   expect(props.onGesture).toHaveBeenCalledTimes(1);
 });
 
-test("draws the visitor's position only when asked to", () => {
-  const { update } = renderMap();
+test("draws the visitor's position only when asked to", async () => {
+  const { update } = await renderMap();
   expect(mockSdk.puck).toBe(false);
 
-  update({ showUserLocation: true });
+  await update({ showUserLocation: true });
   expect(mockSdk.puck).toBe(true);
 });
 
-test("reports a map that failed to load", () => {
-  const { props } = renderMap();
+test("reports a map that failed to load", async () => {
+  const { props } = await renderMap();
 
   mockSdk.map?.onDidFailLoadingMap();
 
@@ -200,11 +200,11 @@ function keysIn(id: "markers" | "selected-marker") {
   );
 }
 
-test("draws the markers in their kind's colour, clustered in the brand's blue when zoomed out, up to zoom 17", () => {
-  const { update } = renderMap();
+test("draws the markers in their kind's colour, clustered in the brand's blue when zoomed out, up to zoom 17", async () => {
+  const { update } = await renderMap();
   expect(mockSdk.sources.markers.shape).toEqual(toFeatureCollection([]));
 
-  update({ markers: [kitchen] });
+  await update({ markers: [kitchen] });
 
   expect(mockSdk.sources.markers.shape).toEqual(toFeatureCollection([kitchen]));
   const { cluster, clusterRadius, clusterMaxZoomLevel } = mockSdk.sources.markers;
@@ -225,8 +225,8 @@ test("draws the markers in their kind's colour, clustered in the brand's blue wh
   expect(clusters.circleColor).toBe("#0369a1");
 });
 
-test("draws each marker's picture, one image for every kind at three pixels to a point", () => {
-  renderMap({ markers: [kitchen] });
+test("draws each marker's picture, one image for every kind at three pixels to a point", async () => {
+  await renderMap({ markers: [kitchen] });
 
   expect(Object.keys(mockSdk.images).sort()).toEqual(MARKER_ICONS.map((icon) => `marker-${icon}`).sort());
   expect(mockSdk.images["marker-food"]).toEqual({ image: expect.anything(), scale: 3 });
@@ -236,20 +236,20 @@ test("draws each marker's picture, one image for every kind at three pixels to a
   expect(selected.iconSize).toBeGreaterThan(1);
 });
 
-test("draws the selected marker on its own, outside the clusters", () => {
-  const { update } = renderMap({ markers: [kitchen, bakery] });
+test("draws the selected marker on its own, outside the clusters", async () => {
+  const { update } = await renderMap({ markers: [kitchen, bakery] });
   expect(keysIn("markers")).toEqual(["place:lakeside-kitchen", "place:beach-street-bakery"]);
   expect(keysIn("selected-marker")).toEqual([]);
 
-  update({ markers: [kitchen, bakery], selectedKey: "place:lakeside-kitchen" });
+  await update({ markers: [kitchen, bakery], selectedKey: "place:lakeside-kitchen" });
 
   expect(keysIn("markers")).toEqual(["place:beach-street-bakery"]);
   expect(keysIn("selected-marker")).toEqual(["place:lakeside-kitchen"]);
   expect(mockSdk.sources["selected-marker"].cluster).toBeUndefined();
 });
 
-test("a press on a marker selects it, with a 44 pt target", () => {
-  const { props } = renderMap({ markers: [kitchen] });
+test("a press on a marker selects it, with a 44 pt target", async () => {
+  const { props } = await renderMap({ markers: [kitchen] });
 
   expect(mockSdk.sources.markers.hitbox).toEqual({ width: 44, height: 44 });
   (mockSdk.sources.markers.onPress as (event: unknown) => void)({
@@ -260,7 +260,7 @@ test("a press on a marker selects it, with a 44 pt target", () => {
 });
 
 test("a press on a cluster moves in to where it comes apart, and selects nothing", async () => {
-  const { props } = renderMap({ markers: [kitchen, bakery] });
+  const { props } = await renderMap({ markers: [kitchen, bakery] });
   const cluster = {
     type: "Feature",
     geometry: { type: "Point", coordinates: [168.66, -45.032] },
@@ -278,8 +278,8 @@ test("a press on a cluster moves in to where it comes apart, and selects nothing
   expect(props.onSelect).not.toHaveBeenCalled();
 });
 
-test("a press beside every marker clears the selection", () => {
-  const { props } = renderMap({ markers: [kitchen], selectedKey: "place:lakeside-kitchen" });
+test("a press beside every marker clears the selection", async () => {
+  const { props } = await renderMap({ markers: [kitchen], selectedKey: "place:lakeside-kitchen" });
 
   mockSdk.map?.onPress();
 

@@ -6,9 +6,9 @@ const share = jest.spyOn(Share, "share");
 
 beforeEach(() => {
   openURL.mockReset();
-  openURL.mockResolvedValue(true);
+  openURL.mockResolvedValue(undefined);
   share.mockReset();
-  share.mockResolvedValue({ action: Share.sharedAction });
+  share.mockResolvedValue({ action: Share.sharedAction, activityType: undefined });
   delete process.env.EXPO_PUBLIC_SITE_URL;
   Platform.OS = "android";
 });
