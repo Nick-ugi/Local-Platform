@@ -2,11 +2,11 @@
 
 Queenstown Local Platform의 App이다. Web과 같은 Backend API를 쓴다.
 
-- Expo SDK 57 (React Native 0.86, React 19.2), TypeScript
+- Expo SDK 58 (React Native 0.88, React 19.3), TypeScript
 - Expo Router (탭과 화면)
 - @rnmapbox/maps (Mapbox 지도), expo-location (현재 위치)
 - use-intl (화면 문구, Web의 next-intl과 같은 방식)
-- Jest (jest-expo), React Native Testing Library 13
+- Jest 30 (jest-expo), React Native Testing Library 14
 
 화면 구조는 [Information Architecture v1](../docs/02-information-architecture.md)의 App, 배치는 [Wireframe v1](../docs/04-wireframe.md)의 a-map, a-explore를 기준으로 한다.
 
@@ -36,7 +36,7 @@ iOS는 macOS에서만 빌드할 수 있다. Windows에서는 iOS Simulator도 �
 npm install
 ```
 
-새 Expo 라이브러리는 `mobile`에서 `npx expo install <이름>`으로 더한다. SDK 57과 맞는 버전을 고른다.
+새 Expo 라이브러리는 `mobile`에서 `npx expo install <이름>`으로 더한다. SDK 58과 맞는 버전을 고른다.
 
 ## 환경 변수
 
@@ -86,6 +86,8 @@ npm start
 | `SDK location not found`, `adb`를 찾지 못함 | `ANDROID_HOME`이 없다. 시스템 환경 변수에 `%LOCALAPPDATA%\Android\Sdk`를 넣고 터미널(VS Code는 VS Code 자체)을 다시 연다. 지금 창에서만 쓰려면 PowerShell에서 `$env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"`. |
 | PowerShell에서 `&&`가 안 된다 | Windows PowerShell 5는 `&&`를 모른다. 명령을 한 줄씩 실행한다. |
 | `configureCMakeDebug` 실패, `WARNING: A restricted method in java.lang.System has been called` | `JAVA_HOME`이 JDK 25 이상이다(Android Studio의 JBR이 25일 수 있다). 네이티브 라이브러리를 준비하는 도구가 JDK의 경고를 오류로 본다. `JAVA_HOME`을 JDK 17이나 21로 바꾸고 다시 빌드한다. 지금 창에서만: `$env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-21..."`(설치한 경로). |
+| 빌드가 `ninja: error: ... Filename longer than 260 characters`나 `ninja: error: mkdir(...): No such file or directory`로 실패 | C++가 있는 라이브러리(`react-native-reanimated`, `react-native-gesture-handler`)의 빌드 경로가 Windows 한계(260자)를 넘었다. Expo SDK 58은 CMake가 긴 경로를 줄이지 않게 하는데(`CMAKE_OBJECT_PATH_MAX=1024`), Android 기본 CMake(3.22.1)의 Ninja는 긴 경로를 열지 못한다. `app.config.ts`가 `expo.android.cmakeObjectPathMax=255`로 CMake가 긴 경로를 해시로 줄이게 되돌린다(CMake 기본값 250은 release 빌드에서 한 글자 모자란다). `android/gradle.properties`에 이 줄이 없으면 `npx expo prebuild --clean --platform android`로 `android/`를 다시 만든다. |
+| 개발 빌드가 "Waking up the server… This can take up to a minute."에서 넘어가지 않음(Android 17 이상) | 처음 열 때 묻는 "근처 기기" 권한을 거부했다. 개발 빌드는 이 묶음의 로컬 네트워크 접근(`ACCESS_LOCAL_NETWORK`)이 있어야 PC의 Backend(`10.0.2.2`)에 닿는다. 설정 → 앱 → Queenstown Local → 권한에서 허용하거나 `adb shell pm grant com.queenstownlocal.app android.permission.ACCESS_LOCAL_NETWORK`. 배포 빌드는 https의 공개 서버를 부르므로 이 권한이 없다. |
 | "The map isn't available right now." | `mobile/.env.local`에 `EXPO_PUBLIC_MAPBOX_TOKEN`이 없다. 넣고 `npx expo start --dev-client --clear`. |
 | "We couldn't load the map data." | 앱이 Backend에 닿지 못했다. DB(`docker compose up -d db`)와 Backend(`gradlew.bat bootRun`)를 켠다. `bootRun`은 서버가 도는 동안 `80% EXECUTING`에 머문다. 정상이다. |
 | "No places in this area." | Backend는 응답했고 그 영역에 공개된 Place가 없다. `backend/seed`의 CSV를 채워 올린다([backend/README.md](../backend/README.md)). |
@@ -151,12 +153,12 @@ src/i18n, src/messages    화면 문구
 - **로그인은 기기에 남는다.** Refresh Token은 기기의 보안 저장소에, Access Token은 메모리에만 둔다. 앱을 껐다 켜도 로그인되어 있다. Log out은 서버의 Refresh Token도 무효로 만든다.
 - **하트를 누르다 로그인하러 가면** 로그인한 뒤 돌아와 저장까지 끝난다(m-login 1번).
 
-- **React가 두 벌이다.** App은 Expo SDK 57의 React 19.2.3, Web은 19.3.0을 쓴다. npm은 App의 것을 `mobile/node_modules`에, Web의 것을 루트에 둔다. Metro는 App의 것을 고르고 번들에는 하나만 들어간다. Jest는 Node처럼 찾으므로 `jest.config.js`에서 `react`를 App의 것으로 보낸다. React Native는 React의 버전이 정확히 맞아야 하므로 `react-test-renderer`도 `19.2.3`에 고정한다.
+- **패키지의 lock 파일은 저장소 루트에서 만든다.** App과 Web이 같은 React 19.3.0을 쓰므로 npm은 React를 루트에 한 벌만 둔다. `mobile`에서 `npx expo install --fix`를 하면 npm이 `expo-modules-core`를 `node_modules/expo/node_modules` 안에 두어 Jest가 찾지 못할 수 있다. 그때는 `package-lock.json`을 되돌리고 루트에서 `npm install`한다.
 - **지도 SDK 없이 정할 수 있는 것은 `shared`에 있다.** GeoJSON 변환, 영역, Marker의 key는 Web과 같은 함수(`shared/src/map`)를 쓴다. Marker 요청 훅(`src/map/useMarkers.ts`)은 Web의 것과 규칙이 같다.
 - **위치 권한은 App이 시작할 때 한 번 묻는다.** Web은 버튼을 누를 때 묻는다(docs/03-user-flow.md, "Web과 App의 차이"). Map과 Explore는 같은 답을 쓴다(`VisitorPositionProvider`). 서비스 지역 밖이거나 거부했으면 지도는 Queenstown에 남고, Explore는 Queenstown 중심에서 가까운 순이며 거리가 없다.
 - **Map의 상태는 URL이 아니라 화면에 있다.** Web은 필터와 선택을 URL에 두지만, App의 Map 탭은 상세가 위에 쌓여도 살아 있으므로 그대로 남는다. "View on map"만 `/?place=`(`event`, `notice`)로 Map 탭에 와서 그 Marker를 고르고 파라미터를 지운다.
 - **Local 탭은 없다(Should).** Notice와 Event는 지도의 칩과 Marker로 들어간다.
 - **날짜와 링크 규칙은 `shared`에 있다.** 일시와 기간(`formatEventWhen`, `noticePeriod`), 걸 수 있는 전화번호와 열 수 있는 URL(`telHref`, `httpUrl`), 검색어(`normalizeQuery`)는 Web과 같은 함수다.
 - **React Native의 `URLSearchParams`는 브라우저의 것과 다르다.** 일부 메서드가 없다. 쿼리는 손으로 만든다(`src/api/map.ts`).
-- **테스트는 React Native Testing Library 13이다.** Expo Router의 `renderRouter`가 13의 동기 `render`를 전제로 한다. npm이 Expo Router용으로 루트에 14를 깔지만, `jest.config.js`가 App의 13으로 보낸다.
+- **테스트는 React Native Testing Library 14다.** `render`, `renderHook`, `renderRouter`, `act`, `fireEvent`, `rerender`, `unmount`는 async라 `await`한다. `await render`는 바로 답하는 요청까지 끝내므로, loading을 볼 테스트는 응답을 손으로 준다. `renderRouter`는 가짜 타이머를 켠다. 그 테스트의 `waitFor`에는 바로 답하는 확인을 준다. `await`하는 확인이면 `waitFor`가 끝난 뒤에도 타이머를 돌리던 `act`가 남아 다음 테스트를 깨뜨린다.
 - **이 환경의 프록시에서는 `npx expo install`이 Expo 서버에 닿지 못할 수 있다.** 그때는 `node_modules/expo/bundledNativeModules.json`의 버전으로 `npm install -w mobile`한다.
