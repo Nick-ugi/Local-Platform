@@ -142,7 +142,7 @@ function PagedList<T>({
   const t = useTranslations("Local");
   const tState = useTranslations("State");
 
-  let content: ReactElement | null = null;
+  let content: ReactElement | undefined;
   if (list.status === "loading") {
     content = <LoadingMessage />;
   } else if (list.status === "error") {
@@ -151,7 +151,7 @@ function PagedList<T>({
     content = empty;
   }
 
-  let footer: ReactElement | null = null;
+  let footer: ReactElement | undefined;
   if (list.more === "loading") {
     footer = <ActivityIndicator style={styles.footer} color={colors.muted} />;
   } else if (list.more === "error") {

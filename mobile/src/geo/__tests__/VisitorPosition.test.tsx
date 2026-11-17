@@ -15,7 +15,7 @@ function wrapper({ children }: { children: ReactNode }) {
 
 async function start(first: LocationResult) {
   locateMock.mockResolvedValueOnce(first);
-  const hook = renderHook(() => useVisitorPosition(), { wrapper });
+  const hook = await renderHook(() => useVisitorPosition(), { wrapper });
   await act(async () => {});
   return hook;
 }
@@ -25,8 +25,8 @@ beforeEach(() => locateMock.mockReset());
 test("asks once when the app starts and is busy until the answer comes", async () => {
   locateMock.mockReturnValue(new Promise(() => {}));
 
-  const { result, rerender } = renderHook(() => useVisitorPosition(), { wrapper });
-  rerender({});
+  const { result, rerender } = await renderHook(() => useVisitorPosition(), { wrapper });
+  await rerender({});
 
   expect(locateMock).toHaveBeenCalledTimes(1);
   expect(result.current.locating).toBe(true);

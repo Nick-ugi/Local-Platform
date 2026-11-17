@@ -38,7 +38,7 @@ afterEach(() => {
 });
 
 async function show(marker: PlaceMarker | EventMarker) {
-  render(<MarkerPreview marker={marker} distanceText="350 m" {...handlers} />, { wrapper: AppIntlProvider });
+  await render(<MarkerPreview marker={marker} distanceText="350 m" {...handlers} />, { wrapper: AppIntlProvider });
   await act(async () => {
     jest.advanceTimersByTime(0);
   });
@@ -55,7 +55,7 @@ test("a place's card says whether it is open now, in New Zealand time", async ()
 test("a place without hours, and an event, have no badge", async () => {
   await show({ ...kitchen, openingHours: null });
   expect(screen.queryByText(/Open now|Closed|Closes soon|Open 24 hours/)).toBeNull();
-  screen.unmount();
+  await screen.unmount();
 
   await show(market);
   expect(screen.queryByText(/Open now|Closed|Closes soon|Open 24 hours/)).toBeNull();

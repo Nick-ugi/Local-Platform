@@ -500,7 +500,7 @@ Web + App + Admin 통합 테스트
 ### Mobile
 
 - React Native
-- Expo (SDK 57)
+- Expo (SDK 58)
 
 ### Backend
 
@@ -874,6 +874,7 @@ Citizen / Resident / Tourist
 - [x] 15주차 Store Prep, Android (계정 삭제(App의 More, Web의 `/account/delete`), 개인정보 처리방침에 App 내용, 앱 아이콘과 스플래시, 릴리스 빌드 설정 `eas.json`, 쓰지 않는 Android 권한 차단, Android 에뮬레이터에서 확인) — 실제 빌드와 Play Console 등록은 배포 뒤, iOS는 Apple 계정이 생긴 뒤
 - [x] 16주차 Hardening (쓸 수 없는 Refresh Token을 매일 정리, Web의 아이콘 · 매니페스트 · 기본 공유 이미지, App 탭 아이콘과 다크 모드에서도 밝은 화면 · 상태 표시줄, 비밀번호를 잊었을 때 안내, 브랜드 색과 아이콘, 사진 없는 장소의 그림, Marker 안의 종류별 그림, 로컬 서버 구성의 통합 테스트와 Android 에뮬레이터(다크 모드)에서 확인)
 - [x] 17주차 Security Updates (Next.js 16.4.6의 보안 수정, Expo SDK 57 패치 버전과 새 개발 빌드, 개발 도구의 undici · zod) — 남은 npm 권고는 다음 Expo SDK로 올릴 때 함께 고친다(expo-router의 query-string, Expo 빌드 도구의 minimatch)
+- [x] 18주차 Expo SDK 58 (React Native 0.88 · React 19.3으로 Web과 같은 React, 앱 테스트를 React Native Testing Library 14 · Jest 30으로, release 빌드의 R8 코드 축소, Windows에서 C++ 라이브러리 빌드 경로 보완, 새 개발 빌드와 release 빌드를 Android 에뮬레이터에서 확인) — expo-router의 high 권고 3건을 고쳤다. 남은 moderate 권고는 Jest 30의 glob과 Expo 빌드 도구의 minimatch로, 아직 고친 버전이 없고 앱에는 실리지 않는다
 
 ### Next
 

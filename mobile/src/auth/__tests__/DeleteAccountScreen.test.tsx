@@ -30,7 +30,7 @@ const onDone = jest.fn();
 const onLogin = jest.fn();
 
 async function open() {
-  renderScreen(<DeleteAccountScreen onDone={onDone} onLogin={onLogin} />);
+  await renderScreen(<DeleteAccountScreen onDone={onDone} onLogin={onLogin} />);
   await act(async () => {});
 }
 
@@ -51,13 +51,13 @@ test("says what goes, takes the password again, deletes the account and confirms
 
   expect(screen.getByText(/kiri@example\.com/)).toBeOnTheScreen();
   expect(screen.getByText(/your saved places/)).toBeOnTheScreen();
-  fireEvent.changeText(screen.getByLabelText("Password"), "correct horse battery");
+  await fireEvent.changeText(screen.getByLabelText("Password"), "correct horse battery");
   await act(async () => fireEvent.press(screen.getByRole("button", { name: "Delete my account" })));
 
   expect(calls.at(-1)).toEqual({ method: "DELETE", url: "/me", body: { password: "correct horse battery" } });
   expect(screen.getByText("Your account has been deleted.")).toBeOnTheScreen();
   expect(items.has("auth.refreshToken")).toBe(false);
-  fireEvent.press(screen.getByRole("button", { name: "Done" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Done" }));
   expect(onDone).toHaveBeenCalledTimes(1);
 });
 
@@ -70,7 +70,7 @@ test("a wrong password says so and keeps the account", async () => {
   );
   await open();
 
-  fireEvent.changeText(screen.getByLabelText("Password"), "not mine");
+  await fireEvent.changeText(screen.getByLabelText("Password"), "not mine");
   await act(async () => fireEvent.press(screen.getByRole("button", { name: "Delete my account" })));
 
   expect(screen.getByText("That password is wrong.")).toBeOnTheScreen();
@@ -81,6 +81,6 @@ test("a visitor who is not signed in is asked to log in", async () => {
   await open();
 
   expect(screen.getByText("Log in to delete your account.")).toBeOnTheScreen();
-  fireEvent.press(screen.getByRole("button", { name: "Log in" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Log in" }));
   expect(onLogin).toHaveBeenCalledTimes(1);
 });

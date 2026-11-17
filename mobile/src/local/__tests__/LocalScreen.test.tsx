@@ -38,13 +38,13 @@ function onePage<T>(items: T[]): Page<T> {
 const onOpen = jest.fn();
 
 async function openLocal() {
-  render(<LocalScreen onOpen={onOpen} />, { wrapper: AppIntlProvider });
+  await render(<LocalScreen onOpen={onOpen} />, { wrapper: AppIntlProvider });
   await act(async () => {});
 }
 
 async function openEvents() {
   await openLocal();
-  fireEvent.press(screen.getByRole("tab", { name: "Events" }));
+  await fireEvent.press(screen.getByRole("tab", { name: "Events" }));
   await act(async () => {});
 }
 
@@ -72,7 +72,7 @@ test("Events, all of them, each with its time in New Zealand and its place, lead
   expect(screen.getByText(formatEventWhen(market.startsAt, market.endsAt))).toBeOnTheScreen();
   expect(screen.getByText("Earnslaw Park")).toBeOnTheScreen();
 
-  fireEvent.press(screen.getByRole("link", { name: /Lakefront Night Market/ }));
+  await fireEvent.press(screen.getByRole("link", { name: /Lakefront Night Market/ }));
   expect(onOpen).toHaveBeenCalledWith("/events/lakefront-night-market");
 });
 
@@ -82,7 +82,7 @@ test("the date chips narrow the events", async () => {
   for (const name of ["Today", "This Week", "This Month"]) {
     expect(screen.getByRole("button", { name })).not.toBeSelected();
   }
-  fireEvent.press(screen.getByRole("button", { name: "This Week" }));
+  await fireEvent.press(screen.getByRole("button", { name: "This Week" }));
   await act(async () => {});
 
   expect(getEventsMock.mock.lastCall?.[0]).toEqual({ when: "week", page: 1 });
@@ -99,11 +99,11 @@ test("Notices list the current notices with type, Official and period, narrowed 
   expect(screen.getByText("Official")).toBeOnTheScreen();
   expect(screen.getByText("6 Oct - 20 Oct 2026")).toBeOnTheScreen();
 
-  fireEvent.press(screen.getByRole("button", { name: "Road Closure" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Road Closure" }));
   await act(async () => {});
   expect(getNoticesMock.mock.lastCall?.[0]).toEqual({ type: "road-closure", page: 1 });
 
-  fireEvent.press(screen.getByRole("link", { name: /Shotover Street resurfacing/ }));
+  await fireEvent.press(screen.getByRole("link", { name: /Shotover Street resurfacing/ }));
   expect(onOpen).toHaveBeenCalledWith("/notices/shotover-street-works");
 });
 
@@ -112,11 +112,11 @@ test("an empty period says so and offers all the events", async () => {
   await openEvents();
   expect(screen.getByText("There are no upcoming events.")).toBeOnTheScreen();
 
-  fireEvent.press(screen.getByRole("button", { name: "Today" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Today" }));
   await act(async () => {});
   expect(screen.getByText("There are no events in this period.")).toBeOnTheScreen();
 
-  fireEvent.press(screen.getByRole("button", { name: "Show all events" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Show all events" }));
   await act(async () => {});
   expect(screen.getByRole("button", { name: "All" })).toBeSelected();
 });
@@ -126,7 +126,7 @@ test("a list that fails says so and tries again", async () => {
   await openLocal();
   expect(screen.getByText("We couldn't load the list.")).toBeOnTheScreen();
 
-  fireEvent.press(screen.getByRole("button", { name: "Try again" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Try again" }));
   await act(async () => {});
 
   expect(screen.getByText("Shotover Street resurfacing")).toBeOnTheScreen();

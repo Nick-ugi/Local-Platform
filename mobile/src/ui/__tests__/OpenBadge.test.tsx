@@ -13,7 +13,7 @@ afterEach(() => {
 /** Renders at a New Zealand time and lets the badge read the clock. */
 async function at(iso: string, openingHours: string | null) {
   jest.setSystemTime(new Date(iso));
-  const view = render(<OpenBadge openingHours={openingHours} />, { wrapper: AppIntlProvider });
+  const view = await render(<OpenBadge openingHours={openingHours} />, { wrapper: AppIntlProvider });
   await act(async () => {
     jest.advanceTimersByTime(0);
   });
@@ -53,7 +53,7 @@ test("open all the time", async () => {
 test("says nothing about hours it cannot read, or no hours", async () => {
   const unreadable = await at("2026-10-20T10:00:00+13:00", "Tu-Su 16:00+");
   expect(unreadable.toJSON()).toBeNull();
-  unreadable.unmount();
+  await unreadable.unmount();
 
   const none = await at("2026-10-20T10:00:00+13:00", null);
   expect(none.toJSON()).toBeNull();

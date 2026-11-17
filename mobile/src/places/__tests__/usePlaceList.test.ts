@@ -43,11 +43,12 @@ const here = { latitude: -45.0312, longitude: 168.6626 };
 beforeEach(() => getPlacesMock.mockReset());
 
 test("loads the first page from the centre without a position", async () => {
-  getPlacesMock.mockResolvedValue(page([1, 2], 2));
+  const first = deferred();
+  getPlacesMock.mockReturnValue(first.promise);
 
-  const { result } = renderHook(() => usePlaceList(all, null));
+  const { result } = await renderHook(() => usePlaceList(all, null));
   expect(result.current.status).toBe("loading");
-  await act(async () => {});
+  await act(async () => first.resolve(page([1, 2], 2)));
 
   expect(getPlacesMock).toHaveBeenCalledWith(
     { category: null, q: null, position: null },
@@ -61,7 +62,7 @@ test("loads the first page from the centre without a position", async () => {
 test("asks from the visitor's position when there is one", async () => {
   getPlacesMock.mockResolvedValue(page([1], 1));
 
-  renderHook(() => usePlaceList({ category: "cafe", q: "flat white" }, here));
+  await renderHook(() => usePlaceList({ category: "cafe", q: "flat white" }, here));
   await act(async () => {});
 
   expect(getPlacesMock.mock.calls[0][0]).toEqual({ category: "cafe", q: "flat white", position: here });
@@ -69,13 +70,13 @@ test("asks from the visitor's position when there is one", async () => {
 
 test("the next page is added, and asking twice asks once", async () => {
   getPlacesMock.mockResolvedValueOnce(page([1, 2], 3));
-  const { result } = renderHook(() => usePlaceList(all, null));
+  const { result } = await renderHook(() => usePlaceList(all, null));
   await act(async () => {});
   const next = deferred();
   getPlacesMock.mockReturnValueOnce(next.promise);
 
-  act(() => result.current.loadMore());
-  act(() => result.current.loadMore());
+  await act(() => result.current.loadMore());
+  await act(() => result.current.loadMore());
   expect(result.current.more).toBe("loading");
   expect(getPlacesMock).toHaveBeenCalledTimes(2);
   expect(getPlacesMock.mock.calls[1][0]).toEqual({ category: null, q: null, position: null, page: 2 });
@@ -86,19 +87,19 @@ test("the next page is added, and asking twice asks once", async () => {
   expect(result.current.more).toBe("idle");
 
   // Every place is there: nothing more to ask for.
-  act(() => result.current.loadMore());
+  await act(() => result.current.loadMore());
   expect(getPlacesMock).toHaveBeenCalledTimes(2);
 });
 
 test("a new list starts again, and the old list's late answer is dropped", async () => {
   const old = deferred();
   getPlacesMock.mockReturnValueOnce(old.promise);
-  const { result, rerender } = renderHook(({ query }: { query: ListQuery }) => usePlaceList(query, null), {
+  const { result, rerender } = await renderHook(({ query }: { query: ListQuery }) => usePlaceList(query, null), {
     initialProps: { query: all },
   });
   getPlacesMock.mockResolvedValueOnce(page([7], 1));
 
-  rerender({ query: { category: "bar", q: null } });
+  await rerender({ query: { category: "bar", q: null } });
   await act(async () => {});
   await act(async () => old.resolve(page([1, 2], 2)));
 
@@ -107,14 +108,14 @@ test("a new list starts again, and the old list's late answer is dropped", async
 
 test("a new position keeps the places on screen until the new order comes", async () => {
   getPlacesMock.mockResolvedValueOnce(page([1, 2], 2));
-  const { result, rerender } = renderHook(({ at }: { at: LatLng | null }) => usePlaceList(all, at), {
+  const { result, rerender } = await renderHook(({ at }: { at: LatLng | null }) => usePlaceList(all, at), {
     initialProps: { at: null as LatLng | null },
   });
   await act(async () => {});
   const ordered = deferred();
   getPlacesMock.mockReturnValueOnce(ordered.promise);
 
-  rerender({ at: here });
+  await rerender({ at: here });
   expect(result.current.status).toBe("ready");
   expect(result.current.items.map((item) => item.slug)).toEqual(["place-1", "place-2"]);
 
@@ -126,13 +127,13 @@ test("a new position keeps the places on screen until the new order comes", asyn
 
 test("a new category does not show the old category's places while it loads", async () => {
   getPlacesMock.mockResolvedValueOnce(page([1], 1));
-  const { result, rerender } = renderHook(({ query }: { query: ListQuery }) => usePlaceList(query, null), {
+  const { result, rerender } = await renderHook(({ query }: { query: ListQuery }) => usePlaceList(query, null), {
     initialProps: { query: all },
   });
   await act(async () => {});
   getPlacesMock.mockReturnValueOnce(new Promise(() => {}));
 
-  rerender({ query: { category: "bar", q: null } });
+  await rerender({ query: { category: "bar", q: null } });
 
   expect(result.current.status).toBe("loading");
   expect(result.current.items).toEqual([]);
@@ -140,7 +141,7 @@ test("a new category does not show the old category's places while it loads", as
 
 test("a failed first page can be asked for again", async () => {
   getPlacesMock.mockRejectedValueOnce(new Error("offline"));
-  const { result } = renderHook(() => usePlaceList(all, null));
+  const { result } = await renderHook(() => usePlaceList(all, null));
   await act(async () => {});
   expect(result.current.status).toBe("error");
 
@@ -153,7 +154,7 @@ test("a failed first page can be asked for again", async () => {
 
 test("a failed next page keeps the list and can be asked for again", async () => {
   getPlacesMock.mockResolvedValueOnce(page([1], 2));
-  const { result } = renderHook(() => usePlaceList(all, null));
+  const { result } = await renderHook(() => usePlaceList(all, null));
   await act(async () => {});
 
   getPlacesMock.mockRejectedValueOnce(new Error("offline"));

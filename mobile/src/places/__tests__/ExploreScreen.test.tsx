@@ -31,7 +31,7 @@ const handlers = { onOpen: jest.fn(), onSearch: jest.fn() };
 
 async function openExplore(location: LocationResult) {
   jest.mocked(locate).mockResolvedValue(location);
-  renderScreen(<ExploreScreen {...handlers} />);
+  await renderScreen(<ExploreScreen {...handlers} />);
   await act(async () => {});
 }
 
@@ -82,7 +82,7 @@ test("a category chip narrows the list; All is on at first", async () => {
   // Each category has a dot of its colour; All has none.
   expect(screen.getAllByTestId("kind-dot", { includeHiddenElements: true })).toHaveLength(6);
 
-  fireEvent.press(screen.getByRole("button", { name: "Cafes" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Cafes" }));
   await act(async () => {});
 
   expect(getPlacesMock.mock.lastCall?.[0]).toMatchObject({ category: "cafe" });
@@ -93,7 +93,7 @@ test("a category chip narrows the list; All is on at first", async () => {
 test("a row opens the place", async () => {
   await openExplore({ status: "denied" });
 
-  fireEvent.press(screen.getByRole("link", { name: /Harbour Coffee/ }));
+  await fireEvent.press(screen.getByRole("link", { name: /Harbour Coffee/ }));
 
   expect(handlers.onOpen).toHaveBeenCalledWith(coffee);
 });
@@ -102,7 +102,7 @@ test("an empty category says so", async () => {
   getPlacesMock.mockImplementation(async (query) => onePage(query.category === "bar" ? [] : [coffee]));
   await openExplore({ status: "denied" });
 
-  fireEvent.press(screen.getByRole("button", { name: "Bars" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Bars" }));
   await act(async () => {});
 
   expect(screen.getByText("No places in this category yet.")).toBeOnTheScreen();
@@ -113,7 +113,7 @@ test("a failed list offers to try again", async () => {
   await openExplore({ status: "denied" });
 
   expect(screen.getByText("We couldn't load the places.")).toBeOnTheScreen();
-  fireEvent.press(screen.getByRole("button", { name: "Try again" }));
+  await fireEvent.press(screen.getByRole("button", { name: "Try again" }));
   await act(async () => {});
 
   expect(screen.getByText("Harbour Coffee")).toBeOnTheScreen();
@@ -126,7 +126,7 @@ test("a list that takes over five seconds says the server is waking up", async (
     await openExplore({ status: "denied" });
     expect(screen.queryByText(/Waking up the server/)).toBeNull();
 
-    act(() => jest.advanceTimersByTime(5000));
+    await act(() => jest.advanceTimersByTime(5000));
 
     expect(screen.getByText("Waking up the server… This can take up to a minute.")).toBeOnTheScreen();
   } finally {
@@ -137,7 +137,7 @@ test("a list that takes over five seconds says the server is waking up", async (
 test("the search box opens Search", async () => {
   await openExplore({ status: "denied" });
 
-  fireEvent.press(screen.getByRole("search", { name: "Search places" }));
+  await fireEvent.press(screen.getByRole("search", { name: "Search places" }));
 
   expect(handlers.onSearch).toHaveBeenCalledTimes(1);
 });

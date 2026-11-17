@@ -35,7 +35,7 @@ function page(items: PlaceSummary[]): Page<PlaceSummary> {
 }
 
 async function show(onOpen = jest.fn()) {
-  const view = render(<NearbyPlaces place={kitchen} onOpen={onOpen} />, {
+  const view = await render(<NearbyPlaces place={kitchen} onOpen={onOpen} />, {
     wrapper: AppIntlProvider,
   });
   await act(async () => {});
@@ -66,7 +66,7 @@ test("lists the places nearest this one with their kind and distance, and opens 
   expect(screen.getByText("Bars · 450 m")).toBeOnTheScreen();
   expect(screen.queryByText("Lakeside Kitchen")).toBeNull();
 
-  fireEvent.press(screen.getByRole("link", { name: /Harbour Coffee/ }));
+  await fireEvent.press(screen.getByRole("link", { name: /Harbour Coffee/ }));
   expect(onOpen).toHaveBeenCalledWith("harbour-coffee");
 });
 
@@ -74,7 +74,7 @@ test("shows nothing when there is nothing near, or the list fails", async () => 
   getPlacesMock.mockResolvedValue(page([summary("lakeside-kitchen", "Lakeside Kitchen", "food", 0)]));
   const empty = await show();
   expect(empty.toJSON()).toBeNull();
-  empty.unmount();
+  await empty.unmount();
 
   getPlacesMock.mockRejectedValue(new Error("offline"));
   const failed = await show();
