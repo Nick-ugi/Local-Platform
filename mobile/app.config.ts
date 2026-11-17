@@ -1,4 +1,5 @@
 import type { ConfigContext, ExpoConfig } from "expo/config";
+import { type ConfigPlugin, withGradleProperties } from "expo/config-plugins";
 
 // The app's native configuration (Continuous Native Generation): android/ and ios/ are generated
 // from this file by `expo prebuild` or `expo run:android`, and are not committed.
@@ -11,7 +12,27 @@ const isProduction = process.env.APP_VARIANT === "production";
 // splash screen's.
 const BRAND_BLUE = "#0369a1";
 
-export default ({ config }: ConfigContext): ExpoConfig => ({
+// Expo SDK 58 builds every C++ library with CMAKE_OBJECT_PATH_MAX=1024, so CMake no longer shortens
+// long object file paths. The Ninja that comes with Android's default CMake (3.22.1) cannot open a
+// path over 260 characters on Windows, and react-native-reanimated and react-native-gesture-handler
+// stopped building ("ninja: error ... Filename longer than 260 characters"). Under 255, CMake
+// replaces a long source path with its hash again, as in Expo SDK 57. CMake's own 250 is one
+// character too few for the release build, whose folder (RelWithDebInfo) is longer than Debug's: a
+// hashed gesture-handler object path there is 250 characters, and CMake then keeps the long one.
+// 255 still leaves every object path under Ninja's 260 and its folder under the 248 Windows allows.
+const CMAKE_OBJECT_PATH_MAX = "expo.android.cmakeObjectPathMax";
+const CMAKE_OBJECT_PATH_MAX_VALUE = "255";
+
+const withCmakeObjectPathMax: ConfigPlugin = (config) =>
+  withGradleProperties(config, (gradle) => {
+    gradle.modResults = gradle.modResults.filter(
+      (item) => !(item.type === "property" && item.key === CMAKE_OBJECT_PATH_MAX),
+    );
+    gradle.modResults.push({ type: "property", key: CMAKE_OBJECT_PATH_MAX, value: CMAKE_OBJECT_PATH_MAX_VALUE });
+    return gradle;
+  });
+
+export default ({ config }: ConfigContext): ExpoConfig => withCmakeObjectPathMax({
   ...config,
   name: "Queenstown Local",
   slug: "queenstown-local",
